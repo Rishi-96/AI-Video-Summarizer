@@ -1,0 +1,65 @@
+﻿.App {
+  text-align: center;
+  min-height: 100vh;
+  background-color: #282c34;
+  color: white;
+}
+
+.App-header {
+  background-color: #1e2127;
+  padding: 20px;
+  border-bottom: 3px solid #61dafb;
+}
+
+.App-header h1 {
+  color: #61dafb;
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+button {
+  background-color: #61dafb;
+  color: #1e2127;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+button:hover:not(:disabled) {
+  background-color: #4fa8c7;
+  transform: scale(1.05);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input[type="file"] {
+  color: white;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e2127;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #61dafb;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4fa8c7;
+}
