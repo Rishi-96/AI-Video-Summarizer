@@ -7,6 +7,8 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 
+from .api import summarize
+
 app = FastAPI(title="AI Video Summarizer API")
 
 # CORS setup
@@ -18,28 +20,57 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include routers
+app.include_router(summarize.router)
+
 # Create upload directory if it doesn't exist
 UPLOAD_DIR = Path("../uploads")
+PROCESSED_DIR = Path("../processed")
 UPLOAD_DIR.mkdir(exist_ok=True)
+PROCESSED_DIR.mkdir(exist_ok=True)
 
 @app.get("/")
 async def root():
     return {
         "message": "AI Video Summarizer API",
         "version": "1.0.0",
-        "status": "running"
+        "status": "running",
+        "features": ["upload", "transcribe", "summarize", "video processing"]
     }
 
 @app.get("/api/health")
 async def health_check():
+    # Check if models are loaded
+    models_status = {
+        "whisper": "not loaded",
+        "summarizer": "not loaded",
+        "processor": "not loaded"
+    }
+    
+    try:
+        from .models.whisper_model import WhisperTranscriber
+        models_status["whisper"] = "available"
+    except:
+        pass
+        
+    try:
+        from .models.summarizer import VideoSummarizer
+        models_status["summarizer"] = "available"
+    except:
+        pass
+        
+    try:
+        from .models.video_processor import VideoProcessor
+        models_status["processor"] = "available"
+    except:
+        pass
+    
     return {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
-        "services": {
-            "backend": "online",
-            "database": "checking",
-            "ml_models": "loading"
-        }
+        "models": models_status,
+        "upload_dir": str(UPLOAD_DIR),
+        "processed_dir": str(PROCESSED_DIR)
     }
 
 @app.post("/api/upload")
@@ -70,6 +101,7 @@ async def upload_video(file: UploadFile = File(...)):
             "original_name": file.filename,
             "size": file_size,
             "size_mb": round(file_size / (1024 * 1024), 2),
+            "path": str(filepath),
             "message": "File uploaded successfully"
         }
         
@@ -87,7 +119,8 @@ async def list_files():
                 "filename": file_path.name,
                 "size": stats.st_size,
                 "size_mb": round(stats.st_size / (1024 * 1024), 2),
-                "created": datetime.fromtimestamp(stats.st_ctime).isoformat()
+                "created": datetime.fromtimestamp(stats.st_ctime).isoformat(),
+                "path": str(file_path)
             })
     return {"files": files}
 

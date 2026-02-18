@@ -1,0 +1,11 @@
+﻿# Try different whisper implementations
+try:
+    from ..models.whisper_faster import FasterWhisperTranscriber as WhisperTranscriber
+    print("Using faster-whisper")
+except ImportError:
+    try:
+        from ..models.whisper_model import WhisperTranscriber
+        print("Using original whisper")
+    except ImportError:
+        from ..models.whisper_model_fallback import SimpleTranscriber as WhisperTranscriber
+        print("Using fallback transcriber")
