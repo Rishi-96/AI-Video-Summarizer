@@ -1,0 +1,66 @@
+[33mcommit 7a1b4e776c2348aeaadcb4fa462d954ef69f5e63[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Rishi-96 <rishij6388@gmail.com>
+Date:   Fri Feb 20 15:30:00 2026 +0530
+
+    added UI
+
+ MONGODB_SETUP.md                                   |  43 [32m+[m
+ backend/.env                                       |   2 [32m+[m[31m-[m
+ backend/app/__pycache__/main.cpython-311.pyc       | Bin [31m0[m -> [32m6160[m bytes
+ backend/app/__pycache__/main.cpython-313.pyc       | Bin [31m5540[m -> [32m5673[m bytes
+ .../app/api/__pycache__/summarize.cpython-313.pyc  | Bin [31m4851[m -> [32m7083[m bytes
+ backend/app/api/auth.py                            | 144 [32m++++[m
+ backend/app/api/chat.py                            | 221 [32m++++++[m
+ backend/app/api/summarize.py                       | 125 [32m+[m[31m--[m
+ backend/app/api/summarize.py.tmp                   |  11 [31m-[m
+ backend/app/api/videos.py                          | 145 [32m++++[m
+ .../app/core/__pycache__/database.cpython-311.pyc  | Bin [31m0[m -> [32m2684[m bytes
+ backend/app/core/config.py                         |  35 [32m+[m
+ backend/app/core/database.py                       |  36 [32m+[m
+ backend/app/core/security.py                       |  53 [32m++[m
+ .../models/__pycache__/summarizer.cpython-313.pyc  | Bin [31m4449[m -> [32m4511[m bytes
+ .../__pycache__/video_processor.cpython-313.pyc    | Bin [31m4617[m -> [32m5127[m bytes
+ .../__pycache__/whisper_faster.cpython-313.pyc     | Bin [31m0[m -> [32m3502[m bytes
+ .../__pycache__/whisper_fixed.cpython-311.pyc      | Bin [31m0[m -> [32m6089[m bytes
+ .../__pycache__/whisper_model.cpython-313.pyc      | Bin [31m4351[m -> [32m4915[m bytes
+ backend/app/models/gemini_chat.py                  |  98 [32m+++[m
+ backend/app/models/summarizer.py                   | 150 [32m++[m[31m--[m
+ backend/app/models/user.py                         |  65 [32m++[m
+ backend/app/models/video.py                        |  69 [32m++[m
+ backend/app/models/whisper_fixed.py                | 129 [32m+++[m
+ backend/install_mongodb.bat                        |  20 [32m+[m
+ ...ummary_5f3b71da-1b6b-4024-bde2-96ab2a513b24.mp4 | Bin [31m0[m -> [32m399461[m bytes
+ backend/setup_mongodb.bat                          |  53 [32m++[m
+ backend/start_server.bat                           |   4 [32m+[m
+ backend/test_fixed.py                              |  16 [32m+[m
+ .../28940e49-5a33-401a-b280-ae6b9cab49b9.mp4       | Bin [31m0[m -> [32m5833322[m bytes
+ frontend/package-lock.json                         | 881 [32m++++++++++++++++++++[m[31m-[m
+ frontend/package.json                              |   7 [32m+[m
+ frontend/postcss.config.js                         |   6 [32m+[m
+ frontend/src/App.js                                | 284 [32m++[m[31m-----[m
+ frontend/src/components/Auth/Login.jsx             | 112 [32m+++[m
+ frontend/src/components/Auth/PrivateRoute.jsx      |  22 [32m+[m
+ frontend/src/components/Auth/Register.jsx          | 258 [32m++++++[m
+ frontend/src/components/Chat/ChatInterface.jsx     | 141 [32m++++[m
+ frontend/src/components/Chat/MessageBubble.jsx     |  53 [32m++[m
+ frontend/src/components/Layout/Layout.jsx          |  15 [32m+[m
+ frontend/src/components/Layout/Navbar.jsx          |  64 [32m++[m
+ frontend/src/components/Summary/SummaryDisplay.jsx |  89 [32m+++[m
+ frontend/src/components/Summary/SummaryHistory.jsx |  67 [32m++[m
+ frontend/src/components/Video/VideoList.jsx        | 102 [32m+++[m
+ frontend/src/components/Video/VideoPlayer.jsx      | 145 [32m++++[m
+ frontend/src/components/Video/VideoUploader.jsx    |  82 [32m++[m
+ frontend/src/context/AuthContext.jsx               |  97 [32m+++[m
+ frontend/src/context/VideoContext.jsx              | 127 [32m+++[m
+ frontend/src/index.js                              |  21 [32m+[m[31m-[m
+ frontend/src/pages/ChatPage.jsx                    |  66 [32m++[m
+ frontend/src/pages/Dashboard.jsx                   |  81 [32m++[m
+ frontend/src/pages/HomePage.jsx                    | 165 [32m++++[m
+ frontend/src/pages/SummaryPage.jsx                 | 160 [32m++++[m
+ frontend/src/pages/UploadPage.jsx                  |  94 [32m+++[m
+ frontend/src/services/api.js                       |  79 [32m++[m
+ frontend/src/styles/tailwind.css                   |  64 [32m++[m
+ frontend/tailwind.config.js                        |  28 [32m+[m
+ uploads/1470afa4-cf9d-4a05-85c6-7e076d331c6f.mp4   | Bin [31m0[m -> [32m35290967[m bytes
+ uploads/a3bf7f0c-ad45-49a2-b9c3-77f8300e8e36.mp4   | Bin [31m0[m -> [32m35290967[m bytes
+ 59 files changed, 4362 insertions(+), 367 deletions(-)

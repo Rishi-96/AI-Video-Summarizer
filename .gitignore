@@ -1,0 +1,21 @@
+# Python
+venv/
+backend/venv/
+__pycache__/
+*.pyc
+
+# Uploads
+backend/uploads/
+backend/processed/
+uploads/
+*.mp4
+
+# Environment
+.env
+
+# Node
+node_modules/
+
+# Build
+dist/
+build/
