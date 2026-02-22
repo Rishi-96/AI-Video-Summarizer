@@ -1,37 +1,21 @@
-﻿from fastapi import APIRouter, HTTPException, BackgroundTasks
+﻿from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from pydantic import BaseModel
 from typing import Optional, List
 import os
 import uuid
+from datetime import datetime
 
-from ..models.whisper_model import WhisperTranscriber
+from ..core.database import get_database
+from ..core.security import get_current_user
+from ..models.whisper_faster import FasterWhisperTranscriber
 from ..models.summarizer import VideoSummarizer
-from ..models.video_processor import VideoProcessor
+from ..core.config import settings
 
-router = APIRouter(prefix="/summarize", tags=["summarize"])
+router = APIRouter()
 
-# Initialize models (lazy loading)
-transcriber = None
-summarizer = None
-processor = None
-
-def get_transcriber():
-    global transcriber
-    if transcriber is None:
-        transcriber = WhisperTranscriber("base")
-    return transcriber
-
-def get_summarizer():
-    global summarizer
-    if summarizer is None:
-        summarizer = VideoSummarizer()
-    return summarizer
-
-def get_processor():
-    global processor
-    if processor is None:
-        processor = VideoProcessor()
-    return processor
+# Initialize models
+transcriber = FasterWhisperTranscriber(settings.WHISPER_MODEL)
+summarizer = VideoSummarizer()
 
 class SummarizeRequest(BaseModel):
     video_path: str
@@ -49,10 +33,11 @@ class SummarizeResponse(BaseModel):
     language: str
 
 @router.post("/", response_model=SummarizeResponse)
-async def summarize_video(request: SummarizeRequest):
-    """
-    Summarize a video file
-    """
+async def summarize_video(
+    request: SummarizeRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """Summarize a video file"""
     try:
         # Check if video exists
         if not os.path.exists(request.video_path):
@@ -62,18 +47,22 @@ async def summarize_video(request: SummarizeRequest):
         summary_id = str(uuid.uuid4())
         
         # Get video info
-        processor = get_processor()
-        video_info = processor.get_video_info(request.video_path)
+        video_info = {
+            "path": request.video_path,
+            "filename": os.path.basename(request.video_path),
+            "size": os.path.getsize(request.video_path)
+        }
         
         # Transcribe video
-        transcriber = get_transcriber()
         segments = transcriber.get_segments(request.video_path)
         
         # Get full transcript
-        transcript = " ".join([seg['text'] for seg in segments])
+        transcript = " ".join([seg.get('text', '') for seg in segments])
+        
+        if not transcript:
+            transcript = "No transcript available for this video."
         
         # Rank segments by importance
-        summarizer = get_summarizer()
         ranked_segments = summarizer.rank_segments(segments)
         
         # Select top segments based on ratio
@@ -87,7 +76,24 @@ async def summarize_video(request: SummarizeRequest):
         )
         
         # Extract key points
-        key_points = summarizer.extract_key_sentences(transcript)
+        key_points = summarizer.extract_key_points(transcript)
+        
+        # Save to database
+        db = await get_database()
+        summary_data = {
+            "summary_id": summary_id,
+            "video_id": os.path.basename(request.video_path).split('.')[0],
+            "user_id": str(current_user["_id"]),
+            "transcript": transcript[:1000] if len(transcript) > 1000 else transcript,
+            "text_summary": text_summary,
+            "key_points": key_points,
+            "segments": selected_segments,
+            "video_info": video_info,
+            "language": "en",
+            "created_at": datetime.utcnow()
+        }
+        
+        await db.summaries.insert_one(summary_data)
         
         return SummarizeResponse(
             success=True,
@@ -103,22 +109,43 @@ async def summarize_video(request: SummarizeRequest):
     except Exception as e:
         raise HTTPException(500, str(e))
 
-@router.post("/{summary_id}/video")
-async def create_summary_video(summary_id: str, video_path: str, segments: List[dict]):
-    """
-    Create a summary video from selected segments
-    """
+@router.get("/history")
+async def get_summary_history(current_user: dict = Depends(get_current_user)):
+    """Get summary history for current user"""
     try:
-        output_path = f"../processed/summary_{summary_id}.mp4"
+        db = await get_database()
+        cursor = db.summaries.find({"user_id": str(current_user["_id"])}).sort("created_at", -1)
+        summaries = await cursor.to_list(length=50)
         
-        processor = get_processor()
-        result = processor.create_summary_video(video_path, segments, output_path)
+        for summary in summaries:
+            summary["_id"] = str(summary["_id"])
         
-        return {
-            "success": True,
-            "summary_video": output_path,
-            "message": "Summary video created"
-        }
+        return {"summaries": summaries}
         
+    except Exception as e:
+        raise HTTPException(500, str(e))
+
+@router.get("/{summary_id}")
+async def get_summary(
+    summary_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Get summary by ID"""
+    try:
+        db = await get_database()
+        summary = await db.summaries.find_one({
+            "summary_id": summary_id,
+            "user_id": str(current_user["_id"])
+        })
+        
+        if not summary:
+            raise HTTPException(404, "Summary not found")
+        
+        summary["_id"] = str(summary["_id"])
+        
+        return summary
+        
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(500, str(e))

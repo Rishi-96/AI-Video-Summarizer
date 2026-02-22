@@ -21,3 +21,24 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+# Python
+venv/
+backend/venv/
+__pycache__/
+*.pyc
+
+# Videos
+uploads/
+*.mp4
+
+# Env
+.env
+
+# Node
+node_modules/
+
+# Build
+dist/
+build/
