@@ -7,7 +7,7 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 
-from .api import summarize
+from .api import summarize, auth
 from .core.database import database
 
 app = FastAPI(title="AI Video Summarizer API")
@@ -30,6 +30,7 @@ app.add_middleware(
 )
 
 # Include routers
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(summarize.router)
 
 # Create upload directory if it doesn't exist
