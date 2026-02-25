@@ -8,8 +8,17 @@ from datetime import datetime
 from pathlib import Path
 
 from .api import summarize
+from .core.database import database
 
 app = FastAPI(title="AI Video Summarizer API")
+
+@app.on_event("startup")
+async def startup():
+    await database.connect()
+
+@app.on_event("shutdown")
+async def shutdown():
+    await database.close()
 
 # CORS setup
 app.add_middleware(

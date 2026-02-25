@@ -1,36 +1,55 @@
 from motor.motor_asyncio import AsyncIOMotorClient
+from typing import Optional
 from .config import settings
 
+
 class Database:
-    client: AsyncIOMotorClient = None
-    db = None
-    
+    def __init__(self):
+        self.client: Optional[AsyncIOMotorClient] = None
+        self.db = None
+
     async def connect(self):
-        """Connect to MongoDB"""
+        """Connect to MongoDB Atlas"""
         try:
-            self.client = AsyncIOMotorClient(settings.MONGODB_URL)
+            self.client = AsyncIOMotorClient(
+                settings.MONGODB_URL,
+                serverSelectionTimeoutMS=5000
+            )
+
+            # Test connection
+            await self.client.server_info()
+
             self.db = self.client[settings.DATABASE_NAME]
-            
+
             # Create indexes
-            await self.db.users.create_index("email", unique=True)
-            await self.db.videos.create_index("file_id", unique=True)
-            await self.db.videos.create_index("user_id")
-            await self.db.summaries.create_index("summary_id", unique=True)
-            await self.db.summaries.create_index("user_id")
-            await self.db.chat_sessions.create_index("session_id", unique=True)
-            
-            print(f"Connected to MongoDB: {settings.DATABASE_NAME}")
+            await self._create_indexes()
+
+            print(f"✅ Connected to MongoDB: {settings.DATABASE_NAME}")
+
         except Exception as e:
-            print(f"Failed to connect to MongoDB: {e}")
-            raise
-    
+            print(f"❌ MongoDB connection failed: {e}")
+            raise e
+
+    async def _create_indexes(self):
+        """Create required database indexes"""
+        await self.db.users.create_index("email", unique=True)
+        await self.db.videos.create_index("file_id", unique=True)
+        await self.db.videos.create_index("user_id")
+        await self.db.summaries.create_index("summary_id", unique=True)
+        await self.db.summaries.create_index("user_id")
+        await self.db.chat_sessions.create_index("session_id", unique=True)
+
     async def close(self):
         """Close MongoDB connection"""
         if self.client:
             self.client.close()
-            print("MongoDB connection closed")
+            print("🔌 MongoDB connection closed")
 
-db = Database()
 
+# Create single database instance
+database = Database()
+
+
+# Dependency for routes
 async def get_database():
-    return db.db
+    return database.db
