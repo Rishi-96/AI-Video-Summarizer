@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+// Dynamically use the same hostname as the frontend so it works via localhost or network IP
+const API_BASE_URL = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:8000`;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -39,7 +40,7 @@ api.interceptors.response.use(
 
 // Auth API
 export const authAPI = {
-  login: (email, password) => api.post('/api/auth/login/json', { email, password }),
+  login: (email, password) => api.post('/api/auth/login', { email, password }),
   register: (userData) => api.post('/api/auth/register', userData),
   getCurrentUser: () => api.get('/api/auth/me'),
 };
@@ -60,11 +61,11 @@ export const videosAPI = {
 
 // Summaries API
 export const summariesAPI = {
-  create: (videoPath, summaryRatio = 0.3, maxLength = 300) => 
-    api.post('/api/summarize/', { 
-      video_path: videoPath, 
+  create: (videoPath, summaryRatio = 0.3, maxLength = 300) =>
+    api.post('/api/summarize/', {
+      video_path: videoPath,
       summary_ratio: summaryRatio,
-      max_summary_length: maxLength 
+      max_summary_length: maxLength
     }),
   getHistory: () => api.get('/api/summarize/history'),
   getOne: (summaryId) => api.get(`/api/summarize/${summaryId}`),

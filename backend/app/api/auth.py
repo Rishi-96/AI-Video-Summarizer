@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from datetime import timedelta
+from bson import ObjectId
 from ..models.user import UserCreate, UserLogin, UserResponse, Token
 from ..core.security import verify_password, get_password_hash, create_access_token, get_current_user
 from ..core.database import get_database
@@ -16,7 +17,12 @@ async def get_user_by_email(email: str):
 async def get_user_by_id(user_id: str):
     """Get user by ID"""
     db = await get_database()
-    user = await db.users.find_one({"_id": user_id})
+    # Convert string ID to ObjectId for MongoDB lookup
+    try:
+        obj_id = ObjectId(user_id)
+    except Exception:
+        return None
+    user = await db.users.find_one({"_id": obj_id})
     return user
 
 @router.post("/register", response_model=Token)

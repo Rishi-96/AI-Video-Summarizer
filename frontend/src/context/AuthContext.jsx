@@ -40,38 +40,44 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
+      console.log('[Auth] Logging in:', email);
       const response = await authAPI.login(email, password);
+      console.log('[Auth] Login response:', response.data);
       const { access_token } = response.data;
-      
+
       localStorage.setItem('token', access_token);
       setToken(access_token);
-      
+
       await fetchUser();
-      
+
       toast.success('Logged in successfully!');
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.detail || 'Login failed';
-      toast.error(message);
+      console.error('[Auth] Login error:', error.response?.status, error.response?.data || error.message);
+      const message = error.response?.data?.detail || error.message || 'Login failed';
+      toast.error(typeof message === 'string' ? message : 'Login failed. Check console.');
       return { success: false, error: message };
     }
   };
 
   const register = async (userData) => {
     try {
+      console.log('[Auth] Registering with:', { email: userData.email, username: userData.username });
       const response = await authAPI.register(userData);
+      console.log('[Auth] Register response:', response.data);
       const { access_token } = response.data;
-      
+
       localStorage.setItem('token', access_token);
       setToken(access_token);
-      
+
       await fetchUser();
-      
+
       toast.success('Registered successfully!');
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.detail || 'Registration failed';
-      toast.error(message);
+      console.error('[Auth] Register error:', error.response?.status, error.response?.data || error.message);
+      const message = error.response?.data?.detail || error.message || 'Registration failed';
+      toast.error(typeof message === 'string' ? message : 'Registration failed. Check console for details.');
       return { success: false, error: message };
     }
   };
