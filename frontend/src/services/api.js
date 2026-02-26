@@ -61,13 +61,13 @@ export const videosAPI = {
 // Summaries API
 export const summariesAPI = {
   create: (videoPath, summaryRatio = 0.3, maxLength = 300) => 
-    api.post('/api/summarize/', { 
+    api.post('/api/summaries/', { 
       video_path: videoPath, 
       summary_ratio: summaryRatio,
       max_summary_length: maxLength 
     }),
-  getHistory: () => api.get('/api/summarize/history'),
-  getOne: (summaryId) => api.get(`/api/summarize/${summaryId}`),
+  getHistory: () => api.get('/api/summaries/history'),
+  getOne: (summaryId) => api.get(`/api/summaries/${summaryId}`),
 };
 
 // Chat API

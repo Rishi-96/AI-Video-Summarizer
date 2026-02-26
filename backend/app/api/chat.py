@@ -32,28 +32,19 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 @router.post("/session/start")
-async def start_chat_session(
-    summary_id: str,
-    current_user: dict = Depends(get_current_user)
-):
-    """Start a new chat session"""
+async def start_chat_session(summary_id: str):
+    """Start a new chat session (no auth for testing)"""
     try:
         db = await get_database()
         
         # Get summary
-        summary = await db.summaries.find_one({
-            "summary_id": summary_id,
-            "user_id": str(current_user["_id"])
-        })
+        summary = await db.summaries.find_one({"summary_id": summary_id})
         
         if not summary:
             raise HTTPException(404, "Summary not found")
         
         # Check if session already exists
-        existing_session = await db.chat_sessions.find_one({
-            "summary_id": summary_id,
-            "user_id": str(current_user["_id"])
-        })
+        existing_session = await db.chat_sessions.find_one({"summary_id": summary_id})
         
         if existing_session:
             return {
@@ -79,7 +70,7 @@ async def start_chat_session(
         # Save to database
         session_data = {
             "session_id": session_id,
-            "user_id": str(current_user["_id"]),
+            "user_id": "test_user",
             "video_id": summary.get("video_id", ""),
             "summary_id": summary_id,
             "messages": [],
@@ -98,20 +89,13 @@ async def start_chat_session(
         raise HTTPException(500, str(e))
 
 @router.post("/session/{session_id}/ask")
-async def ask_question(
-    session_id: str,
-    question: str,
-    current_user: dict = Depends(get_current_user)
-):
-    """Ask a question in a chat session"""
+async def ask_question(session_id: str, question: str):
+    """Ask a question in a chat session (no auth for testing)"""
     try:
         db = await get_database()
         
         # Get session
-        session = await db.chat_sessions.find_one({
-            "session_id": session_id,
-            "user_id": str(current_user["_id"])
-        })
+        session = await db.chat_sessions.find_one({"session_id": session_id})
         
         if not session:
             raise HTTPException(404, "Chat session not found")
@@ -121,9 +105,7 @@ async def ask_question(
         
         if not gemini_chat:
             # Recreate if lost
-            summary = await db.summaries.find_one({
-                "summary_id": session["summary_id"]
-            })
+            summary = await db.summaries.find_one({"summary_id": session["summary_id"]})
             
             gemini_chat = GeminiChat(settings.GEMINI_API_KEY)
             gemini_chat.set_context(

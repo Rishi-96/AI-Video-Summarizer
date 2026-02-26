@@ -16,27 +16,30 @@ router = APIRouter()
 processor = VideoProcessor()
 
 @router.post("/upload")
-async def upload_video(
-    background_tasks: BackgroundTasks,
-    file: UploadFile = File(...),
-    current_user: dict = Depends(get_current_user)
-):
-    """Upload a video file"""
+async def upload_video(file: UploadFile = File(...)):
+    """Upload a video file (no auth for testing)"""
     try:
         # Validate file type
-        allowed_types = ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska']
-        if file.content_type not in allowed_types:
-            raise HTTPException(400, f"File type not allowed. Allowed types: {allowed_types}")
+        allowed_extensions = ['.mp4', '.avi', '.mov', '.mkv']
+        file_extension = os.path.splitext(file.filename)[1].lower()
+        
+        if file_extension not in allowed_extensions:
+            raise HTTPException(400, f"File type not allowed. Allowed: {allowed_extensions}")
         
         # Generate unique filename
         file_id = str(uuid.uuid4())
-        file_extension = os.path.splitext(file.filename)[1]
         filename = f"{file_id}{file_extension}"
-        filepath = os.path.join(settings.UPLOAD_DIR, filename)
+        
+        # Create upload directory
+        upload_dir = Path("uploads")
+        upload_dir.mkdir(exist_ok=True, parents=True)
+        
+        filepath = upload_dir / filename
         
         # Save file
         with open(filepath, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
+            content = await file.read()
+            buffer.write(content)
         
         # Get file size
         file_size = os.path.getsize(filepath)
@@ -45,10 +48,10 @@ async def upload_video(
         db = await get_database()
         video_data = {
             "file_id": file_id,
-            "user_id": str(current_user["_id"]),
+            "user_id": "test_user",
             "filename": filename,
             "original_name": file.filename,
-            "file_path": filepath,
+            "file_path": str(filepath),
             "file_size": file_size,
             "status": "uploaded",
             "created_at": datetime.utcnow()
@@ -66,15 +69,20 @@ async def upload_video(
             "message": "File uploaded successfully"
         }
         
+    except HTTPException:
+        raise
     except Exception as e:
+        print(f"Upload error: {e}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(500, str(e))
 
 @router.get("/")
-async def get_videos(current_user: dict = Depends(get_current_user)):
-    """Get all videos for current user"""
+async def get_videos():
+    """Get all videos (no auth for testing)"""
     try:
         db = await get_database()
-        cursor = db.videos.find({"user_id": str(current_user["_id"])}).sort("created_at", -1)
+        cursor = db.videos.find({}).sort("created_at", -1)
         videos = await cursor.to_list(length=100)
         
         # Convert ObjectId to string

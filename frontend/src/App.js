@@ -49,37 +49,29 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<HomePage />} />
         
-        {/* Protected routes */}
+        {/* Protected routes - Temporarily open without auth */}
         <Route path="/dashboard" element={
-          <PrivateRoute>
             <Layout>
               <Dashboard />
             </Layout>
-          </PrivateRoute>
         } />
         
         <Route path="/upload" element={
-          <PrivateRoute>
             <Layout>
               <UploadPage />
             </Layout>
-          </PrivateRoute>
         } />
         
         <Route path="/summary/:summaryId" element={
-          <PrivateRoute>
             <Layout>
               <SummaryPage />
             </Layout>
-          </PrivateRoute>
         } />
         
         <Route path="/chat/:sessionId" element={
-          <PrivateRoute>
             <Layout>
               <ChatPage />
             </Layout>
-          </PrivateRoute>
         } />
         
         <Route path="*" element={<Navigate to="/" />} />

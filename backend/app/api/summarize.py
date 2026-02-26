@@ -11,7 +11,7 @@ from ..models.whisper_faster import FasterWhisperTranscriber
 from ..models.summarizer import VideoSummarizer
 from ..core.config import settings
 
-router = APIRouter()
+router = APIRouter(prefix="/api/summaries", tags=["summaries"])
 
 # Initialize models
 transcriber = FasterWhisperTranscriber(settings.WHISPER_MODEL)
@@ -110,11 +110,11 @@ async def summarize_video(
         raise HTTPException(500, str(e))
 
 @router.get("/history")
-async def get_summary_history(current_user: dict = Depends(get_current_user)):
-    """Get summary history for current user"""
+async def get_summary_history():
+    """Get all summaries (no auth for testing)"""
     try:
         db = await get_database()
-        cursor = db.summaries.find({"user_id": str(current_user["_id"])}).sort("created_at", -1)
+        cursor = db.summaries.find({}).sort("created_at", -1)
         summaries = await cursor.to_list(length=50)
         
         for summary in summaries:

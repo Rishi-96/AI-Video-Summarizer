@@ -21,31 +21,13 @@ const HomePage = () => {
             </p>
             
             <div className="flex justify-center space-x-4">
-              {isAuthenticated ? (
-                <Link
-                  to="/dashboard"
-                  className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
-                >
-                  Go to Dashboard
-                  <FiArrowRight className="ml-2" />
-                </Link>
-              ) : (
-                <>
-                  <Link
-                    to="/register"
-                    className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
-                  >
-                    Get Started
-                    <FiArrowRight className="ml-2" />
-                  </Link>
-                  <Link
-                    to="/login"
-                    className="inline-flex items-center px-6 py-3 bg-gray-700 text-white font-medium rounded-lg hover:bg-gray-600 transition"
-                  >
-                    Sign In
-                  </Link>
-                </>
-              )}
+              <Link
+                to="/dashboard"
+                className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
+              >
+                Get Started
+                <FiArrowRight className="ml-2" />
+              </Link>
             </div>
           </div>
         </div>
@@ -141,10 +123,10 @@ const HomePage = () => {
             Join thousands of users who save time with AI-powered video summaries
           </p>
           <Link
-            to="/register"
+            to="/dashboard"
             className="inline-flex items-center px-8 py-4 bg-white text-blue-600 font-medium rounded-lg hover:bg-gray-100 transition text-lg"
           >
-            Create Free Account
+            Get Started
             <FiArrowRight className="ml-2" />
           </Link>
         </div>
