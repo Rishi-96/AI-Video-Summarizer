@@ -7,36 +7,23 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 
-from .api import auth
-
-# Try to import summarize router - it depends on heavy ML packages (torch, transformers)
-# that may not be installed. Server should still start for auth routes to work.
-try:
-    from .api import summarize
-    _summarize_available = True
-except ImportError as e:
-    print(f"[WARNING] Summarize module not available (missing ML packages): {e}")
-    _summarize_available = False
+from .api import summarize, auth
 from .core.database import database
 
 app = FastAPI(title="AI Video Summarizer API")
 
 @app.on_event("startup")
 async def startup():
-    try:
-        await database.connect()
-    except Exception as e:
-        print(f"[WARNING] Server starting without database: {e}")
-        print("[WARNING] Auth routes will return 503 until database is connected.")
+    await database.connect()
 
 @app.on_event("shutdown")
 async def shutdown():
     await database.close()
 
-# CORS setup - allow frontend from any port
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -44,8 +31,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
-if _summarize_available:
-    app.include_router(summarize.router)
+app.include_router(summarize.router)
 
 # Create upload directory if it doesn't exist
 UPLOAD_DIR = Path("../uploads")

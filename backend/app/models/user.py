@@ -21,7 +21,7 @@ class UserResponse(BaseModel):
     username: str
     full_name: Optional[str]
     is_active: bool
-    created_at: Optional[datetime] = None
+    created_at: datetime
     
     class Config:
         from_attributes = True
