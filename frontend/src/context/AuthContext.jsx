@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { authAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -17,15 +17,15 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  useEffect(() => {
-    if (token) {
-      fetchUser();
-    } else {
-      setLoading(false);
-    }
-  }, [token]);
+  const logout = useCallback(() => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setToken(null);
+    setUser(null);
+    toast.success('Logged out successfully!');
+  }, []);
 
-  const fetchUser = async () => {
+  const fetchUser = useCallback(async () => {
     try {
       const response = await authAPI.getCurrentUser();
       setUser(response.data);
@@ -36,18 +36,27 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [logout]);
+
+  useEffect(() => {
+    if (token) {
+      fetchUser();
+    } else {
+      setLoading(false);
+    }
+  }, [token, fetchUser]);
+
 
   const login = async (email, password) => {
     try {
       const response = await authAPI.login(email, password);
       const { access_token } = response.data;
-      
+
       localStorage.setItem('token', access_token);
       setToken(access_token);
-      
+
       await fetchUser();
-      
+
       toast.success('Logged in successfully!');
       return { success: true };
     } catch (error) {
@@ -61,12 +70,12 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await authAPI.register(userData);
       const { access_token } = response.data;
-      
+
       localStorage.setItem('token', access_token);
       setToken(access_token);
-      
+
       await fetchUser();
-      
+
       toast.success('Registered successfully!');
       return { success: true };
     } catch (error) {
@@ -74,14 +83,6 @@ export const AuthProvider = ({ children }) => {
       toast.error(message);
       return { success: false, error: message };
     }
-  };
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setToken(null);
-    setUser(null);
-    toast.success('Logged out successfully!');
   };
 
   const value = {

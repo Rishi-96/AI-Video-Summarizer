@@ -1,7 +1,9 @@
+from pathlib import Path
 from pydantic_settings import BaseSettings
 from pydantic import field_validator
 import os
 import logging
+
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +49,10 @@ class Settings(BaseSettings):
 
     class Config:
         case_sensitive = True
-        env_file = ".env"
+        extra = "ignore"          # silently ignore unknown env vars (e.g. legacy keys)
+        # Resolve .env relative to this file so it's found regardless of CWD
+        env_file = str(Path(__file__).resolve().parent.parent.parent / ".env")
+        env_file_encoding = "utf-8"
 
 
 settings = Settings()

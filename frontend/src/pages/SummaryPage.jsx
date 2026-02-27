@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiArrowLeft, FiMessageCircle, FiDownload, FiLoader } from 'react-icons/fi';
 import { summariesAPI, chatAPI } from '../services/api';
@@ -16,11 +16,7 @@ const SummaryPage = () => {
   const [loading, setLoading] = useState(true);
   const [startingChat, setStartingChat] = useState(false);
 
-  useEffect(() => {
-    fetchSummary();
-  }, [summaryId]);
-
-  const fetchSummary = async () => {
+  const fetchSummary = useCallback(async () => {
     try {
       const response = await summariesAPI.getOne(summaryId);
       setSummary(response.data);
@@ -30,7 +26,11 @@ const SummaryPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [summaryId]);
+
+  useEffect(() => {
+    fetchSummary();
+  }, [fetchSummary]);
 
   const handleStartChat = async () => {
     setStartingChat(true);
