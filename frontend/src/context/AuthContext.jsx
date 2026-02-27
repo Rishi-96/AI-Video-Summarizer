@@ -60,7 +60,8 @@ export const AuthProvider = ({ children }) => {
       toast.success('Logged in successfully!');
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.detail || 'Login failed';
+      const detail = error.response?.data?.detail;
+      const message = typeof detail === 'string' ? detail : detail?.message || 'Login failed';
       toast.error(message);
       return { success: false, error: message };
     }
@@ -79,7 +80,8 @@ export const AuthProvider = ({ children }) => {
       toast.success('Registered successfully!');
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.detail || 'Registration failed';
+      const detail = error.response?.data?.detail;
+      const message = typeof detail === 'string' ? detail : detail?.message || 'Registration failed';
       toast.error(message);
       return { success: false, error: message };
     }
