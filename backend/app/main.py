@@ -10,6 +10,20 @@ from pathlib import Path
 ssl._create_default_https_context = ssl._create_unverified_context
 os.environ["CURL_CA_BUNDLE"] = ""
 
+try:
+    import urllib3
+    import requests
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    
+    # HuggingFace downloads bypass
+    old_request = requests.Session.request
+    def new_request(*args, **kwargs):
+        kwargs['verify'] = False
+        return old_request(*args, **kwargs)
+    requests.Session.request = new_request
+except ImportError:
+    pass
+
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
