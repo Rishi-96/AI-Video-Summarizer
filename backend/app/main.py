@@ -1,8 +1,15 @@
 ﻿import logging
 import uuid
+import ssl
+import os
 from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
+
+# Fix for corporate proxies/Zscaler injecting self-signed certificates
+ssl._create_default_https_context = ssl._create_unverified_context
+os.environ["CURL_CA_BUNDLE"] = ""
+
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -49,8 +56,8 @@ async def lifespan(app: FastAPI):
     global _whisper_instance, _summarizer_instance
     if _summarize_available:
         try:
-            from .models.whisper_faster import FasterWhisperTranscriber
-            _whisper_instance = FasterWhisperTranscriber(settings.WHISPER_MODEL)
+            from .models.whisper_model import WhisperTranscriber
+            _whisper_instance = WhisperTranscriber(model_size=settings.WHISPER_MODEL)
             app.state.whisper = _whisper_instance
             logger.info("Whisper model loaded at startup")
         except Exception as e:
