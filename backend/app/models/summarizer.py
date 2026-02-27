@@ -1,37 +1,47 @@
-﻿from transformers import pipeline
-from sentence_transformers import SentenceTransformer
-import torch
-import numpy as np
+﻿import logging
 from typing import List, Dict
+
+logger = logging.getLogger(__name__)
+
+try:
+    import torch
+    import numpy as np
+    HAS_ML = True
+except ImportError:
+    HAS_ML = False
 
 
 class VideoSummarizer:
     def __init__(self):
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.use_mock = False
+        self.device = "cuda" if HAS_ML and torch.cuda.is_available() else "cpu"
+        self.use_mock = not HAS_ML
+        self.summarizer = None
+        self.embedder = None
 
-        try:
-            # Use FAST and valid summarization model
-            self.summarizer = pipeline(
-                "summarization",
-                model="sshleifer/distilbart-cnn-12-6",  # Fast & Stable
-                device=0 if self.device == "cuda" else -1
-            )
-            print(f"✅ Summarizer loaded on {self.device}")
-        except Exception as e:
-            print(f"⚠️ Error loading summarizer: {e}")
-            self.use_mock = True
+        if HAS_ML:
+            try:
+                from transformers import pipeline
+                # Use FAST and valid summarization model
+                self.summarizer = pipeline(
+                    "summarization",
+                    model="sshleifer/distilbart-cnn-12-6",  # Fast & Stable
+                    device=0 if self.device == "cuda" else -1
+                )
+                logger.info("Summarizer loaded on %s", self.device)
+            except Exception as e:
+                logger.warning("Error loading summarizer: %s", e)
+                self.use_mock = True
 
-        try:
-            self.embedder = SentenceTransformer(
-                "all-MiniLM-L6-v2",
-                device=self.device
-            )
-            print("✅ Sentence transformer loaded")
-        except Exception as e:
-            print(f"⚠️ Error loading sentence transformer: {e}")
-            self.embedder = None
-
+            try:
+                from sentence_transformers import SentenceTransformer
+                self.embedder = SentenceTransformer(
+                    "all-MiniLM-L6-v2",
+                    device=self.device
+                )
+                logger.info("Sentence transformer loaded")
+            except Exception as e:
+                logger.warning("Error loading sentence transformer: %s", e)
+                self.embedder = None
     # -------------------------------
     # TEXT CHUNKING (CRITICAL FIX)
     # -------------------------------
@@ -89,7 +99,7 @@ class VideoSummarizer:
             return combined
 
         except Exception as e:
-            print(f"Summarization failed: {e}")
+            logger.warning("Summarization failed: %s", e)
             return text[:300] + "..."
 
     # -------------------------------
@@ -124,7 +134,7 @@ class VideoSummarizer:
             return [sentences[i] for i in top_indices]
 
         except Exception as e:
-            print(f"Key point extraction failed: {e}")
+            logger.warning("Key point extraction failed: %s", e)
             return sentences[:num_points]
 
     # -------------------------------
@@ -161,5 +171,5 @@ class VideoSummarizer:
             )
 
         except Exception as e:
-            print(f"Ranking failed: {e}")
+            logger.warning("Segment ranking failed: %s", e)
             return segments

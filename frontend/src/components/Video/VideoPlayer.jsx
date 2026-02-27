@@ -10,16 +10,25 @@ const VideoPlayer = ({ url, title, onProgress }) => {
   const [duration, setDuration] = React.useState(0);
   const playerRef = React.useRef(null);
 
-  const handleProgress = (state) => {
-    setPlayed(state.played);
+  const handleTimeUpdate = (e) => {
+    const current = e.target.currentTime;
+    const dur = e.target.duration || duration || 1;
+    setPlayed(current / dur);
     if (onProgress) {
-      onProgress(state);
+      onProgress({ played: current / dur, playedSeconds: current });
     }
   };
 
+  const handleDurationChange = (e) => {
+    setDuration(e.target.duration);
+  };
+
   const handleSeekChange = (e) => {
-    setPlayed(parseFloat(e.target.value));
-    playerRef.current.seekTo(parseFloat(e.target.value));
+    const fraction = parseFloat(e.target.value);
+    setPlayed(fraction);
+    if (playerRef.current && duration > 0) {
+      playerRef.current.currentTime = fraction * duration;
+    }
   };
 
   const formatTime = (seconds) => {
@@ -38,15 +47,15 @@ const VideoPlayer = ({ url, title, onProgress }) => {
       <div className="relative pt-[56.25%]"> {/* 16:9 Aspect Ratio */}
         <ReactPlayer
           ref={playerRef}
-          url={url}
+          src={url}
           width="100%"
           height="100%"
           style={{ position: 'absolute', top: 0, left: 0 }}
           playing={playing}
           volume={volume}
           muted={muted}
-          onProgress={handleProgress}
-          onDuration={setDuration}
+          onTimeUpdate={handleTimeUpdate}
+          onDurationChange={handleDurationChange}
           config={{
             file: {
               attributes: {
@@ -119,9 +128,10 @@ const VideoPlayer = ({ url, title, onProgress }) => {
             onClick={() => {
               const player = playerRef.current;
               if (player) {
-                const internalPlayer = player.getInternalPlayer();
-                if (internalPlayer?.requestFullscreen) {
-                  internalPlayer.requestFullscreen();
+                if (player.requestFullscreen) {
+                  player.requestFullscreen();
+                } else if (player.webkitRequestFullscreen) {
+                  player.webkitRequestFullscreen();
                 }
               }
             }}

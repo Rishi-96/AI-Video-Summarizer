@@ -1,35 +1,59 @@
 from pydantic_settings import BaseSettings
-from dotenv import load_dotenv
+from pydantic import field_validator
 import os
+import logging
 
-load_dotenv()
+logger = logging.getLogger(__name__)
+
 
 class Settings(BaseSettings):
     # MongoDB
-    MONGODB_URL: str = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
-    DATABASE_NAME: str = os.getenv("DATABASE_NAME", "video_summarizer")
-    
-    # Security
-    SECRET_KEY: str = os.getenv("SECRET_KEY", "your-secret-key-here")
-    ALGORITHM: str = os.getenv("ALGORITHM", "HS256")
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
-    
+    MONGODB_URL: str = "mongodb://localhost:27017"
+    DATABASE_NAME: str = "video_summarizer"
+
+    # Security — no default; must be supplied via .env
+    SECRET_KEY: str
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+
     # API Keys
-    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-    
+    GROQ_API_KEY: str = ""
+
     # File Upload
-    MAX_FILE_SIZE: int = int(os.getenv("MAX_FILE_SIZE", "524288000"))
-    UPLOAD_DIR: str = os.getenv("UPLOAD_DIR", "uploads")
-    PROCESSED_DIR: str = os.getenv("PROCESSED_DIR", "processed")
-    
+    MAX_FILE_SIZE_MB: int = 500                    # checked before write
+    UPLOAD_DIR: str = "uploads"
+    PROCESSED_DIR: str = "processed"
+
     # Model Settings
-    WHISPER_MODEL: str = os.getenv("WHISPER_MODEL", "tiny")
-    SUMMARY_RATIO: float = float(os.getenv("SUMMARY_RATIO", "0.3"))
-    
-    # Frontend
-    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:3000")
-    
+    WHISPER_MODEL: str = "tiny"
+    SUMMARY_RATIO: float = 0.3
+
+    # Logging
+    LOG_LEVEL: str = "INFO"
+
+    # Frontend — used for strict CORS
+    FRONTEND_URL: str = "http://localhost:3000"
+
+    @field_validator("SECRET_KEY")
+    @classmethod
+    def secret_key_must_be_strong(cls, v: str) -> str:
+        if len(v) < 32:
+            raise ValueError(
+                "SECRET_KEY must be at least 32 characters. "
+                "Generate one with: python -c \"import secrets; print(secrets.token_hex(32))\""
+            )
+        return v
+
     class Config:
         case_sensitive = True
+        env_file = ".env"
+
 
 settings = Settings()
+
+# Apply log level from settings
+logging.basicConfig(
+    level=getattr(logging, settings.LOG_LEVEL.upper(), logging.INFO),
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+)

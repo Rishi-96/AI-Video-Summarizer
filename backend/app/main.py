@@ -1,158 +1,148 @@
-﻿from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-import os
+﻿import logging
 import uuid
-import shutil
+from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
 
-from .api import auth
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
-# Try to import summarize router - it depends on heavy ML packages (torch, transformers)
-# that may not be installed. Server should still start for auth routes to work.
-try:
-    from .api import summarize
-    _summarize_available = True
-except ImportError as e:
-    print(f"[WARNING] Summarize module not available (missing ML packages): {e}")
-    _summarize_available = False
+from .api import auth, videos, chat
+from .core.config import settings
 from .core.database import database
 
-app = FastAPI(title="AI Video Summarizer API")
+logger = logging.getLogger(__name__)
 
-@app.on_event("startup")
-async def startup():
+# ---------------------------------------------------------------------------
+# Optional heavy ML modules — server still starts without them
+# ---------------------------------------------------------------------------
+_summarize_available = False
+try:
+    from .api import summarize as summarize_router
+    _summarize_available = True
+except ImportError as e:
+    logger.warning("Summarize module not available (missing ML packages): %s", e)
+
+# ---------------------------------------------------------------------------
+# ML singleton state (populated during lifespan startup)
+# ---------------------------------------------------------------------------
+_whisper_instance = None
+_summarizer_instance = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan: startup + shutdown."""
+    # ---- startup ----
+    # Database
     try:
         await database.connect()
     except Exception as e:
-        print(f"[WARNING] Server starting without database: {e}")
-        print("[WARNING] Auth routes will return 503 until database is connected.")
+        logger.warning("Server starting without database: %s", e)
 
-@app.on_event("shutdown")
-async def shutdown():
+    # Ensure upload/processed directories exist
+    Path(settings.UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
+    Path(settings.PROCESSED_DIR).mkdir(parents=True, exist_ok=True)
+
+    # Pre-load ML models as app-level singletons
+    global _whisper_instance, _summarizer_instance
+    if _summarize_available:
+        try:
+            from .models.whisper_faster import FasterWhisperTranscriber
+            _whisper_instance = FasterWhisperTranscriber(settings.WHISPER_MODEL)
+            app.state.whisper = _whisper_instance
+            logger.info("Whisper model loaded at startup")
+        except Exception as e:
+            logger.warning("Could not pre-load Whisper: %s", e)
+            app.state.whisper = None
+
+        try:
+            from .models.summarizer import VideoSummarizer
+            _summarizer_instance = VideoSummarizer()
+            app.state.summarizer = _summarizer_instance
+            logger.info("Summarizer model loaded at startup")
+        except Exception as e:
+            logger.warning("Could not pre-load Summarizer: %s", e)
+            app.state.summarizer = None
+    else:
+        app.state.whisper = None
+        app.state.summarizer = None
+
+    yield
+
+    # ---- shutdown ----
     await database.close()
 
-# CORS setup - allow frontend from any port
+
+# ---------------------------------------------------------------------------
+# App
+# ---------------------------------------------------------------------------
+app = FastAPI(
+    title="AI Video Summarizer API",
+    version="2.0.0",
+    lifespan=lifespan,
+)
+
+# ---------------------------------------------------------------------------
+# CORS — scoped to configured FRONTEND_URL only
+# ---------------------------------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[settings.FRONTEND_URL],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Include routers
-app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+# ---------------------------------------------------------------------------
+# Global exception handler — prevent stack trace leakage
+# ---------------------------------------------------------------------------
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    error_id = str(uuid.uuid4())[:8]
+    logger.exception("Unhandled exception [%s]: %s", error_id, exc)
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": {
+                "code": "INTERNAL_SERVER_ERROR",
+                "message": "An unexpected error occurred. Please try again.",
+                "error_id": error_id,
+            }
+        },
+    )
+
+# ---------------------------------------------------------------------------
+# Routers
+# ---------------------------------------------------------------------------
+app.include_router(auth.router,   prefix="/api/auth",     tags=["auth"])
+app.include_router(videos.router, prefix="/api/videos",   tags=["videos"])
+app.include_router(chat.router,   prefix="/api/chat",     tags=["chat"])
 if _summarize_available:
-    app.include_router(summarize.router)
+    app.include_router(summarize_router.router, prefix="/api/summarize", tags=["summarize"])
 
-# Create upload directory if it doesn't exist
-UPLOAD_DIR = Path("../uploads")
-PROCESSED_DIR = Path("../processed")
-UPLOAD_DIR.mkdir(exist_ok=True)
-PROCESSED_DIR.mkdir(exist_ok=True)
-
+# ---------------------------------------------------------------------------
+# Utility endpoints
+# ---------------------------------------------------------------------------
 @app.get("/")
 async def root():
     return {
         "message": "AI Video Summarizer API",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "status": "running",
-        "features": ["upload", "transcribe", "summarize", "video processing"]
     }
+
 
 @app.get("/api/health")
 async def health_check():
-    # Check if models are loaded
     models_status = {
-        "whisper": "not loaded",
-        "summarizer": "not loaded",
-        "processor": "not loaded"
+        "whisper": "loaded" if getattr(app.state, "whisper", None) else "unavailable",
+        "summarizer": "loaded" if getattr(app.state, "summarizer", None) else "unavailable",
     }
-    
-    try:
-        from .models.whisper_model import WhisperTranscriber
-        models_status["whisper"] = "available"
-    except:
-        pass
-        
-    try:
-        from .models.summarizer import VideoSummarizer
-        models_status["summarizer"] = "available"
-    except:
-        pass
-        
-    try:
-        from .models.video_processor import VideoProcessor
-        models_status["processor"] = "available"
-    except:
-        pass
-    
     return {
         "status": "healthy",
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": datetime.utcnow().isoformat(),
         "models": models_status,
-        "upload_dir": str(UPLOAD_DIR),
-        "processed_dir": str(PROCESSED_DIR)
+        "upload_dir": settings.UPLOAD_DIR,
     }
-
-@app.post("/api/upload")
-async def upload_video(file: UploadFile = File(...)):
-    try:
-        # Validate file type
-        allowed_types = ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska']
-        if file.content_type not in allowed_types:
-            raise HTTPException(400, f"File type not allowed. Allowed types: {allowed_types}")
-        
-        # Generate unique filename
-        file_id = str(uuid.uuid4())
-        file_extension = os.path.splitext(file.filename)[1]
-        filename = f"{file_id}{file_extension}"
-        filepath = UPLOAD_DIR / filename
-        
-        # Save file
-        with open(filepath, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-        
-        # Get file size
-        file_size = os.path.getsize(filepath)
-        
-        return {
-            "success": True,
-            "file_id": file_id,
-            "filename": filename,
-            "original_name": file.filename,
-            "size": file_size,
-            "size_mb": round(file_size / (1024 * 1024), 2),
-            "path": str(filepath),
-            "message": "File uploaded successfully"
-        }
-        
-    except Exception as e:
-        raise HTTPException(500, str(e))
-
-@app.get("/api/files")
-async def list_files():
-    """List all uploaded files"""
-    files = []
-    for file_path in UPLOAD_DIR.glob("*"):
-        if file_path.is_file():
-            stats = file_path.stat()
-            files.append({
-                "filename": file_path.name,
-                "size": stats.st_size,
-                "size_mb": round(stats.st_size / (1024 * 1024), 2),
-                "created": datetime.fromtimestamp(stats.st_ctime).isoformat(),
-                "path": str(file_path)
-            })
-    return {"files": files}
-
-@app.delete("/api/files/{filename}")
-async def delete_file(filename: str):
-    """Delete an uploaded file"""
-    filepath = UPLOAD_DIR / filename
-    if filepath.exists():
-        filepath.unlink()
-        return {"success": True, "message": f"File {filename} deleted"}
-    raise HTTPException(404, "File not found")

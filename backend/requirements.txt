@@ -1,32 +1,40 @@
-﻿# -------- Backend --------
+﻿# ─── Web Framework ───────────────────────────────────────────────────────────
 fastapi==0.110.0
 uvicorn[standard]==0.29.0
 python-multipart==0.0.9
 python-dotenv==1.0.1
+pydantic-settings==2.2.1
+aiofiles==23.2.1
 
-# -------- Database --------
+# ─── Database ────────────────────────────────────────────────────────────────
 motor==3.3.2
 pymongo==4.6.1
 
-# -------- AI --------
+# ─── Auth ────────────────────────────────────────────────────────────────────
+python-jose[cryptography]==3.3.0
+bcrypt==4.1.2
+passlib[bcrypt]==1.7.4
+email-validator==2.1.1
+
+# ─── AI / ML ─────────────────────────────────────────────────────────────────
 torch==2.3.1
 torchvision==0.18.1
 torchaudio==2.3.1
-
 transformers==4.41.2
 sentence-transformers==2.7.0
+openai-whisper==20231117
+groq==0.9.0
 
-# -------- Video --------
+# ─── Video Processing ────────────────────────────────────────────────────────
 moviepy==1.0.3
 opencv-python-headless==4.10.0.84
 ffmpeg-python==0.2.0
 Pillow==10.3.0
+yt-dlp==2024.5.27
 
-# -------- Scientific --------
+# ─── Audio ───────────────────────────────────────────────────────────────────
+soundfile==0.12.1
+
+# ─── Scientific ──────────────────────────────────────────────────────────────
 numpy==1.26.4
 scipy==1.10.1
-
-pydantic-settings
-python-jose[cryptography]
-passlib[bcrypt]
-email-validator

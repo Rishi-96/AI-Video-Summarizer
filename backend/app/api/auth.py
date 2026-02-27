@@ -1,46 +1,60 @@
-from fastapi import APIRouter, HTTPException, Depends, status
-from datetime import timedelta
-from bson import ObjectId
-from ..models.user import UserCreate, UserLogin, UserResponse, Token
-from ..core.security import verify_password, get_password_hash, create_access_token, get_current_user
-from ..core.database import get_database
-from ..core.config import settings
+import logging
+from datetime import datetime, timedelta, timezone
 
+from bson import ObjectId
+from fastapi import APIRouter, Cookie, HTTPException, Depends, Response, status
+
+from ..core.config import settings
+from ..core.database import get_database
+from ..core.security import (
+    create_access_token,
+    create_refresh_token,
+    get_current_user,
+    get_current_user_from_refresh,
+    get_password_hash,
+    verify_password,
+)
+from ..models.user import Token, TokenPair, UserCreate, UserLogin, UserResponse
+
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
 async def get_user_by_email(email: str):
-    """Get user by email"""
     db = await get_database()
-    user = await db.users.find_one({"email": email})
-    return user
+    return await db.users.find_one({"email": email})
+
 
 async def get_user_by_id(user_id: str):
-    """Get user by ID"""
     db = await get_database()
-    # Convert string ID to ObjectId for MongoDB lookup
     try:
         obj_id = ObjectId(user_id)
     except Exception:
         return None
-    user = await db.users.find_one({"_id": obj_id})
-    return user
+    return await db.users.find_one({"_id": obj_id})
 
-@router.post("/register", response_model=Token)
-async def register(user_data: UserCreate):
-    """Register a new user"""
+
+# ---------------------------------------------------------------------------
+# Routes
+# ---------------------------------------------------------------------------
+
+@router.post("/register", response_model=TokenPair, status_code=status.HTTP_201_CREATED)
+async def register(user_data: UserCreate, response: Response):
+    """Register a new user and return access + refresh tokens."""
     try:
         db = await get_database()
-        
-        # Check if user exists
-        existing_user = await db.users.find_one({"email": user_data.email})
-        if existing_user:
+
+        existing = await db.users.find_one({"email": user_data.email})
+        if existing:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Email already registered"
+                detail={"code": "EMAIL_TAKEN", "message": "Email already registered."},
             )
-        
-        # Create new user
-        from datetime import datetime
+
         user_dict = {
             "email": user_data.email,
             "username": user_data.username,
@@ -48,57 +62,104 @@ async def register(user_data: UserCreate):
             "hashed_password": get_password_hash(user_data.password),
             "is_active": True,
             "is_superuser": False,
-            "created_at": datetime.utcnow(),
-            "updated_at": datetime.utcnow()
+            "created_at": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc),
         }
-        
         result = await db.users.insert_one(user_dict)
-        
-        # Create JWT token
-        access_token = create_access_token(
-            data={"sub": str(result.inserted_id)},
-            expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        user_id = str(result.inserted_id)
+
+        access_token  = create_access_token({"sub": user_id}, timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES))
+        refresh_token = create_refresh_token({"sub": user_id})
+
+        # Set refresh token in HttpOnly cookie
+        response.set_cookie(
+            key="refresh_token",
+            value=refresh_token,
+            httponly=True,
+            samesite="lax",
+            max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 86400,
         )
-        
+
+        logger.info("New user registered: %s", user_data.email)
         return {"access_token": access_token, "token_type": "bearer"}
+
     except HTTPException:
         raise
     except Exception as e:
-        print(f"Registration error: {e}")
+        logger.exception("Registration error: %s", e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
+            detail={"code": "REGISTER_FAILED", "message": "Registration failed. Please try again."},
         )
 
-@router.post("/login", response_model=Token)
-async def login(login_data: UserLogin):
-    """Login user with JWT"""
+
+@router.post("/login", response_model=TokenPair)
+async def login(login_data: UserLogin, response: Response):
+    """Authenticate and return access + refresh tokens."""
     db = await get_database()
-    
-    # Find user by email
     user = await db.users.find_one({"email": login_data.email})
+
     if not user or not verify_password(login_data.password, user["hashed_password"]):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password"
+            detail={"code": "INVALID_CREDENTIALS", "message": "Incorrect email or password."},
         )
-    
-    # Create JWT token
-    access_token = create_access_token(
-        data={"sub": str(user["_id"])},
-        expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+
+    user_id = str(user["_id"])
+    access_token  = create_access_token({"sub": user_id}, timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES))
+    refresh_token = create_refresh_token({"sub": user_id})
+
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        samesite="lax",
+        max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 86400,
     )
-    
+
+    logger.info("User logged in: %s", login_data.email)
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/refresh", response_model=Token)
+async def refresh_access_token(
+    response: Response,
+    refresh_token: str = Cookie(default=None),
+):
+    """Issue a new short-lived access token from the HttpOnly refresh cookie."""
+    if not refresh_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={"code": "NO_REFRESH_TOKEN", "message": "Refresh token not found. Please log in again."},
+        )
+
+    user = await get_current_user_from_refresh(refresh_token)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={"code": "INVALID_REFRESH_TOKEN", "message": "Refresh token is invalid or expired. Please log in again."},
+        )
+
+    user_id = str(user["_id"])
+    access_token = create_access_token({"sub": user_id}, timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES))
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/logout")
+async def logout(response: Response):
+    """Clear the refresh token cookie."""
+    response.delete_cookie("refresh_token")
+    return {"message": "Logged out successfully."}
+
 
 @router.get("/me", response_model=UserResponse)
 async def get_current_user_info(current_user: dict = Depends(get_current_user)):
-    """Get current user information"""
+    """Return information about the currently authenticated user."""
     return {
         "id": str(current_user["_id"]),
         "email": current_user["email"],
         "username": current_user["username"],
         "full_name": current_user.get("full_name"),
         "is_active": current_user.get("is_active", True),
-        "created_at": current_user.get("created_at")
+        "created_at": current_user.get("created_at"),
     }

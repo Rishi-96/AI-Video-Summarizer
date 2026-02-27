@@ -6,6 +6,9 @@ import SummaryDisplay from '../components/Summary/SummaryDisplay';
 import VideoPlayer from '../components/Video/VideoPlayer';
 import toast from 'react-hot-toast';
 
+const API_BASE = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:8000`;
+
+
 const SummaryPage = () => {
   const { summaryId } = useParams();
   const navigate = useNavigate();
@@ -59,7 +62,7 @@ ${summary.transcript}
 
 Generated on: ${new Date(summary.created_at).toLocaleString()}
     `;
-    
+
     const blob = new Blob([content], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -69,7 +72,7 @@ Generated on: ${new Date(summary.created_at).toLocaleString()}
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
+
     toast.success('Summary downloaded!');
   };
 
@@ -111,7 +114,7 @@ Generated on: ${new Date(summary.created_at).toLocaleString()}
           <FiArrowLeft className="mr-2" />
           Back to Dashboard
         </button>
-        
+
         <div className="flex items-center space-x-3">
           <button
             onClick={handleDownload}
@@ -120,7 +123,7 @@ Generated on: ${new Date(summary.created_at).toLocaleString()}
             <FiDownload className="mr-2" />
             Download
           </button>
-          
+
           <button
             onClick={handleStartChat}
             disabled={startingChat}
@@ -141,15 +144,19 @@ Generated on: ${new Date(summary.created_at).toLocaleString()}
         </div>
       </div>
 
-      {/* Video Player (if video exists) */}
-      {summary.video_info?.path && (
-        <div className="mb-8">
-          <VideoPlayer 
-            url={`http://localhost:8000/${summary.video_info.path}`}
-            title={summary.video_info.filename}
-          />
-        </div>
-      )}
+      {/* Video Player */}
+      {summary.video_info?.file_id && (() => {
+        const token = localStorage.getItem('token') || '';
+        const videoUrl = `${API_BASE}/api/videos/stream/${summary.video_info.file_id}?token=${encodeURIComponent(token)}`;
+        return (
+          <div className="mb-8">
+            <VideoPlayer
+              url={videoUrl}
+              title={summary.video_info.filename}
+            />
+          </div>
+        );
+      })()}
 
       {/* Summary Display */}
       <SummaryDisplay summary={summary} />

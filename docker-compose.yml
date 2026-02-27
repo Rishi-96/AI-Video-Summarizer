@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  # ─── MongoDB ──────────────────────────────────────────────────────────────
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: video_summarizer
+    ports:
+      - "27017:27017"
+
+  # ─── Backend ──────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    env_file:
+      - ./backend/.env
+    environment:
+      MONGODB_URL: mongodb://mongo:27017
+      FRONTEND_URL: http://localhost:3000
+    ports:
+      - "8000:8000"
+    volumes:
+      - uploads_data:/app/uploads
+      - processed_data:/app/processed
+
+  # ─── Frontend ─────────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      REACT_APP_API_URL: http://localhost:8000
+    ports:
+      - "3000:80"
+
+volumes:
+  mongo_data:
+  uploads_data:
+  processed_data:

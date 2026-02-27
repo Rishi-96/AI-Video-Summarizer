@@ -1,59 +1,70 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FiLogOut, FiUser, FiVideo, FiHome, FiUpload } from 'react-icons/fi';
+import { FiLogOut, FiVideo, FiHome, FiUpload } from 'react-icons/fi';
+import { motion } from 'framer-motion';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    window.location.href = '/';
+  };
+
+  const getInitial = (name) => {
+    return name ? name.charAt(0).toUpperCase() : '?';
   };
 
   return (
-    <nav className="bg-gray-800 border-b border-gray-700">
+    <nav className="glass-navbar border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex">
-            <Link to="/" className="flex items-center">
-              <FiVideo className="h-8 w-8 text-blue-500" />
-              <span className="ml-2 text-xl font-bold text-white">AI Summarizer</span>
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center group">
+              <div className="bg-blue-600/20 p-2 rounded-xl group-hover:bg-blue-600/30 transition-colors">
+                <FiVideo className="h-6 w-6 text-blue-500" />
+              </div>
+              <span className="ml-3 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 group-hover:to-white transition-all">AI Summarizer</span>
             </Link>
-            
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-4">
+
+            <div className="hidden sm:ml-10 sm:flex sm:space-x-8">
               <Link
                 to="/dashboard"
-                className="flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 rounded-md"
+                className={`nav-link py-5 flex items-center ${location.pathname === '/dashboard' ? 'nav-link-active text-white' : ''}`}
               >
-                <FiHome className="mr-1" />
+                <FiHome className="mr-2 h-4 w-4" />
                 Dashboard
               </Link>
-              
+
               <Link
                 to="/upload"
-                className="flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 rounded-md"
+                className={`nav-link py-5 flex items-center ${location.pathname === '/upload' ? 'nav-link-active text-white' : ''}`}
               >
-                <FiUpload className="mr-1" />
+                <FiUpload className="mr-2 h-4 w-4" />
                 Upload
               </Link>
             </div>
           </div>
-          
-          <div className="flex items-center">
-            <div className="flex items-center mr-4">
-              <FiUser className="h-5 w-5 text-gray-400" />
-              <span className="ml-2 text-sm text-gray-300">{user?.username}</span>
+
+          <div className="flex items-center gap-6">
+            <div className="hidden sm:flex items-center gap-3 bg-gray-800/50 py-1.5 px-3 rounded-full border border-gray-700/50 hover:bg-gray-800/80 transition-colors">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white shadow-inner">
+                {getInitial(user?.username)}
+              </div>
+              <span className="text-sm font-medium text-gray-200 pr-1">{user?.username}</span>
             </div>
-            
-            <button
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={handleLogout}
-              className="flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 rounded-md"
+              className="flex items-center px-4 py-2 text-sm font-medium text-red-400 hover:text-white hover:bg-red-500/20 rounded-xl transition-colors border border-transparent hover:border-red-500/30"
             >
-              <FiLogOut className="mr-1" />
+              <FiLogOut className="mr-2 h-4 w-4" />
               Logout
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>
