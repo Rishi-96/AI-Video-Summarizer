@@ -13,7 +13,8 @@ logger = logging.getLogger(__name__)
 
 class VideoSummarizer:
     def __init__(self):
-        self.api_key = os.environ.get("GROQ_API_KEY", "")
+        from app.core.config import settings
+        self.api_key = settings.GROQ_API_KEY
         self.client = None
         self.use_mock = not _HAS_GROQ or not self.api_key
         
