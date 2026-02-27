@@ -106,13 +106,13 @@ export const VideoProvider = ({ children }) => {
   };
 
   // ── create summary (202 + poll) ─────────────────────────────────────────
-  const createSummary = async (videoPath, summaryRatio = 0.3) => {
+  const createSummary = async (fileId, summaryRatio = 0.3) => {
     try {
       setLoading(true);
       setSummaryStatus('pending');
 
       // 1. Enqueue the job (returns 202 + task_id)
-      const { data: task } = await summariesAPI.create(videoPath, summaryRatio);
+      const { data: task } = await summariesAPI.create(fileId, summaryRatio);
       toast.success('Summarization started — processing in background…');
 
       // 2. Poll until done

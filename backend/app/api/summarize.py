@@ -35,7 +35,7 @@ _task_store: dict[str, dict] = {}
 # ---------------------------------------------------------------------------
 
 class SummarizeRequest(BaseModel):
-    video_path: str
+    file_id: str
     summary_ratio: Optional[float] = 0.3
     max_summary_length: Optional[int] = 300
 
@@ -52,7 +52,9 @@ class TaskAccepted(BaseModel):
 
 async def _run_summarize_pipeline(
     task_id: str,
-    request: SummarizeRequest,
+    video_path: str,
+    summary_ratio: float,
+    max_summary_length: int,
     user_id: str,
     whisper,
     summarizer,
@@ -62,18 +64,18 @@ async def _run_summarize_pipeline(
     try:
         # 1. Transcribe (CPU-heavy — run in thread)
         logger.info("Task %s: starting transcription", task_id)
-        segments = await asyncio.to_thread(whisper.get_segments, request.video_path)
+        segments = await asyncio.to_thread(whisper.get_segments, video_path)
         transcript = " ".join(seg.get("text", "") for seg in segments) or "No transcript available."
 
         # 2. Rank + select segments
         ranked = await asyncio.to_thread(summarizer.rank_segments, segments)
-        num_segs = max(1, int(len(ranked) * request.summary_ratio))
+        num_segs = max(1, int(len(ranked) * summary_ratio))
         selected = ranked[:num_segs]
 
         # 3. Summarize (also CPU-heavy)
         logger.info("Task %s: summarizing", task_id)
         text_summary = await asyncio.to_thread(
-            summarizer.summarize_text, transcript, request.max_summary_length
+            summarizer.summarize_text, transcript, max_summary_length
         )
 
         # 4. Key points
@@ -84,20 +86,20 @@ async def _run_summarize_pipeline(
 
         # Resolve the file_id from the DB to enable streaming by ID
         db = await get_database()
-        video_record = await db.videos.find_one({"file_path": request.video_path})
-        resolved_file_id = video_record["file_id"] if video_record else Path(request.video_path).stem
+        video_record = await db.videos.find_one({"file_path": video_path})
+        resolved_file_id = video_record["file_id"] if video_record else Path(video_path).stem
 
         video_info = {
             "file_id":  resolved_file_id,
-            "path":     request.video_path,
-            "filename": Path(request.video_path).name,
-            "size":     os.path.getsize(request.video_path),
+            "path":     video_path,
+            "filename": Path(video_path).name,
+            "size":     os.path.getsize(video_path),
         }
 
         await db.summaries.insert_one({
             "summary_id": summary_id,
             "task_id": task_id,
-            "video_id": Path(request.video_path).stem,
+            "video_id": Path(video_path).stem,
             "user_id": user_id,
             "transcript": transcript[:5000],          # store up to 5k chars
             "text_summary": text_summary,
@@ -128,11 +130,20 @@ async def summarize_video(
     current_user: dict = Depends(get_current_user),
 ):
     """Queue a summarization job. Returns 202 immediately with a task_id."""
-    # Validate path
-    if not os.path.exists(request.video_path):
+    db = await get_database()
+    video_record = await db.videos.find_one({"file_id": request.file_id, "user_id": str(current_user["_id"])})
+    
+    if not video_record or "file_path" not in video_record:
         raise HTTPException(
             status_code=404,
-            detail={"code": "VIDEO_NOT_FOUND", "message": "Video file not found at the given path."},
+            detail={"code": "VIDEO_NOT_FOUND", "message": "Video file not found or you do not have permission."},
+        )
+
+    # Validate path exists on disk
+    if not os.path.exists(video_record["file_path"]):
+        raise HTTPException(
+            status_code=404,
+            detail={"code": "FILE_MISSING", "message": "The actual video file is missing from the server storage."},
         )
 
     # Get singleton models from app state
@@ -148,10 +159,13 @@ async def summarize_video(
     task_id = str(uuid.uuid4())
     _task_store[task_id] = {"status": "pending", "summary_id": None, "error": None}
 
+    # Pass the actual absolute string path to the pipeline thread
     background_tasks.add_task(
         _run_summarize_pipeline,
         task_id,
-        request,
+        video_record["file_path"],
+        request.summary_ratio,
+        request.max_summary_length,
         str(current_user["_id"]),
         whisper,
         summarizer,

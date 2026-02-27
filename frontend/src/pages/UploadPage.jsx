@@ -18,7 +18,7 @@ const UploadPage = () => {
 
     setIsSummarizing(true);
     try {
-      const summary = await createSummary(uploadedVideo.path, 0.3);
+      const summary = await createSummary(uploadedVideo.file_id, 0.3);
       navigate(`/summary/${summary.summary_id}`);
     } catch (error) {
       console.error('Summarization failed:', error);
@@ -45,7 +45,7 @@ const UploadPage = () => {
           <h3 className="text-lg font-medium text-white mb-4">
             Upload Complete
           </h3>
-          
+
           <div className="bg-gray-700 rounded-lg p-4 mb-4">
             <p className="text-gray-300">
               <span className="font-medium">File:</span> {uploadedVideo.original_name}
@@ -83,7 +83,7 @@ const UploadPage = () => {
       <div className="mt-12 bg-blue-600/10 border border-blue-500/30 rounded-xl p-6">
         <h4 className="text-blue-400 font-medium mb-2">📌 Note</h4>
         <p className="text-gray-300 text-sm">
-          The summarization process may take a few minutes depending on the video length. 
+          The summarization process may take a few minutes depending on the video length.
           You'll be redirected to the summary page once it's complete.
         </p>
       </div>

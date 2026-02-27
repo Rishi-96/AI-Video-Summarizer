@@ -101,9 +101,9 @@ export const videosAPI = {
 // ─── Summaries API ──────────────────────────────────────────────────────────
 export const summariesAPI = {
   // Enqueue and return task_id (202 Accepted)
-  create: (videoPath, summaryRatio = 0.3, maxLength = 300) =>
+  create: (fileId, summaryRatio = 0.3, maxLength = 300) =>
     api.post('/api/summarize/', {
-      video_path: videoPath,
+      file_id: fileId,
       summary_ratio: summaryRatio,
       max_summary_length: maxLength,
     }),
