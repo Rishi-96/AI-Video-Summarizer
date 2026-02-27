@@ -63,7 +63,7 @@ class VideoSummarizer:
                 prompt = f"Please provide a concise and highly accurate summary of the following video transcript. The summary should be approximately {max_length} words long.\n\nTranscript: {chunk}"
                 
                 resp = self.client.chat.completions.create(
-                    model="llama3-8b-8192",
+                    model="llama-3.1-8b-instant",
                     messages=[{"role": "user", "content": prompt}]
                 )
                 summaries.append(resp.choices[0].message.content.strip())
@@ -73,7 +73,7 @@ class VideoSummarizer:
             if len(summaries) > 1:
                 final_req = f"Combine these summary parts into one clean, seamless final recap (approx {max_length} words):\n\n{combined}"
                 final = self.client.chat.completions.create(
-                    model="llama3-8b-8192",
+                    model="llama-3.1-8b-instant",
                     messages=[{"role": "user", "content": final_req}]
                 )
                 return final.choices[0].message.content.strip()
@@ -97,7 +97,7 @@ class VideoSummarizer:
             prompt = f"Extract exactly {num_points} key bullet points from the following video transcript. Return ONLY a valid JSON array of strings, with no other formatting or markdown.\n\nTranscript: {chunk}"
             
             resp = self.client.chat.completions.create(
-                model="llama3-8b-8192",
+                model="llama-3.1-8b-instant",
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.2
             )
