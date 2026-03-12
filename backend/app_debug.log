@@ -914,3 +914,100 @@ If you are sure that the described cause is not responsible for this error and t
     from numba import _helperlib
 ImportError: numpy._core.multiarray failed to import
 
+2026-03-12 17:43:59,594 - app.api.summarize - ERROR - Local video summarization failed: numpy._core.multiarray failed to import
+2026-03-12 17:43:59,596 - app.api.summarize - ERROR - Traceback (most recent call last):
+  File "C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app\api\summarize.py", line 432, in summarize_video_sync
+    clip = VideoFileClip(temp_video.name)
+        ^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\whisper\__init__.py", line 13, in <module>
+    from .model import ModelDimensions, Whisper
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\whisper\model.py", line 14, in <module>
+    from .transcribe import transcribe as transcribe_function
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\whisper\transcribe.py", line 21, in <module>
+    from .timing import add_word_timestamps
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\whisper\timing.py", line 7, in <module>
+    import numba
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\__init__.py", line 92, in <module>
+    from numba.core.decorators import (cfunc, jit, njit, stencil,
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\core\decorators.py", line 13, in <module>
+    from numba.stencils.stencil import stencil
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\stencils\stencil.py", line 11, in <module>
+    from numba.core import types, typing, utils, ir, config, ir_utils, registry
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\core\ir_utils.py", line 14, in <module>
+    from numba.core.extending import _Intrinsic
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\core\extending.py", line 20, in <module>
+    from numba.core.pythonapi import box, unbox, reflect, NativeValue  # noqa: F401
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\core\pythonapi.py", line 11, in <module>
+    from numba import _helperlib
+ImportError: numpy._core.multiarray failed to import
+
+2026-03-12 17:44:33,876 - app.api.videos - ERROR - YouTube download failed for user 69a00f20f00b71ffa4672fbb url=https://youtu.be/vdMPP47nLhc?si=dk69oD6EYm8enabM: [0;31mERROR:[0m [youtube] vdMPP47nLhc: This video is not available
+Traceback (most recent call last):
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1698, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1833, in __extract_info
+    ie_result = ie.extract(url)
+                ^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\extractor\common.py", line 765, in extract
+    ie_result = self._real_extract(url)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\extractor\youtube\_video.py", line 4021, in _real_extract
+    self.raise_no_formats(reason, expected=True)
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\extractor\common.py", line 1277, in raise_no_formats
+    raise ExtractorError(msg, expected=expected, video_id=video_id)
+yt_dlp.utils.ExtractorError: [youtube] vdMPP47nLhc: This video is not available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app\api\videos.py", line 204, in upload_youtube
+    result = await _yt_download(request.url, output_template)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app\api\videos.py", line 98, in _yt_download
+    return await asyncio.to_thread(_download)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\New folder\Lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\New folder\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app\api\videos.py", line 92, in _download
+    info = ydl.extract_info(url, download=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1687, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1716, in wrapper
+    self.report_error(str(e), e.format_traceback())
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1154, in report_error
+    self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1093, in trouble
+    raise DownloadError(message, exc_info)
+yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube] vdMPP47nLhc: This video is not available
+2026-03-12 17:47:45,588 - app.main - INFO - Main module loading...
+2026-03-12 17:47:46,368 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 17:47:46,455 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 17:47:46,456 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 17:47:48,498 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 17:47:48,498 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 17:48:42,308 - app.core.database - INFO - MongoDB connection closed
+2026-03-12 17:48:42,317 - app.core.database - INFO - MongoDB connection closed
+2026-03-12 17:48:53,511 - app.main - INFO - Main module loading...
+2026-03-12 17:48:53,727 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 17:48:53,793 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 17:48:53,793 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 17:48:55,827 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 17:48:55,827 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 17:50:02,945 - app.api.videos - INFO - Video uploaded: file_id=a7f7b8cd-a54f-4db5-9d0d-d90a9bbb212c user=69a00f20f00b71ffa4672fbb size_mb=33.66
+2026-03-12 17:50:07,433 - app.api.summarize - INFO - Task b43f27ac-3da4-4210-853b-0eb8752afba3: starting transcription
+2026-03-12 17:50:21,781 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-12 17:50:21,802 - app.api.summarize - INFO - Task b43f27ac-3da4-4210-853b-0eb8752afba3: summarizing
+2026-03-12 17:50:22,460 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 17:50:22,719 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 17:50:22,818 - app.models.video_processor - INFO - Video processor initialized
+2026-03-12 17:50:22,819 - app.api.summarize - INFO - Task b43f27ac-3da4-4210-853b-0eb8752afba3: generating highlight reel video
+2026-03-12 17:54:34,079 - app.api.summarize - INFO - Task b43f27ac-3da4-4210-853b-0eb8752afba3: visual summary video created at processed\69a00f20f00b71ffa4672fbb\summary_b43f27ac-3da4-4210-853b-0eb8752afba3.mp4
+2026-03-12 17:54:34,094 - app.api.summarize - INFO - Task b43f27ac-3da4-4210-853b-0eb8752afba3: done, summary_id=c85a1d58-07cd-4438-9452-186c22b3ff6b

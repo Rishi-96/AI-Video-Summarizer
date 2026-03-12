@@ -1,0 +1,100 @@
+2026-03-12 17:31:35,599 - app.api.summarize - ERROR - Traceback (most recent call last):
+  File "C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app\api\summarize.py", line 432, in summarize_video_sync
+    clip = VideoFileClip(temp_video.name)
+        ^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\whisper\__init__.py", line 13, in <module>
+    from .model import ModelDimensions, Whisper
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\whisper\model.py", line 14, in <module>
+    from .transcribe import transcribe as transcribe_function
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\whisper\transcribe.py", line 21, in <module>
+    from .timing import add_word_timestamps
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\whisper\timing.py", line 7, in <module>
+    import numba
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\__init__.py", line 92, in <module>
+    from numba.core.decorators import (cfunc, jit, njit, stencil,
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\core\decorators.py", line 13, in <module>
+    from numba.stencils.stencil import stencil
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\stencils\stencil.py", line 11, in <module>
+    from numba.core import types, typing, utils, ir, config, ir_utils, registry
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\core\ir_utils.py", line 14, in <module>
+    from numba.core.extending import _Intrinsic
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\core\extending.py", line 20, in <module>
+    from numba.core.pythonapi import box, unbox, reflect, NativeValue  # noqa: F401
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\core\pythonapi.py", line 11, in <module>
+    from numba import _helperlib
+ImportError: numpy._core.multiarray failed to import
+
+2026-03-12 17:43:59,594 - app.api.summarize - ERROR - Local video summarization failed: numpy._core.multiarray failed to import
+2026-03-12 17:43:59,596 - app.api.summarize - ERROR - Traceback (most recent call last):
+  File "C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app\api\summarize.py", line 432, in summarize_video_sync
+    clip = VideoFileClip(temp_video.name)
+        ^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\whisper\__init__.py", line 13, in <module>
+    from .model import ModelDimensions, Whisper
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\whisper\model.py", line 14, in <module>
+    from .transcribe import transcribe as transcribe_function
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\whisper\transcribe.py", line 21, in <module>
+    from .timing import add_word_timestamps
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\whisper\timing.py", line 7, in <module>
+    import numba
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\__init__.py", line 92, in <module>
+    from numba.core.decorators import (cfunc, jit, njit, stencil,
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\core\decorators.py", line 13, in <module>
+    from numba.stencils.stencil import stencil
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\stencils\stencil.py", line 11, in <module>
+    from numba.core import types, typing, utils, ir, config, ir_utils, registry
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\core\ir_utils.py", line 14, in <module>
+    from numba.core.extending import _Intrinsic
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\core\extending.py", line 20, in <module>
+    from numba.core.pythonapi import box, unbox, reflect, NativeValue  # noqa: F401
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\numba\core\pythonapi.py", line 11, in <module>
+    from numba import _helperlib
+ImportError: numpy._core.multiarray failed to import
+
+2026-03-12 17:44:33,876 - app.api.videos - ERROR - YouTube download failed for user 69a00f20f00b71ffa4672fbb url=https://youtu.be/vdMPP47nLhc?si=dk69oD6EYm8enabM: [0;31mERROR:[0m [youtube] vdMPP47nLhc: This video is not available
+Traceback (most recent call last):
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1698, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1833, in __extract_info
+    ie_result = ie.extract(url)
+                ^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\extractor\common.py", line 765, in extract
+    ie_result = self._real_extract(url)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\extractor\youtube\_video.py", line 4021, in _real_extract
+    self.raise_no_formats(reason, expected=True)
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\extractor\common.py", line 1277, in raise_no_formats
+    raise ExtractorError(msg, expected=expected, video_id=video_id)
+yt_dlp.utils.ExtractorError: [youtube] vdMPP47nLhc: This video is not available
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app\api\videos.py", line 204, in upload_youtube
+    result = await _yt_download(request.url, output_template)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app\api\videos.py", line 98, in _yt_download
+    return await asyncio.to_thread(_download)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\New folder\Lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\New folder\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app\api\videos.py", line 92, in _download
+    info = ydl.extract_info(url, download=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1687, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1716, in wrapper
+    self.report_error(str(e), e.format_traceback())
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1154, in report_error
+    self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
+  File "C:\Users\Himani Jain\Documents\MajorProject\.venv\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1093, in trouble
+    raise DownloadError(message, exc_info)
+yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube] vdMPP47nLhc: This video is not available
