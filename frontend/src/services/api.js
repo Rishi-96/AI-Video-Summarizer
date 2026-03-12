@@ -114,6 +114,21 @@ export const summariesAPI = {
   // History + individual
   getHistory: () => api.get('/api/summarize/history'),
   getOne: (summaryId) => api.get(`/api/summarize/${summaryId}`),
+
+  // Get summary video stream URL (for <video> element src)
+  getSummaryVideoUrl: (summaryId) => {
+    const token = localStorage.getItem('token') || '';
+    return `${API_BASE_URL}/api/summarize/video/${summaryId}/stream?token=${encodeURIComponent(token)}`;
+  },
+  // Synchronous summarization (Transformers/Whisper)
+  summarizeYouTube: (url) => api.post('/api/summarize/summarize-youtube', { url }),
+  summarizeVideo: (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post('/api/summarize/summarize-video', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
 };
 
 // ─── Chat API ───────────────────────────────────────────────────────────────

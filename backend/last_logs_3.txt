@@ -1,0 +1,50 @@
+2026-03-12 16:37:42,761 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 16:37:52,612 - app.core.database - INFO - MongoDB connection closed
+2026-03-12 16:37:55,772 - app.main - INFO - Main module loading...
+2026-03-12 16:37:55,990 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 16:37:56,050 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 16:37:56,050 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 16:37:58,080 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 16:37:58,081 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 16:38:41,962 - app.core.database - INFO - MongoDB connection closed
+2026-03-12 16:38:45,346 - app.main - INFO - Main module loading...
+2026-03-12 16:38:45,582 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 16:38:45,646 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 16:38:45,646 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 16:38:47,680 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 16:38:47,680 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 16:38:52,949 - app.core.database - INFO - MongoDB connection closed
+2026-03-12 16:39:00,847 - app.main - INFO - Main module loading...
+2026-03-12 16:39:01,403 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 16:39:01,507 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 16:39:01,507 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 16:39:03,552 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 16:39:03,553 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 16:59:37,330 - app.api.videos - INFO - Video uploaded: file_id=23bfc427-f5f0-43f9-8ba0-5f897db609e8 user=69a00f20f00b71ffa4672fbb size_mb=33.66
+2026-03-12 16:59:41,802 - app.api.summarize - INFO - Task 2770952d-c23b-43b7-92d9-517000468f1b: starting transcription
+2026-03-12 17:00:17,890 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-12 17:00:17,921 - app.api.summarize - INFO - Task 2770952d-c23b-43b7-92d9-517000468f1b: summarizing
+2026-03-12 17:00:18,957 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 17:00:19,230 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 17:00:19,282 - app.api.summarize - WARNING - Task 2770952d-c23b-43b7-92d9-517000468f1b: summary video generation failed (non-fatal): No module named 'cv2'
+2026-03-12 17:00:19,291 - app.api.summarize - INFO - Task 2770952d-c23b-43b7-92d9-517000468f1b: done, summary_id=b4d54d23-837e-43ed-9534-d386684642d9
+2026-03-12 17:07:08,035 - app.main - INFO - Main module loading...
+2026-03-12 17:07:09,586 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 17:07:09,672 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 17:07:09,672 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 17:07:11,732 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 17:07:11,732 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 17:08:38,627 - app.api.videos - INFO - Video uploaded: file_id=5c3a06f4-9396-4b05-ab5a-c1cb92d98668 user=69a00f20f00b71ffa4672fbb size_mb=33.66
+2026-03-12 17:09:25,881 - app.api.summarize - INFO - Task c6f8c9ff-0df3-4a2f-aebe-87c9fa93ed92: starting transcription
+2026-03-12 17:09:50,349 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-12 17:09:50,379 - app.api.summarize - INFO - Task c6f8c9ff-0df3-4a2f-aebe-87c9fa93ed92: summarizing
+2026-03-12 17:09:51,301 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 17:09:51,709 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 17:09:51,729 - app.api.summarize - WARNING - Task c6f8c9ff-0df3-4a2f-aebe-87c9fa93ed92: summary video generation failed (non-fatal): No module named 'cv2'
+2026-03-12 17:09:51,734 - app.api.summarize - INFO - Task c6f8c9ff-0df3-4a2f-aebe-87c9fa93ed92: done, summary_id=7377d800-3103-4aad-9601-3b0d89096e24
+2026-03-12 17:11:34,850 - app.api.summarize - ERROR - YouTube summarization failed: 
+Could not retrieve a transcript for the video https://www.youtube.com/watch?v=vdMPP47nLhc! This is most likely caused by:
+
+Subtitles are disabled for this video
+
+If you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!

@@ -1,0 +1,20 @@
+2026-03-12 17:11:34,850 - app.api.summarize - ERROR - YouTube summarization failed: 
+Could not retrieve a transcript for the video https://www.youtube.com/watch?v=vdMPP47nLhc! This is most likely caused by:
+
+Subtitles are disabled for this video
+
+If you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!
+2026-03-12 17:15:35,605 - app.api.videos - INFO - Video uploaded: file_id=10a6a42b-6074-40de-b334-e0b80a586f4e user=69a00f20f00b71ffa4672fbb size_mb=33.66
+2026-03-12 17:15:37,257 - app.api.summarize - INFO - Task a1d87e9b-86c1-487c-9c93-bfb44e346d98: starting transcription
+2026-03-12 17:16:34,457 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-12 17:16:34,492 - app.api.summarize - INFO - Task a1d87e9b-86c1-487c-9c93-bfb44e346d98: summarizing
+2026-03-12 17:16:37,739 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 17:16:38,008 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 17:16:38,029 - app.api.summarize - WARNING - Task a1d87e9b-86c1-487c-9c93-bfb44e346d98: summary video generation failed (non-fatal): No module named 'cv2'
+2026-03-12 17:16:38,044 - app.api.summarize - INFO - Task a1d87e9b-86c1-487c-9c93-bfb44e346d98: done, summary_id=01b8f18e-c48c-47ff-9f82-1fa20a925313
+2026-03-12 17:19:35,589 - app.main - INFO - Main module loading...
+2026-03-12 17:19:35,940 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 17:19:36,067 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 17:19:36,067 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 17:19:38,135 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 17:19:38,135 - app.main - INFO - Summarizer model loaded at startup

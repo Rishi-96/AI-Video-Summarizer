@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import VideoUploader from '../components/Video/VideoUploader';
 import { useVideo } from '../context/VideoContext';
+import { summariesAPI } from '../services/api';
 
 const UploadPage = () => {
+  const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [localFile, setLocalFile] = useState(null);
+  const [quickSummary, setQuickSummary] = useState('');
+  const [quickVideoUrl, setQuickVideoUrl] = useState('');
   const [uploadedVideo, setUploadedVideo] = useState(null);
   const [isSummarizing, setIsSummarizing] = useState(false);
   const { createSummary } = useVideo();
@@ -17,11 +22,45 @@ const UploadPage = () => {
     if (!uploadedVideo) return;
 
     setIsSummarizing(true);
+    setQuickSummary('');
     try {
       const summary = await createSummary(uploadedVideo.file_id, 0.3);
       navigate(`/summary/${summary.summary_id}`);
     } catch (error) {
       console.error('Summarization failed:', error);
+    } finally {
+      setIsSummarizing(false);
+    }
+  };
+
+  const handleYouTubeSummarize = async () => {
+    if (!youtubeUrl) return;
+    setIsSummarizing(true);
+    setQuickSummary('');
+    try {
+      const response = await summariesAPI.summarizeYouTube(youtubeUrl);
+      setQuickSummary(response.data.summary);
+    } catch (error) {
+      console.error('YouTube summarization failed:', error);
+      alert('Could not summarize YouTube video. Ensure it has a transcript.');
+    } finally {
+      setIsSummarizing(false);
+    }
+  };
+
+  const handleLocalFileSummarize = async () => {
+    if (!localFile) return;
+    setIsSummarizing(true);
+    setQuickSummary('');
+    try {
+      const response = await summariesAPI.summarizeVideo(localFile);
+      setQuickSummary(response.data.summary);
+      if (response.data.video_url) {
+        setQuickVideoUrl(response.data.video_url);
+      }
+    } catch (error) {
+      console.error('Local video summarization failed:', error);
+      alert('Summarization failed. Ensure the video isn\'t corrupt.');
     } finally {
       setIsSummarizing(false);
     }
@@ -36,6 +75,54 @@ const UploadPage = () => {
         <p className="text-gray-400">
           Upload a video and let AI create a smart summary for you
         </p>
+      </div>
+      <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <h3 className="text-lg font-medium text-white mb-4">YouTube Summarizer</h3>
+          <div className="space-y-4">
+            <input
+              type="text"
+              placeholder="Paste YouTube URL..."
+              className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
+              value={youtubeUrl}
+              onChange={(e) => setYoutubeUrl(e.target.value)}
+            />
+            <button
+              onClick={handleYouTubeSummarize}
+              disabled={isSummarizing || !youtubeUrl}
+              className="w-full px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 transition flex items-center justify-center"
+            >
+              {isSummarizing && youtubeUrl ? (
+                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+              ) : 'Summarize'}
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <h3 className="text-lg font-medium text-white mb-4">Quick Video Summarizer</h3>
+          <div className="space-y-4">
+            <input
+              type="file"
+              accept="video/*"
+              className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+              onChange={(e) => setLocalFile(e.target.files[0])}
+            />
+            <button
+              onClick={handleLocalFileSummarize}
+              disabled={isSummarizing || !localFile}
+              className="w-full px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition flex items-center justify-center"
+            >
+              {isSummarizing && localFile ? (
+                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+              ) : 'Summarize File'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="text-center mb-6">
+        <p className="text-gray-500 text-sm italic">OR USE FULL PIPELINE</p>
       </div>
 
       <VideoUploader onUploadComplete={handleUploadComplete} />
@@ -76,6 +163,27 @@ const UploadPage = () => {
                 'Generate Summary'
               )}
             </button>
+          </div>
+        </div>
+      )}
+
+      {quickSummary && (
+        <div className="mt-8 bg-gray-800 rounded-xl p-6 border border-blue-500/30">
+          <h3 className="text-lg font-medium text-white mb-4">AI Summary</h3>
+          
+          {quickVideoUrl && (
+            <div className="mb-6 rounded-lg overflow-hidden border border-gray-700 shadow-2xl">
+              <video 
+                src={`${process.env.REACT_APP_API_URL || 'http://localhost:8000'}${quickVideoUrl}?token=${encodeURIComponent(localStorage.getItem('token'))}`} 
+                controls 
+                className="w-full aspect-video bg-black"
+                autoPlay
+              />
+            </div>
+          )}
+
+          <div className="bg-gray-700/50 rounded-lg p-4 text-gray-200 leading-relaxed">
+            {quickSummary}
           </div>
         </div>
       )}

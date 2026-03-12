@@ -1,57 +1,89 @@
-﻿import logging
+import logging
+import os
+import json
 from typing import List, Dict
+
+try:
+    from groq import Groq
+    _HAS_GROQ = True
+except ImportError:
+    _HAS_GROQ = False
 
 logger = logging.getLogger(__name__)
 
-try:
-    import torch
-    import numpy as np
-    HAS_ML = True
-except ImportError:
-    HAS_ML = False
-
-
 class VideoSummarizer:
-    def __init__(self):
-        self.device = "cuda" if HAS_ML and torch.cuda.is_available() else "cpu"
-        self.use_mock = not HAS_ML
-        self.summarizer = None
-        self.embedder = None
+    _hf_summarizer = None
 
-        if HAS_ML:
+    def __init__(self):
+        from app.core.config import settings
+        self.api_key = settings.GROQ_API_KEY
+        self.client = None
+        self.use_mock = not _HAS_GROQ or not self.api_key
+        
+        if not self.use_mock:
+            try:
+                import httpx
+                http_proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("HTTP_PROXY")
+                http_client = httpx.Client(proxy=http_proxy, verify=False) if http_proxy else httpx.Client(verify=False)
+                
+                # Try Ollama first if it's running, else fallback to Groq
+                try:
+                    ollama_check = httpx.get("http://localhost:11434/api/tags", timeout=1.0)
+                    if ollama_check.status_code == 200:
+                        self.use_ollama = True
+                        self.ollama_url = "http://localhost:11434/api/generate"
+                        logger.info("Ollama Summarizer detected and loaded")
+                    else:
+                        self.use_ollama = False
+                except Exception:
+                    self.use_ollama = False
+
+                if not self.use_ollama:
+                    self.client = Groq(api_key=self.api_key, http_client=http_client)
+                    logger.info("Groq Summarizer loaded")
+                
+            except Exception as e:
+                logger.warning("Error initializing AI backend: %s", e)
+                self.use_mock = True
+        else:
+            logger.warning("GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.")
+
+    @classmethod
+    def get_hf_summarizer(cls):
+        if cls._hf_summarizer is None:
             try:
                 from transformers import pipeline
-                # Use FAST and valid summarization model
-                self.summarizer = pipeline(
-                    "summarization",
-                    model="sshleifer/distilbart-cnn-12-6",  # Fast & Stable
-                    device=0 if self.device == "cuda" else -1
-                )
-                logger.info("Summarizer loaded on %s", self.device)
+                logger.info("Loading HuggingFace summarization pipeline (sshleifer/distilbart-cnn-12-6)...")
+                cls._hf_summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
             except Exception as e:
-                logger.warning("Error loading summarizer: %s", e)
-                self.use_mock = True
+                logger.error(f"Failed to load HuggingFace summarizer: {e}")
+        return cls._hf_summarizer
 
-            try:
-                from sentence_transformers import SentenceTransformer
-                self.embedder = SentenceTransformer(
-                    "all-MiniLM-L6-v2",
-                    device=self.device
-                )
-                logger.info("Sentence transformer loaded")
-            except Exception as e:
-                logger.warning("Error loading sentence transformer: %s", e)
-                self.embedder = None
+    def summarize_hf(self, text: str, max_length: int = 150) -> str:
+        """Summarize text using local HuggingFace transformers pipeline."""
+        summarizer = self.get_hf_summarizer()
+        if not summarizer or not text.strip():
+            return text[:300] + "..."
+        try:
+            # Simple chunking for HF model limits (max 1024 tokens)
+            chunk = text[:3000]
+            result = summarizer(chunk, max_length=max_length, min_length=30, do_sample=False)
+            return result[0]['summary_text']
+        except Exception as e:
+            logger.error(f"HF Summarization error: {e}")
+            return text[:300] + "..."
+
     # -------------------------------
-    # TEXT CHUNKING (CRITICAL FIX)
+    # TEXT CHUNKING
     # -------------------------------
-    def _chunk_text(self, text: str, max_chunk_tokens: int = 800) -> List[str]:
+    def _chunk_text(self, text: str, max_chunk_chars: int = 15000) -> List[str]:
+        # Groq llama3 supports 8k tokens (~32k chars), 15k chars is very safe
         sentences = text.split(". ")
         chunks = []
         current_chunk = ""
 
         for sentence in sentences:
-            if len(current_chunk) + len(sentence) < max_chunk_tokens:
+            if len(current_chunk) + len(sentence) < max_chunk_chars:
                 current_chunk += sentence + ". "
             else:
                 chunks.append(current_chunk.strip())
@@ -59,15 +91,13 @@ class VideoSummarizer:
 
         if current_chunk:
             chunks.append(current_chunk.strip())
-
         return chunks
 
     # -------------------------------
     # SUMMARIZATION
     # -------------------------------
     def summarize_text(self, text: str, max_length: int = 150) -> str:
-
-        if self.use_mock:
+        if self.use_mock or not text.strip():
             return text[:300] + "..."
 
         try:
@@ -75,101 +105,100 @@ class VideoSummarizer:
             summaries = []
 
             for chunk in chunks:
-                result = self.summarizer(
-                    chunk,
-                    max_length=max_length,
-                    min_length=40,
-                    do_sample=False,
-                    num_beams=4
-                )
-                summaries.append(result[0]["summary_text"])
+                prompt = f"Please provide a concise and highly accurate summary of the following video transcript. The summary should be approximately {max_length} words long.\n\nTranscript: {chunk}"
+                
+                if self.use_ollama:
+                    import httpx
+                    resp = httpx.post(self.ollama_url, json={
+                        "model": "llama3",
+                        "prompt": prompt,
+                        "stream": False
+                    }, timeout=60.0)
+                    summaries.append(resp.json().get("response", "").strip())
+                else:
+                    resp = self.client.chat.completions.create(
+                        model="llama-3.1-8b-instant",
+                        messages=[{"role": "user", "content": prompt}]
+                    )
+                    summaries.append(resp.choices[0].message.content.strip())
 
-            # Final summary of summaries
             combined = " ".join(summaries)
-
+            
             if len(summaries) > 1:
-                final = self.summarizer(
-                    combined,
-                    max_length=max_length,
-                    min_length=40,
-                    do_sample=False
-                )
-                return final[0]["summary_text"]
+                final_req = f"Combine these summary parts into one clean, seamless final recap (approx {max_length} words):\n\n{combined}"
+                if self.use_ollama:
+                    import httpx
+                    resp = httpx.post(self.ollama_url, json={
+                        "model": "llama3",
+                        "prompt": final_req,
+                        "stream": False
+                    }, timeout=60.0)
+                    return resp.json().get("response", "").strip()
+                else:
+                    final = self.client.chat.completions.create(
+                        model="llama-3.1-8b-instant",
+                        messages=[{"role": "user", "content": final_req}]
+                    )
+                    return final.choices[0].message.content.strip()
 
             return combined
 
         except Exception as e:
-            logger.warning("Summarization failed: %s", e)
+            logger.warning("Groq Summarization failed: %s", e)
             return text[:300] + "..."
 
     # -------------------------------
     # KEY POINT EXTRACTION
     # -------------------------------
     def extract_key_points(self, text: str, num_points: int = 5) -> List[str]:
-
-        sentences = [
-            s.strip() + "."
-            for s in text.split(".")
-            if len(s.strip()) > 30
-        ]
-
-        if len(sentences) <= num_points:
-            return sentences
-
-        if self.embedder is None:
-            return sentences[:num_points]
+        if self.use_mock or not text.strip():
+            return [s.strip() + "." for s in text.split(".") if len(s.strip()) > 30][:num_points]
 
         try:
-            embeddings = self.embedder.encode(
-                sentences,
-                batch_size=16,
-                show_progress_bar=False
-            )
-
-            centroid = np.mean(embeddings, axis=0)
-            similarities = np.dot(embeddings, centroid)
-
-            top_indices = np.argsort(similarities)[-num_points:][::-1]
-
-            return [sentences[i] for i in top_indices]
-
+            # We only need the first big chunk to extract decent high-level points
+            chunk = text[:15000] 
+            prompt = f"Extract exactly {num_points} key bullet points from the following video transcript. Return ONLY a valid JSON array of strings, with no other formatting or markdown.\n\nTranscript: {chunk}"
+            
+            if self.use_ollama:
+                import httpx
+                resp = httpx.post(self.ollama_url, json={
+                    "model": "llama3",
+                    "prompt": prompt,
+                    "stream": False
+                }, timeout=60.0)
+                raw = resp.json().get("response", "").strip()
+            else:
+                resp = self.client.chat.completions.create(
+                    model="llama-3.1-8b-instant",
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=0.2
+                )
+                raw = resp.choices[0].message.content.strip()
+            
+            # Clean up potential markdown formatting 
+            if raw.startswith("```json"): raw = raw[7:]
+            if raw.startswith("```"): raw = raw[3:]
+            if raw.endswith("```"): raw = raw[:-3]
+            
+            points = json.loads(raw.strip())
+            return points[:num_points]
         except Exception as e:
-            logger.warning("Key point extraction failed: %s", e)
-            return sentences[:num_points]
+            logger.warning("Groq Key point extraction failed: %s", e)
+            return [text[:100] + "..."]
 
     # -------------------------------
     # SEGMENT RANKING
     # -------------------------------
     def rank_segments(self, segments: List[Dict]) -> List[Dict]:
-
-        if not segments or self.embedder is None:
-            return segments
-
-        try:
-            texts = [seg.get("text", "") for seg in segments]
-
-            embeddings = self.embedder.encode(
-                texts,
-                batch_size=16,
-                show_progress_bar=False
-            )
-
-            scores = np.var(embeddings, axis=1)
-
-            if scores.max() > scores.min():
-                scores = (scores - scores.min()) / (scores.max() - scores.min())
-            else:
-                scores = np.ones_like(scores)
-
-            for i, seg in enumerate(segments):
-                seg["relevance_score"] = float(scores[i])
-
-            return sorted(
-                segments,
-                key=lambda x: x["relevance_score"],
-                reverse=True
-            )
-
-        except Exception as e:
-            logger.warning("Segment ranking failed: %s", e)
-            return segments
+        """
+        Rank segments based on relevance or other metrics.
+        Currently returns segments with equal weight, allowing the caller 
+        to decide on distribution/slicing (e.g., evenly across the video).
+        """
+        if not segments:
+            return []
+            
+        for seg in segments:
+            seg["relevance_score"] = 1.0  # Equal weight
+            
+        return segments
