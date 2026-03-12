@@ -1,0 +1,20 @@
+2026-03-12 16:39:00,847 - app.main - INFO - Main module loading...
+2026-03-12 16:39:01,403 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 16:39:01,507 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 16:39:01,507 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 16:39:03,552 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 16:39:03,553 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 16:59:37,330 - app.api.videos - INFO - Video uploaded: file_id=23bfc427-f5f0-43f9-8ba0-5f897db609e8 user=69a00f20f00b71ffa4672fbb size_mb=33.66
+2026-03-12 16:59:41,802 - app.api.summarize - INFO - Task 2770952d-c23b-43b7-92d9-517000468f1b: starting transcription
+2026-03-12 17:00:17,890 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-12 17:00:17,921 - app.api.summarize - INFO - Task 2770952d-c23b-43b7-92d9-517000468f1b: summarizing
+2026-03-12 17:00:18,957 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 17:00:19,230 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 17:00:19,282 - app.api.summarize - WARNING - Task 2770952d-c23b-43b7-92d9-517000468f1b: summary video generation failed (non-fatal): No module named 'cv2'
+2026-03-12 17:00:19,291 - app.api.summarize - INFO - Task 2770952d-c23b-43b7-92d9-517000468f1b: done, summary_id=b4d54d23-837e-43ed-9534-d386684642d9
+2026-03-12 17:07:08,035 - app.main - INFO - Main module loading...
+2026-03-12 17:07:09,586 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 17:07:09,672 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 17:07:09,672 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 17:07:11,732 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 17:07:11,732 - app.main - INFO - Summarizer model loaded at startup

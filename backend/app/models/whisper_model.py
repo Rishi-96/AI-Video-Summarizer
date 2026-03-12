@@ -1,4 +1,4 @@
-﻿"""
+"""
 whisper_model.py — Groq API transcription with chunked audio processing
 to reduce peak memory usage and fit within Groq API constraints.
 """
@@ -35,7 +35,11 @@ class WhisperTranscriber:
         
         if not self.use_mock:
             try:
-                self.client = Groq(api_key=self.api_key)
+                import httpx
+                import os
+                http_proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("HTTP_PROXY")
+                http_client = httpx.Client(proxy=http_proxy, verify=False) if http_proxy else httpx.Client(verify=False)
+                self.client = Groq(api_key=self.api_key, http_client=http_client)
                 logger.info("Groq Whisper Transcriber loaded")
             except Exception as e:
                 logger.warning("Error initializing Groq Whisper: %s", e)
@@ -98,14 +102,17 @@ class WhisperTranscriber:
     def _extract_audio(self, video_path: str) -> str:
         """Extract audio to a temporary WAV file. Caller must delete it."""
         try:
-            import moviepy.editor as mp  # lazy import — heavy
+            try:
+                from moviepy import VideoFileClip
+            except ImportError:
+                from moviepy.editor import VideoFileClip
             tmp = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
             audio_path = tmp.name
             tmp.close()
 
-            clip = mp.VideoFileClip(video_path)
+            clip = VideoFileClip(video_path)
             # Output 16kHz mono audio to aggressively save megabytes (Groq limits: 25MB)
-            clip.audio.write_audiofile(audio_path, fps=16000, nbytes=2, codec='pcm_s16le', verbose=False, logger=None)
+            clip.audio.write_audiofile(audio_path, fps=16000, nbytes=2, codec='pcm_s16le')
             clip.close()
             return audio_path
         except Exception as e:

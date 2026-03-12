@@ -1,10 +1,15 @@
-﻿import logging
+import logging
+# Reloading server...
 import uuid
 import ssl
 import os
 from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
+
+# Add file handler to root logger
+logging.basicConfig(level=logging.INFO, filename='app_debug.log', filemode='a', 
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 # Fix for corporate proxies/Zscaler injecting self-signed certificates
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -34,6 +39,7 @@ from .core.config import settings
 from .core.database import database
 
 logger = logging.getLogger(__name__)
+logger.info("Main module loading...")
 
 # ---------------------------------------------------------------------------
 # Optional heavy ML modules — server still starts without them

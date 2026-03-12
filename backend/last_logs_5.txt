@@ -1,0 +1,18 @@
+> C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:837:2026-03-12 17:09:51,729 - app.api.summarize - WARNING - Task c6f8c9ff-0df3-4a2f-aebe-87c9fa93ed92: summary video generation failed (non-fatal): No module named 'cv2'
+> C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:838:2026-03-12 17:09:51,734 - app.api.summarize - INFO - Task c6f8c9ff-0df3-4a2f-aebe-87c9fa93ed92: done, summary_id=7377d800-3103-4aad-9601-3b0d89096e24
+> C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:839:2026-03-12 17:11:34,850 - app.api.summarize - ERROR - YouTube summarization failed: 
+  C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:840:Could not retrieve a transcript for the video https://www.youtube.com/watch?v=vdMPP47nLhc! This is most likely caused by:
+  C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:841:
+> C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:846:2026-03-12 17:15:37,257 - app.api.summarize - INFO - Task a1d87e9b-86c1-487c-9c93-bfb44e346d98: starting transcription
+  C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:847:2026-03-12 17:16:34,457 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+> C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:848:2026-03-12 17:16:34,492 - app.api.summarize - INFO - Task a1d87e9b-86c1-487c-9c93-bfb44e346d98: summarizing
+  C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:849:2026-03-12 17:16:37,739 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+  C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:850:2026-03-12 17:16:38,008 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+> C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:851:2026-03-12 17:16:38,029 - app.api.summarize - WARNING - Task a1d87e9b-86c1-487c-9c93-bfb44e346d98: summary video generation failed (non-fatal): No module named 'cv2'
+> C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:852:2026-03-12 17:16:38,044 - app.api.summarize - INFO - Task a1d87e9b-86c1-487c-9c93-bfb44e346d98: done, summary_id=01b8f18e-c48c-47ff-9f82-1fa20a925313
+  C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:853:2026-03-12 17:19:35,589 - app.main - INFO - Main module loading...
+> C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:854:2026-03-12 17:19:35,940 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+  C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:855:2026-03-12 17:19:36,067 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+  C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:856:2026-03-12 17:19:36,067 - app.main - INFO - Whisper model loaded at startup
+> C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:857:2026-03-12 17:19:38,135 - app.models.summarizer - INFO - Groq Summarizer loaded
+> C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app_debug.log:858:2026-03-12 17:19:38,135 - app.main - INFO - Summarizer model loaded at startup

@@ -1,12 +1,12 @@
 import logging
+import os
+import httpx
 from typing import AsyncGenerator, Dict, List, Optional
-
 from groq import Groq
 
 logger = logging.getLogger(__name__)
 
 DEFAULT_MODEL = "llama-3.1-8b-instant"
-
 
 class GroqChat:
     def __init__(self, api_key: str):
@@ -14,19 +14,33 @@ class GroqChat:
         self.client: Optional[Groq] = None
         self.history: List[Dict] = []
         self.use_mock = False
+        self.use_ollama = False
+        self.ollama_url = "http://localhost:11434/api/generate"
 
-        if api_key:
+        try:
+            http_proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("HTTP_PROXY")
+            http_client = httpx.Client(proxy=http_proxy, verify=False) if http_proxy else httpx.Client(verify=False)
+            
+            # Check for Ollama
             try:
-                self.client = Groq(api_key=api_key)
-                logger.info("Groq client initialized")
-            except Exception as e:
-                logger.warning("Error initializing Groq client: %s", e)
-                self.use_mock = True
-        else:
-            logger.warning("No GROQ_API_KEY set — running in mock mode")
+                ollama_check = httpx.get("http://localhost:11434/api/tags", timeout=1.0)
+                if ollama_check.status_code == 200:
+                    self.use_ollama = True
+                    logger.info("Chat: Ollama detected")
+            except Exception:
+                pass
+
+            if not self.use_ollama:
+                if api_key:
+                    self.client = Groq(api_key=api_key, http_client=http_client)
+                    logger.info("Groq client initialized")
+                else:
+                    logger.warning("No GROQ_API_KEY set and Ollama not detected — running in mock mode")
+                    self.use_mock = True
+        except Exception as e:
+            logger.warning("Error initializing AI backend: %s", e)
             self.use_mock = True
 
-    # ------------------------------------------------------------------
     def set_context(
         self,
         transcript: str,
@@ -49,9 +63,27 @@ class GroqChat:
         )
         self.history = [{"role": "system", "content": system_prompt}]
 
-    # ------------------------------------------------------------------
     async def ask_question(self, question: str) -> str:
         """Send a question and return the full response string."""
+        if self.use_ollama:
+            # Construct a simple prompt from history
+            prompt = "\n".join([f"{m['role']}: {m['content']}" for m in self.history])
+            prompt += f"\nuser: {question}\nassistant:"
+            
+            try:
+                resp = httpx.post(self.ollama_url, json={
+                    "model": "llama3",
+                    "prompt": prompt,
+                    "stream": False
+                }, timeout=60.0)
+                answer = resp.json().get("response", "").strip()
+                self.history.append({"role": "user", "content": question})
+                self.history.append({"role": "assistant", "content": answer})
+                return answer
+            except Exception as e:
+                logger.error("Ollama chat error: %s", e)
+                return f"Error connecting to Ollama: {e}"
+
         if self.use_mock or self.client is None:
             return self._mock_response(question)
 
@@ -69,12 +101,13 @@ class GroqChat:
             logger.warning("Groq chat error: %s", e)
             return f"I'm having trouble answering right now. Please try again. ({e})"
 
-    # ------------------------------------------------------------------
     async def stream_question(self, question: str) -> AsyncGenerator[str, None]:
-        """
-        Yield response tokens one-by-one for WebSocket streaming.
-        Falls back to a single-chunk yield in mock mode.
-        """
+        """Yield response tokens one-by-one for WebSocket streaming."""
+        if self.use_ollama:
+            answer = await self.ask_question(question)
+            yield answer
+            return
+
         if self.use_mock or self.client is None:
             yield self._mock_response(question)
             return
@@ -99,7 +132,6 @@ class GroqChat:
             logger.warning("Groq streaming error: %s", e)
             yield f"[Error: {e}]"
 
-    # ------------------------------------------------------------------
     def _mock_response(self, question: str) -> str:
         q = question.lower()
         if any(w in q for w in ("summary", "about", "what is")):

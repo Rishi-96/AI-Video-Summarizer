@@ -1,96 +1,185 @@
-import React from 'react';
-import ReactPlayer from 'react-player';
-import { FiMaximize2, FiVolume2, FiVolumeX } from 'react-icons/fi';
+import React, { useRef, useState, useEffect } from 'react';
+import { FiMaximize2, FiVolume2, FiVolumeX, FiPlay, FiPause } from 'react-icons/fi';
 
 const VideoPlayer = ({ url, title, onProgress }) => {
-  const [playing, setPlaying] = React.useState(false);
-  const [volume, setVolume] = React.useState(0.8);
-  const [muted, setMuted] = React.useState(false);
-  const [played, setPlayed] = React.useState(0);
-  const [duration, setDuration] = React.useState(0);
-  const playerRef = React.useRef(null);
+  const videoRef = useRef(null);
+  const containerRef = useRef(null);
+  const [playing, setPlaying] = useState(false);
+  const [volume, setVolume] = useState(0.8);
+  const [muted, setMuted] = useState(false);
+  const [played, setPlayed] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [buffered, setBuffered] = useState(0);
 
-  const handleTimeUpdate = (e) => {
-    const current = e.target.currentTime;
-    const dur = e.target.duration || duration || 1;
-    setPlayed(current / dur);
+  // Sync volume and muted state to video element
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.volume = volume;
+      videoRef.current.muted = muted;
+    }
+  }, [volume, muted]);
+
+  const handlePlayPause = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (playing) {
+      video.pause();
+    } else {
+      video.play().catch(() => {});
+    }
+    setPlaying(!playing);
+  };
+
+  const handleTimeUpdate = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    const current = video.currentTime;
+    const dur = video.duration || 1;
+    const fraction = current / dur;
+    setPlayed(fraction);
+
+    // Buffered progress
+    if (video.buffered.length > 0) {
+      setBuffered(video.buffered.end(video.buffered.length - 1) / dur);
+    }
+
     if (onProgress) {
-      onProgress({ played: current / dur, playedSeconds: current });
+      onProgress({ played: fraction, playedSeconds: current });
     }
   };
 
-  const handleDurationChange = (e) => {
-    setDuration(e.target.duration);
+  const handleLoadedMetadata = () => {
+    const video = videoRef.current;
+    if (video) {
+      setDuration(video.duration);
+    }
   };
 
   const handleSeekChange = (e) => {
     const fraction = parseFloat(e.target.value);
     setPlayed(fraction);
-    if (playerRef.current && duration > 0) {
-      playerRef.current.currentTime = fraction * duration;
+    if (videoRef.current && duration > 0) {
+      videoRef.current.currentTime = fraction * duration;
+    }
+  };
+
+  const handleVolumeChange = (e) => {
+    const v = parseFloat(e.target.value);
+    setVolume(v);
+    if (v > 0 && muted) setMuted(false);
+  };
+
+  const handleEnded = () => {
+    setPlaying(false);
+    setPlayed(0);
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+    }
+  };
+
+  const handleFullscreen = () => {
+    const container = containerRef.current;
+    if (!container) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else if (container.requestFullscreen) {
+      container.requestFullscreen();
+    } else if (container.webkitRequestFullscreen) {
+      container.webkitRequestFullscreen();
     }
   };
 
   const formatTime = (seconds) => {
-    const date = new Date(seconds * 1000);
-    const hh = date.getUTCHours();
-    const mm = date.getUTCMinutes();
-    const ss = date.getUTCSeconds().toString().padStart(2, '0');
-    if (hh) {
-      return `${hh}:${mm.toString().padStart(2, '0')}:${ss}`;
+    if (!seconds || isNaN(seconds)) return '0:00';
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+    if (h > 0) {
+      return `${h}:${m.toString().padStart(2, '0')}:${s}`;
     }
-    return `${mm}:${ss}`;
+    return `${m}:${s}`;
   };
 
   return (
-    <div className="bg-black rounded-xl overflow-hidden">
-      <div className="relative pt-[56.25%]"> {/* 16:9 Aspect Ratio */}
-        <ReactPlayer
-          ref={playerRef}
+    <div ref={containerRef} className="bg-black rounded-xl overflow-hidden">
+      {/* Video Element */}
+      <div className="relative" style={{ paddingTop: '56.25%' }}>
+        <video
+          ref={videoRef}
           src={url}
-          width="100%"
-          height="100%"
-          style={{ position: 'absolute', top: 0, left: 0 }}
-          playing={playing}
-          volume={volume}
-          muted={muted}
           onTimeUpdate={handleTimeUpdate}
-          onDurationChange={handleDurationChange}
-          config={{
-            file: {
-              attributes: {
-                controlsList: 'nodownload'
-              }
-            }
+          onLoadedMetadata={handleLoadedMetadata}
+          onEnded={handleEnded}
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          preload="metadata"
+          playsInline
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            backgroundColor: '#000',
           }}
+          onClick={handlePlayPause}
         />
+
+        {/* Click-to-play overlay (only when paused) */}
+        {!playing && (
+          <div
+            className="absolute inset-0 flex items-center justify-center cursor-pointer bg-black/30 transition-opacity hover:bg-black/40"
+            onClick={handlePlayPause}
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+          >
+            <div className="w-16 h-16 rounded-full bg-blue-600/90 flex items-center justify-center shadow-lg shadow-blue-500/30">
+              <FiPlay size={28} className="text-white ml-1" />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Video Controls */}
-      <div className="bg-gray-900 p-4">
-        <div className="flex items-center space-x-4">
+      <div className="bg-gray-900 px-4 py-3">
+        {/* Progress Bar */}
+        <div className="relative w-full h-1.5 bg-gray-700 rounded-full mb-3 cursor-pointer group">
+          {/* Buffered */}
+          <div
+            className="absolute top-0 left-0 h-full bg-gray-600 rounded-full"
+            style={{ width: `${buffered * 100}%` }}
+          />
+          {/* Played */}
+          <div
+            className="absolute top-0 left-0 h-full bg-blue-500 rounded-full transition-all"
+            style={{ width: `${played * 100}%` }}
+          />
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.001}
+            value={played}
+            onChange={handleSeekChange}
+            className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+          />
+        </div>
+
+        <div className="flex items-center space-x-3">
           {/* Play/Pause Button */}
           <button
-            onClick={() => setPlaying(!playing)}
-            className="text-white hover:text-blue-400 transition"
+            onClick={handlePlayPause}
+            className="text-white hover:text-blue-400 transition p-1"
           >
-            {playing ? (
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M10 9v6h2V9h-2zm4 0v6h2V9h-2z" />
-              </svg>
-            ) : (
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            )}
+            {playing ? <FiPause size={20} /> : <FiPlay size={20} />}
           </button>
 
           {/* Volume Control */}
           <button
             onClick={() => setMuted(!muted)}
-            className="text-white hover:text-blue-400 transition"
+            className="text-white hover:text-blue-400 transition p-1"
           >
-            {muted ? <FiVolumeX size={20} /> : <FiVolume2 size={20} />}
+            {muted || volume === 0 ? <FiVolumeX size={18} /> : <FiVolume2 size={18} />}
           </button>
 
           {/* Volume Slider */}
@@ -98,52 +187,34 @@ const VideoPlayer = ({ url, title, onProgress }) => {
             type="range"
             min={0}
             max={1}
-            step={0.1}
-            value={volume}
-            onChange={(e) => setVolume(parseFloat(e.target.value))}
-            className="w-24 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+            step={0.05}
+            value={muted ? 0 : volume}
+            onChange={handleVolumeChange}
+            className="w-20 h-1.5 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+            style={{
+              background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(muted ? 0 : volume) * 100}%, #374151 ${(muted ? 0 : volume) * 100}%, #374151 100%)`,
+            }}
           />
 
-          {/* Progress Bar */}
-          <div className="flex-1 flex items-center space-x-2">
-            <span className="text-sm text-gray-400">
-              {formatTime(played * duration)}
-            </span>
-            <input
-              type="range"
-              min={0}
-              max={1}
-              step={0.001}
-              value={played}
-              onChange={handleSeekChange}
-              className="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-            />
-            <span className="text-sm text-gray-400">
-              {formatTime(duration)}
+          {/* Time */}
+          <div className="flex-1 flex items-center justify-end">
+            <span className="text-sm text-gray-400 font-mono">
+              {formatTime(played * duration)} / {formatTime(duration)}
             </span>
           </div>
 
           {/* Fullscreen Button */}
           <button
-            onClick={() => {
-              const player = playerRef.current;
-              if (player) {
-                if (player.requestFullscreen) {
-                  player.requestFullscreen();
-                } else if (player.webkitRequestFullscreen) {
-                  player.webkitRequestFullscreen();
-                }
-              }
-            }}
-            className="text-white hover:text-blue-400 transition"
+            onClick={handleFullscreen}
+            className="text-white hover:text-blue-400 transition p-1"
           >
-            <FiMaximize2 size={18} />
+            <FiMaximize2 size={17} />
           </button>
         </div>
 
         {/* Video Title */}
         {title && (
-          <div className="mt-3 text-white text-sm font-medium">
+          <div className="mt-2 text-gray-300 text-sm font-medium truncate">
             {title}
           </div>
         )}

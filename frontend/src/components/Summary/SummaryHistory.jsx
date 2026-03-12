@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiFileText, FiMessageCircle, FiCalendar, FiClock } from 'react-icons/fi';
+import { FiFileText, FiMessageCircle, FiCalendar, FiClock, FiFilm } from 'react-icons/fi';
 import { formatDistanceToNow } from 'date-fns';
 
 const SummaryHistory = ({ summaries }) => {
@@ -52,10 +52,16 @@ const SummaryHistory = ({ summaries }) => {
               </div>
             </div>
 
-            <div className="ml-4">
+            <div className="ml-4 flex flex-col items-end space-y-2">
               <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-full">
                 {summary.language || 'EN'}
               </span>
+              {summary.has_summary_video && (
+                <span className="flex items-center px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-full">
+                  <FiFilm className="mr-1 h-3 w-3" />
+                  Video
+                </span>
+              )}
             </div>
           </div>
         </div>

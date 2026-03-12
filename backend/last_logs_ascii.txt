@@ -1,0 +1,100 @@
+Traceback (most recent call last):
+  File "C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 115, in _extract_audio
+    clip.audio.write_audiofile(audio_path, fps=16000, nbytes=2, codec='pcm_s16le', verbose=False, logger=None)
+  File "C:\New folder\Lib\site-packages\decorator.py", line 234, in fun
+    args, kw = fix(args, kw, sig)
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\New folder\Lib\site-packages\decorator.py", line 204, in fix
+    ba = sig.bind(*args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\New folder\Lib\inspect.py", line 3212, in bind
+    return self._bind(args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\New folder\Lib\inspect.py", line 3201, in _bind
+    raise TypeError(
+TypeError: got an unexpected keyword argument 'verbose'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app\api\summarize.py", line 78, in _run_summarize_pipeline
+    segments = await asyncio.to_thread(whisper.get_segments, video_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\New folder\Lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\New folder\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 187, in get_segments
+    result = self.transcribe_file(video_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 150, in transcribe_file
+    audio_path = self._extract_audio(video_path)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Himani Jain\Documents\MajorProject\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 119, in _extract_audio
+    raise RuntimeError(f"Audio extraction failed: {e}") from e
+RuntimeError: Audio extraction failed: got an unexpected keyword argument 'verbose'
+2026-03-12 16:37:07,421 - app.core.database - INFO - MongoDB connection closed
+2026-03-12 16:37:11,423 - app.main - INFO - Main module loading...
+2026-03-12 16:37:11,956 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 16:37:12,024 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 16:37:12,024 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 16:37:14,110 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 16:37:14,110 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 16:37:14,268 - app.core.database - INFO - MongoDB connection closed
+2026-03-12 16:37:16,866 - app.main - INFO - Main module loading...
+2026-03-12 16:37:17,116 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 16:37:17,157 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 16:37:17,157 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 16:37:19,206 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 16:37:19,206 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 16:37:30,002 - app.core.database - INFO - MongoDB connection closed
+2026-03-12 16:37:33,662 - app.main - INFO - Main module loading...
+2026-03-12 16:37:33,943 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 16:37:34,022 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 16:37:34,022 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 16:37:35,686 - app.core.database - INFO - MongoDB connection closed
+2026-03-12 16:37:36,045 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 16:37:36,045 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 16:37:40,125 - app.main - INFO - Main module loading...
+2026-03-12 16:37:40,372 - app.main - INFO - Main module loading...
+2026-03-12 16:37:40,441 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 16:37:40,494 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 16:37:40,494 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 16:37:40,643 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 16:37:40,728 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 16:37:40,728 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 16:37:42,548 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 16:37:42,549 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 16:37:42,761 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 16:37:42,761 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 16:37:52,612 - app.core.database - INFO - MongoDB connection closed
+2026-03-12 16:37:55,772 - app.main - INFO - Main module loading...
+2026-03-12 16:37:55,990 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 16:37:56,050 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 16:37:56,050 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 16:37:58,080 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 16:37:58,081 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 16:38:41,962 - app.core.database - INFO - MongoDB connection closed
+2026-03-12 16:38:45,346 - app.main - INFO - Main module loading...
+2026-03-12 16:38:45,582 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 16:38:45,646 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 16:38:45,646 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 16:38:47,680 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 16:38:47,680 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 16:38:52,949 - app.core.database - INFO - MongoDB connection closed
+2026-03-12 16:39:00,847 - app.main - INFO - Main module loading...
+2026-03-12 16:39:01,403 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-12 16:39:01,507 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-12 16:39:01,507 - app.main - INFO - Whisper model loaded at startup
+2026-03-12 16:39:03,552 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-12 16:39:03,553 - app.main - INFO - Summarizer model loaded at startup
+2026-03-12 16:59:37,330 - app.api.videos - INFO - Video uploaded: file_id=23bfc427-f5f0-43f9-8ba0-5f897db609e8 user=69a00f20f00b71ffa4672fbb size_mb=33.66
+2026-03-12 16:59:41,802 - app.api.summarize - INFO - Task 2770952d-c23b-43b7-92d9-517000468f1b: starting transcription
+2026-03-12 17:00:17,890 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-12 17:00:17,921 - app.api.summarize - INFO - Task 2770952d-c23b-43b7-92d9-517000468f1b: summarizing
+2026-03-12 17:00:18,957 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 17:00:19,230 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 17:00:19,282 - app.api.summarize - WARNING - Task 2770952d-c23b-43b7-92d9-517000468f1b: summary video generation failed (non-fatal): No module named 'cv2'
+2026-03-12 17:00:19,291 - app.api.summarize - INFO - Task 2770952d-c23b-43b7-92d9-517000468f1b: done, summary_id=b4d54d23-837e-43ed-9534-d386684642d9
