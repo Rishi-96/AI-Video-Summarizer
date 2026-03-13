@@ -115,6 +115,9 @@ async def _run_summarize_pipeline(
             # Derive a friendly title from the original filename
             video_title = Path(video_path).stem.replace("_", " ").replace("-", " ").title()
 
+            # Limit segments to a maximum of 10 to keep summary concise and generation fast
+            selected_for_video = selected[:10]
+
             logger.info("Task %s: generating enhanced visual summary video", task_id)
             await asyncio.to_thread(
                 processor.create_visual_summary,
@@ -124,7 +127,7 @@ async def _run_summarize_pipeline(
                 summary_video_output,
                 video_title,
                 0,        # auto key frames
-                selected  # Use the ranked segments
+                selected_for_video  # Use the ranked segments
             )
             if os.path.exists(summary_video_output):
                 summary_video_path = summary_video_output

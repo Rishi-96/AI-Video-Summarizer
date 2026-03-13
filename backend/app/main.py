@@ -15,8 +15,15 @@ from .core.config import settings
 from .core.database import database
 
 # Add file handler to root logger
-logging.basicConfig(level=logging.INFO, filename='app_debug.log', filemode='a', 
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# Add file handler to root logger with UTF-8 support
+logging.basicConfig(
+    level=logging.INFO, 
+    filename='app_debug.log', 
+    filemode='a', 
+    encoding='utf-8',
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    force=True
+)
 
 # Fix for corporate proxies/Zscaler injecting self-signed certificates
 ssl._create_default_https_context = ssl._create_unverified_context

@@ -1345,3 +1345,104 @@ yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube] vdMPP47nLhc: This video 
 2026-03-13 11:26:48,547 - app.models.summarizer - INFO - Groq Summarizer loaded
 2026-03-13 11:26:48,547 - app.main - INFO - Summarizer model loaded at startup
 2026-03-13 11:26:48,654 - app.core.database - INFO - MongoDB connection closed
+2026-03-14 01:24:41,716 - app.main - INFO - Main module loading...
+2026-03-14 01:24:42,119 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-14 01:24:42,134 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-14 01:24:42,134 - app.main - INFO - Whisper model loaded at startup
+2026-03-14 01:24:44,176 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-14 01:24:44,176 - app.main - INFO - Summarizer model loaded at startup
+2026-03-14 01:26:51,920 - app.api.videos - INFO - Video uploaded: file_id=44e96696-33ae-4def-bfa8-9e12b52974dc user=69a00f20f00b71ffa4672fbb size_mb=33.66
+2026-03-14 01:26:53,914 - app.api.summarize - INFO - Task 0966fa74-f226-46bd-9dc7-ee1a2d990ec6: starting transcription
+2026-03-14 01:27:03,496 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-14 01:27:03,529 - app.api.summarize - INFO - Task 0966fa74-f226-46bd-9dc7-ee1a2d990ec6: summarizing
+2026-03-14 01:27:04,578 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 01:27:04,938 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 01:27:04,976 - app.models.video_processor - INFO - Video processor initialized
+2026-03-14 01:27:04,976 - app.api.summarize - INFO - Task 0966fa74-f226-46bd-9dc7-ee1a2d990ec6: generating enhanced visual summary video
+2026-03-14 01:27:04,978 - app.models.video_processor - INFO - Creating enhanced visual summary for uploads\69a00f20f00b71ffa4672fbb\44e96696-33ae-4def-bfa8-9e12b52974dc.mp4
+2026-03-14 01:27:12,992 - app.models.video_processor - INFO - Compositing 17 clips into final summary video (114s total)
+2026-03-14 01:34:17,374 - app.api.videos - INFO - Video uploaded: file_id=997d52ec-abc9-46b0-beb0-82b4d50fdfb5 user=69a00f20f00b71ffa4672fbb size_mb=33.66
+2026-03-14 01:34:49,962 - app.api.summarize - INFO - Task 7e2b5ae6-8cb4-4745-9afa-b15bf7e82dcc: starting transcription
+2026-03-14 01:35:01,876 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-14 01:35:01,918 - app.api.summarize - INFO - Task 7e2b5ae6-8cb4-4745-9afa-b15bf7e82dcc: summarizing
+2026-03-14 01:35:02,821 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 01:35:03,325 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 01:35:03,343 - app.models.video_processor - INFO - Video processor initialized
+2026-03-14 01:35:03,344 - app.api.summarize - INFO - Task 7e2b5ae6-8cb4-4745-9afa-b15bf7e82dcc: generating enhanced visual summary video
+2026-03-14 01:35:03,344 - app.models.video_processor - INFO - Creating enhanced visual summary for uploads\69a00f20f00b71ffa4672fbb\997d52ec-abc9-46b0-beb0-82b4d50fdfb5.mp4
+2026-03-14 01:35:14,568 - app.models.video_processor - INFO - Compositing 17 clips into final summary video (114s total)
+2026-03-14 01:47:14,601 - app.models.video_processor - INFO - Enhanced visual summary created successfully at processed\69a00f20f00b71ffa4672fbb\summary_0966fa74-f226-46bd-9dc7-ee1a2d990ec6.mp4
+2026-03-14 01:47:14,626 - app.api.summarize - INFO - Task 0966fa74-f226-46bd-9dc7-ee1a2d990ec6: visual summary video created at processed\69a00f20f00b71ffa4672fbb\summary_0966fa74-f226-46bd-9dc7-ee1a2d990ec6.mp4
+2026-03-14 01:47:14,668 - app.api.summarize - INFO - Task 0966fa74-f226-46bd-9dc7-ee1a2d990ec6: done, summary_id=6ffc728d-87e0-489d-9753-eefde52acfaa
+2026-03-14 01:50:44,171 - app.main - INFO - Main module loading...
+2026-03-14 01:50:44,474 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-14 01:50:44,488 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-14 01:50:44,488 - app.main - INFO - Whisper model loaded at startup
+2026-03-14 01:50:46,532 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-14 01:50:46,532 - app.main - INFO - Summarizer model loaded at startup
+2026-03-14 01:51:31,055 - app.api.videos - INFO - Video uploaded: file_id=4b2eee2e-37ad-4083-8817-b72d8167ab25 user=69a00f20f00b71ffa4672fbb size_mb=33.66
+2026-03-14 01:51:33,553 - app.api.summarize - INFO - Task 7fc364ae-186a-4052-b221-750bb88da6f4: starting transcription
+2026-03-14 01:51:44,207 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-14 01:51:44,239 - app.api.summarize - INFO - Task 7fc364ae-186a-4052-b221-750bb88da6f4: summarizing
+2026-03-14 01:51:45,141 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 01:51:45,606 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 01:51:45,659 - app.models.video_processor - INFO - Video processor initialized
+2026-03-14 01:51:45,660 - app.api.summarize - INFO - Task 7fc364ae-186a-4052-b221-750bb88da6f4: generating enhanced visual summary video
+2026-03-14 01:51:45,661 - app.models.video_processor - INFO - Creating enhanced visual summary for uploads\69a00f20f00b71ffa4672fbb\4b2eee2e-37ad-4083-8817-b72d8167ab25.mp4
+2026-03-14 01:51:51,569 - app.models.video_processor - INFO - Compositing 17 clips into final summary video (114s total)
+2026-03-14 02:03:23,562 - asyncio - ERROR - Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\New folder\Lib\asyncio\events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\New folder\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+2026-03-14 02:04:53,580 - app.models.video_processor - INFO - Enhanced visual summary created successfully at processed\69a00f20f00b71ffa4672fbb\summary_7fc364ae-186a-4052-b221-750bb88da6f4.mp4
+2026-03-14 02:04:53,589 - app.api.summarize - INFO - Task 7fc364ae-186a-4052-b221-750bb88da6f4: visual summary video created at processed\69a00f20f00b71ffa4672fbb\summary_7fc364ae-186a-4052-b221-750bb88da6f4.mp4
+2026-03-14 02:04:53,604 - app.api.summarize - INFO - Task 7fc364ae-186a-4052-b221-750bb88da6f4: done, summary_id=0c5dfa5a-42cb-4b00-aaec-7c6c86bd599c
+2026-03-14 02:06:01,507 - app.api.videos - INFO - Video deleted: file_id=44e96696-33ae-4def-bfa8-9e12b52974dc user=69a00f20f00b71ffa4672fbb
+2026-03-14 02:06:09,498 - app.api.videos - INFO - Video deleted: file_id=6097495f-2dbd-4454-b974-8263afdc70a6 user=69a00f20f00b71ffa4672fbb
+2026-03-14 02:07:37,174 - app.api.auth - INFO - User logged in: himani.jain0007@gmail.com
+2026-03-14 02:07:50,308 - app.api.videos - INFO - Video uploaded: file_id=cfcf32fd-8f26-4047-8824-9558aafe6b24 user=69a16805472358f8e590d3fb size_mb=51.29
+2026-03-14 02:07:54,067 - app.api.summarize - INFO - Task 898d1ad5-fa3c-42a7-8960-4147a63cc3af: starting transcription
+2026-03-14 02:08:04,264 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-14 02:08:04,296 - app.api.summarize - INFO - Task 898d1ad5-fa3c-42a7-8960-4147a63cc3af: summarizing
+2026-03-14 02:08:05,332 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 02:08:05,749 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 02:08:05,751 - app.models.video_processor - INFO - Video processor initialized
+2026-03-14 02:08:05,752 - app.api.summarize - INFO - Task 898d1ad5-fa3c-42a7-8960-4147a63cc3af: generating enhanced visual summary video
+2026-03-14 02:08:05,753 - app.models.video_processor - INFO - Creating enhanced visual summary for uploads\69a16805472358f8e590d3fb\cfcf32fd-8f26-4047-8824-9558aafe6b24.mp4
+2026-03-14 02:08:13,415 - app.models.video_processor - INFO - Compositing 17 clips into final summary video (114s total)
+2026-03-14 02:10:22,570 - app.main - INFO - Main module loading...
+2026-03-14 02:10:22,879 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-14 02:10:22,891 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-14 02:10:22,892 - app.main - INFO - Whisper model loaded at startup
+2026-03-14 02:10:24,942 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-14 02:10:24,942 - app.main - INFO - Summarizer model loaded at startup
+2026-03-14 02:10:30,029 - app.api.summarize - INFO - Task 02a56d15-7ed5-4880-aa20-4fa7b76864b7: starting transcription
+2026-03-14 02:10:42,476 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-03-14 02:10:42,507 - app.api.summarize - INFO - Task 02a56d15-7ed5-4880-aa20-4fa7b76864b7: summarizing
+2026-03-14 02:10:43,689 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 02:10:44,340 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 02:10:44,374 - app.models.video_processor - INFO - Video processor initialized
+2026-03-14 02:10:44,374 - app.api.summarize - INFO - Task 02a56d15-7ed5-4880-aa20-4fa7b76864b7: generating enhanced visual summary video
+2026-03-14 02:10:44,375 - app.models.video_processor - INFO - Creating enhanced visual summary for uploads\69a16805472358f8e590d3fb\cfcf32fd-8f26-4047-8824-9558aafe6b24.mp4
+2026-03-14 02:10:48,540 - app.models.video_processor - INFO - Compositing 15 clips into final summary video (99s total)
+2026-03-14 02:22:01,512 - app.models.video_processor - INFO - Enhanced visual summary created successfully at processed\69a16805472358f8e590d3fb\summary_02a56d15-7ed5-4880-aa20-4fa7b76864b7.mp4
+2026-03-14 02:22:01,552 - app.api.summarize - INFO - Task 02a56d15-7ed5-4880-aa20-4fa7b76864b7: visual summary video created at processed\69a16805472358f8e590d3fb\summary_02a56d15-7ed5-4880-aa20-4fa7b76864b7.mp4
+2026-03-14 02:22:01,568 - app.api.summarize - INFO - Task 02a56d15-7ed5-4880-aa20-4fa7b76864b7: done, summary_id=17019228-8c57-493a-9de1-e5bff2b10ad9
+2026-03-14 02:23:55,890 - app.main - INFO - Main module loading...
+2026-03-14 02:23:56,234 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-14 02:23:56,243 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-14 02:23:56,243 - app.main - INFO - Whisper model loaded at startup
+2026-03-14 02:23:58,264 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-14 02:23:58,264 - app.main - INFO - Summarizer model loaded at startup
+2026-03-14 02:24:02,534 - asyncio - ERROR - Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\New folder\Lib\asyncio\events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\New folder\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
