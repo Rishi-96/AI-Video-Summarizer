@@ -30,11 +30,11 @@ logger = logging.getLogger(__name__)
 OUTPUT_WIDTH = 1280
 OUTPUT_HEIGHT = 720
 FPS = 24
-FADE_DURATION = 0.5          # seconds of cross-fade between slides
+FADE_DURATION = 0.6          # seconds of cross-fade between slides
 TITLE_SLIDE_DURATION = 4     # seconds
-KEY_FRAME_DURATION = 5       # seconds per key-frame slide
-KEY_POINT_DURATION = 4       # seconds per key-point slide
-CLOSING_SLIDE_DURATION = 3   # seconds
+KEY_FRAME_DURATION = 8       # seconds per key-frame slide (increased for readability)
+KEY_POINT_DURATION = 6       # seconds per key-point slide (increased for readability)
+CLOSING_SLIDE_DURATION = 4   # seconds
 
 # Colours (RGB)
 BG_DARK = (15, 17, 26)
@@ -172,66 +172,75 @@ class VideoProcessor:
 
         return np.array(img)
 
-    def _create_frame_slide(self, frame: np.ndarray, text: str, slide_num: int, total_slides: int) -> np.ndarray:
-        """Create a slide with a key frame as background and summary text overlaid."""
-        # Resize frame to output dimensions
-        pil_frame = Image.fromarray(frame).resize((OUTPUT_WIDTH, OUTPUT_HEIGHT), Image.LANCZOS)
+    def _create_overlay_mask(self, text: str, slide_num: int, total_slides: int) -> Image.Image:
+        """Create a transparent RGBA overlay with a gradient and summary text."""
+        overlay = Image.new("RGBA", (OUTPUT_WIDTH, OUTPUT_HEIGHT), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(overlay)
 
-        # Add gradient overlay for text readability
-        pil_frame = self._add_gradient_overlay(pil_frame, opacity=200)
-        pil_frame = pil_frame.convert("RGB")
-        draw = ImageDraw.Draw(pil_frame)
+        # 1. Gradient for readability
+        gradient_start = int(OUTPUT_HEIGHT * 0.4)
+        for y in range(gradient_start, OUTPUT_HEIGHT):
+            progress = (y - gradient_start) / (OUTPUT_HEIGHT - gradient_start)
+            alpha = int(220 * progress)  # Bottom is more opaque
+            draw.line([(0, y), (OUTPUT_WIDTH, y)], fill=(0, 0, 0, alpha))
 
-        # Wrap text — allow up to 7 lines to show more content
-        text_font = self._get_font(24)
-        wrapped = textwrap.fill(text.strip(), width=65)
+        # 2. Text container
+        text_font = self._get_font(26)  # Slightly larger
+        wrapped = textwrap.fill(text.strip(), width=60)
         lines = wrapped.split("\n")
         if len(lines) > 7:
             lines = lines[:7]
-            lines[-1] = lines[-1][:75] + "..."
+            lines[-1] = lines[-1][:70] + "..."
         wrapped = "\n".join(lines)
 
-        # Draw text container at bottom
         text_bbox = draw.multiline_textbbox((0, 0), wrapped, font=text_font)
         text_h = text_bbox[3] - text_bbox[1]
-        pad = 30
-        container_y = OUTPUT_HEIGHT - text_h - pad * 2 - 50
+        pad = 35
+        container_y = OUTPUT_HEIGHT - text_h - pad * 2 - 60
 
-        # Semi-transparent container background
+        # Semi-transparent container
         container_img = Image.new("RGBA", (OUTPUT_WIDTH, OUTPUT_HEIGHT), (0, 0, 0, 0))
-        container_draw = ImageDraw.Draw(container_img)
+        c_draw = ImageDraw.Draw(container_img)
         self._draw_rounded_rect(
-            container_draw,
-            (40, container_y, OUTPUT_WIDTH - 40, OUTPUT_HEIGHT - 30),
-            radius=16,
+            c_draw,
+            (40, container_y, OUTPUT_WIDTH - 40, OUTPUT_HEIGHT - 35),
+            radius=18,
             fill=(10, 12, 22, 200),
         )
-        pil_frame = Image.alpha_composite(pil_frame.convert("RGBA"), container_img).convert("RGB")
-        draw = ImageDraw.Draw(pil_frame)
+        overlay = Image.alpha_composite(overlay, container_img)
+        draw = ImageDraw.Draw(overlay)
 
-        # Draw text
+        # 3. Draw text
         draw.multiline_text(
-            (70, container_y + pad),
+            (75, container_y + pad),
             wrapped,
             font=text_font,
             fill=TEXT_WHITE,
-            spacing=8,
+            spacing=10,
         )
 
-        # Slide counter (top right)
-        counter_font = self._get_font(16)
-        counter_text = f"{slide_num}/{total_slides}"
-        counter_bbox = draw.textbbox((0, 0), counter_text, font=counter_font)
-        counter_w = counter_bbox[2] - counter_bbox[0]
-        self._draw_rounded_rect(
-            draw,
-            (OUTPUT_WIDTH - counter_w - 40, 18, OUTPUT_WIDTH - 20, 44),
-            radius=10,
-            fill=(0, 0, 0),
-        )
-        draw.text((OUTPUT_WIDTH - counter_w - 30, 20), counter_text, font=counter_font, fill=TEXT_GREY)
+        # 4. Slide counter
+        if total_slides > 0:
+            counter_font = self._get_font(18)
+            counter_text = f"{slide_num} / {total_slides}"
+            c_bbox = draw.textbbox((0, 0), counter_text, font=counter_font)
+            cw = c_bbox[2] - c_bbox[0]
+            self._draw_rounded_rect(
+                draw,
+                (OUTPUT_WIDTH - cw - 50, 20, OUTPUT_WIDTH - 25, 52),
+                radius=12,
+                fill=(0, 0, 0, 180),
+            )
+            draw.text((OUTPUT_WIDTH - cw - 38, 24), counter_text, font=counter_font, fill=TEXT_GREY)
 
-        return np.array(pil_frame)
+        return overlay
+
+    def _create_frame_slide(self, frame: np.ndarray, text: str, slide_num: int, total_slides: int) -> np.ndarray:
+        """Create a static slide (fallback)."""
+        pil_frame = Image.fromarray(frame).resize((OUTPUT_WIDTH, OUTPUT_HEIGHT), Image.LANCZOS)
+        overlay = self._create_overlay_mask(text, slide_num, total_slides)
+        combined = Image.alpha_composite(pil_frame.convert("RGBA"), overlay).convert("RGB")
+        return np.array(combined)
 
     def _create_keypoint_slide(self, points: List[str], start_idx: int, end_idx: int) -> np.ndarray:
         """Create a styled slide showing key points."""
@@ -440,178 +449,119 @@ class VideoProcessor:
         key_points: List[str],
         output_path: str,
         video_title: str = "Video Summary",
-        num_key_frames: int = 0,  # 0 = auto-calculate based on text
+        num_key_frames: int = 0,
+        segments: Optional[List[Dict]] = None,
     ) -> str:
         """
-        Create a short visual summary video from background key-frames
-        overlaid with the AI-generated summary text and key points.
-
-        The number of slides adapts to the text length so that ALL
-        summary content is included — nothing is cut off.
-
-        Audio is extracted from the original video at each key frame's
-        timestamp so the viewer hears the speaker's voice matching
-        each slide.
-
-        Structure:
-          1. Title slide (4s)  — silence
-          2. Key-frame slides with summary text (5s each) — original audio
-          3. Key-point slides (4s each) — silence
-          4. Closing slide (3s) — silence
-
-        Returns the output path.
+        Create a clear, understandable visual summary video.
+        
+        Now uses MOVING video clips (when segments are provided) overlaid with
+        the AI-generated text summary. This is much clearer and more engaging
+        than a static slideshow.
         """
-        logger.info("Creating visual summary: extracting key frames from %s", video_path)
+        logger.info("Creating enhanced visual summary for %s", video_path)
 
-        # ── 1. Gather video metadata & audio ──────────────────────────
+        # 1. Metadata
         source_video = mp.VideoFileClip(video_path)
         video_duration = source_video.duration
         has_audio = source_video.audio is not None
         duration_str = self._format_duration(video_duration)
 
-        # ── 2. Split summary text into sentence chunks FIRST ──────────
-        #    Each chunk ~280 chars (fits ~7 lines at width 65)
-        text_chunks = self._split_text_for_slides(text_summary, max_chars_per_slide=280)
-
-        # Determine how many key frames we need (one per text chunk)
-        if num_key_frames <= 0:
-            num_key_frames = max(6, len(text_chunks))
-        num_key_frames = min(num_key_frames, 25)
-        if len(text_chunks) > num_key_frames:
-            num_key_frames = len(text_chunks)
-
-        # ── 3. Extract key frames with timestamps ─────────────────────
-        frame_data = self.extract_frames(video_path, num_key_frames)
-        if not frame_data:
-            source_video.close()
-            raise RuntimeError("Could not extract any frames from the video")
-
-        frames = [fd[0] for fd in frame_data]
-        timestamps = [fd[1] for fd in frame_data]
-
-        # Pad text chunks or recycle frames to match counts
-        while len(text_chunks) < len(frames):
-            text_chunks.append("")
-        original_frame_count = len(frames)
-        while len(frames) < len(text_chunks):
-            idx = len(frames) % original_frame_count
-            frames.append(frames[idx])
-            timestamps.append(timestamps[idx])
-
-        # ── 4. Build visual slides ────────────────────────────────────
-        #   Each entry: (numpy_image, duration_secs, is_keyframe, keyframe_idx)
-        slides = []
-
-        # Title slide
+        # 2. Split summary text into digestible chunks
+        text_chunks = self._split_text_for_slides(text_summary, max_chars_per_slide=240)
+        
+        # 3. Determine slides (either from segments or auto-extracted)
+        faded_clips = []
+        
+        # --- TITLE SLIDE ---
         title_img = self._create_title_slide(video_title, duration_str)
-        slides.append((title_img, TITLE_SLIDE_DURATION, False, -1))
+        title_clip = mp.ImageClip(title_img).set_duration(TITLE_SLIDE_DURATION).crossfadein(FADE_DURATION).crossfadeout(FADE_DURATION)
+        faded_clips.append(title_clip)
 
-        # Key-frame + text slides
-        total_frame_slides = len(frames)
-        for i, frame in enumerate(frames):
-            text_chunk = text_chunks[i] if i < len(text_chunks) else ""
-            if not text_chunk.strip() and i >= len(text_chunks):
-                continue
-            slide_img = self._create_frame_slide(frame, text_chunk, i + 1, total_frame_slides)
-            slides.append((slide_img, KEY_FRAME_DURATION, True, i))
+        # --- CONTENT SLIDES ---
+        # If segments aren't provided, extract frames evenly
+        slide_timestamps = []
+        if segments:
+            slide_timestamps = [s['start'] for s in segments]
+        else:
+            num = max(6, len(text_chunks))
+            slide_timestamps = np.linspace(0, video_duration * 0.9, num).tolist()
 
-        # Key-point slides
+        total_content_slides = max(len(text_chunks), len(slide_timestamps))
+        
+        for i in range(total_content_slides):
+            # Choose text
+            chunk = text_chunks[i] if i < len(text_chunks) else "Video Highlight"
+            
+            # Choose timestamp
+            ts = slide_timestamps[i % len(slide_timestamps)]
+            
+            # Create content subclip (8s moving video)
+            dur = KEY_FRAME_DURATION
+            start_ts = ts
+            end_ts = min(video_duration, start_ts + dur)
+            
+            # Ensure we have a valid clip length
+            if end_ts - start_ts < 1.0:
+                start_ts = max(0, video_duration - dur)
+                end_ts = video_duration
+            
+            try:
+                # Get moving subclip
+                content_clip = source_video.subclip(start_ts, end_ts)
+                
+                # Resize if needed to match output
+                if content_clip.w != OUTPUT_WIDTH or content_clip.h != OUTPUT_HEIGHT:
+                    content_clip = content_clip.resize(newsize=(OUTPUT_WIDTH, OUTPUT_HEIGHT))
+                
+                # Create the text overlay
+                overlay_img = self._create_overlay_mask(chunk, i + 1, total_content_slides)
+                overlay_clip = mp.ImageClip(np.array(overlay_img)).set_duration(content_clip.duration)
+                
+                # Composite
+                slide_clip = mp.CompositeVideoClip([content_clip, overlay_clip])
+                
+            except Exception as e:
+                logger.warning(f"Failed to create moving slide {i}, falling back to static: {e}")
+                # Fallback to static frame if subclip fails
+                frame = source_video.get_frame(start_ts)
+                img = self._create_frame_slide(frame, chunk, i + 1, total_content_slides)
+                slide_clip = mp.ImageClip(img).set_duration(dur)
+
+            slide_clip = slide_clip.crossfadein(FADE_DURATION).crossfadeout(FADE_DURATION)
+            faded_clips.append(slide_clip)
+
+        # --- KEY POINTS SLIDES ---
         if key_points:
             points_per_slide = 3
             for start in range(0, len(key_points), points_per_slide):
-                end = start + points_per_slide
-                kp_img = self._create_keypoint_slide(key_points, start, end)
-                slides.append((kp_img, KEY_POINT_DURATION, False, -1))
+                kp_img = self._create_keypoint_slide(key_points, start, start + points_per_slide)
+                kp_clip = mp.ImageClip(kp_img).set_duration(KEY_POINT_DURATION).crossfadein(FADE_DURATION).crossfadeout(FADE_DURATION)
+                faded_clips.append(kp_clip)
 
-        # Closing slide
+        # --- CLOSING SLIDE ---
         closing_img = self._create_closing_slide()
-        slides.append((closing_img, CLOSING_SLIDE_DURATION, False, -1))
+        closing_clip = mp.ImageClip(closing_img).set_duration(CLOSING_SLIDE_DURATION).crossfadein(FADE_DURATION)
+        faded_clips.append(closing_clip)
 
-        # ── 5. Build audio track ──────────────────────────────────────
-        audio_clips = []
-        if has_audio:
-            logger.info("Extracting audio snippets from original video for %d slides", len(slides))
-            for (_, slide_dur, is_kf, kf_idx) in slides:
-                if is_kf and kf_idx >= 0:
-                    # Extract audio from the original video around this frame's timestamp
-                    ts = timestamps[kf_idx]
-                    audio_start = max(0.0, ts)
-                    audio_end = min(video_duration, ts + slide_dur)
-                    actual_len = audio_end - audio_start
-
-                    if actual_len > 0.5:
-                        try:
-                            audio_snippet = source_video.audio.subclip(audio_start, audio_end)
-                            # If the snippet is shorter than the slide, pad with silence using vol(0)
-                            if actual_len < slide_dur:
-                                pad_len = slide_dur - actual_len
-                                # Grab a snippet from the start and mute it
-                                safe_pad_len = min(pad_len, video_duration)
-                                silence = source_video.audio.subclip(0, safe_pad_len).volumex(0)
-                                if safe_pad_len < pad_len:  # Extemely rare (video < slide diff)
-                                    num_repeats = int(pad_len / safe_pad_len) + 1
-                                    silence = mp.concatenate_audioclips([silence] * num_repeats).subclip(0, pad_len)
-                                audio_snippet = mp.concatenate_audioclips([audio_snippet, silence])
-                            else:
-                                # Trim to exact slide duration
-                                audio_snippet = audio_snippet.subclip(0, slide_dur)
-                            audio_clips.append(audio_snippet)
-                            continue
-                        except Exception as e:
-                            logger.debug("Audio extraction failed at %.1f: %s", ts, e)
-
-                # Silence for non-keyframe slides or when audio extraction fails
-                try:
-                    if has_audio and video_duration > 0.1:
-                        safe_dur = min(slide_dur, video_duration)
-                        silence = source_video.audio.subclip(0, safe_dur).volumex(0)
-                        if safe_dur < slide_dur:
-                            num_repeats = int(slide_dur / safe_dur) + 1
-                            silence = mp.concatenate_audioclips([silence] * num_repeats).subclip(0, slide_dur)
-                        audio_clips.append(silence)
-                except Exception as e:
-                    logger.warning("Failed creating silence snippet: %s", e)
-
-
-        # ── 6. Compose MoviePy clips with fade transitions ────────────
-        logger.info("Composing %d slides into summary video", len(slides))
-        faded_clips = []
-        for (frame_arr, dur, _, _) in slides:
-            clip = mp.ImageClip(frame_arr).set_duration(dur)
-            clip = clip.crossfadein(FADE_DURATION).crossfadeout(FADE_DURATION)
-            faded_clips.append(clip)
-
+        # 4. Concatenate and Write
+        logger.info("Concatenating %d clips into final summary", len(faded_clips))
         final = mp.concatenate_videoclips(faded_clips, method="compose", padding=-FADE_DURATION)
-
-        # Attach audio if available
-        if audio_clips:
-            try:
-                combined_audio = mp.concatenate_audioclips(audio_clips)
-                # Trim/pad audio to match final video duration
-                if combined_audio.duration > final.duration:
-                    combined_audio = combined_audio.subclip(0, final.duration)
-                final = final.set_audio(combined_audio)
-                logger.info("Audio track attached (%.1fs)", combined_audio.duration)
-            except Exception as e:
-                logger.warning("Failed to attach audio track (non-fatal): %s", e)
-
-        # Write output
+        
         write_kwargs = {
             "fps": FPS,
             "codec": "libx264",
             "preset": "medium"
         }
-        if final.audio is not None:
+        if has_audio:
             write_kwargs["audio_codec"] = "aac"
-            write_kwargs["temp_audiofile"] = tempfile.mktemp(suffix=".m4a")
-            write_kwargs["remove_temp"] = True
+            # MoviePy will handle the audio from subclips automatically
         else:
             write_kwargs["audio"] = False
 
         final.write_videofile(output_path, **write_kwargs)
-
-        total_duration = sum(d for _, d, _, _ in slides) - FADE_DURATION * (len(slides) - 1)
-        logger.info("Visual summary video created: %s (~%.0f seconds, %d slides)", output_path, total_duration, len(slides))
+        
+        logger.info("Enhanced visual summary created: %s", output_path)
         final.close()
         source_video.close()
         return output_path

@@ -104,7 +104,7 @@ class VideoSummarizer:
             summaries = []
 
             for chunk in chunks:
-                prompt = f"Please provide a concise and highly accurate summary of the following video transcript. The summary should be approximately {max_length} words long.\n\nTranscript: {chunk}"
+                prompt = f"Please provide a detailed, clear, and highly accurate summary of the following video transcript. Ensure the summary is easy to understand and approximately {max_length} words long.\n\nTranscript: {chunk}"
                 
                 if self.use_ollama:
                     import httpx
@@ -156,7 +156,7 @@ class VideoSummarizer:
         try:
             # We only need the first big chunk to extract decent high-level points
             chunk = text[:15000] 
-            prompt = f"Extract exactly {num_points} key bullet points from the following video transcript. Return ONLY a valid JSON array of strings, with no other formatting or markdown.\n\nTranscript: {chunk}"
+            prompt = f"Extract the {num_points} most important key points from the following video transcript. These should be detailed but clear bullet points that represent the core value of the content. Return ONLY a valid JSON array of strings, with no other formatting or markdown.\n\nTranscript: {chunk}"
             
             if self.use_ollama:
                 import httpx

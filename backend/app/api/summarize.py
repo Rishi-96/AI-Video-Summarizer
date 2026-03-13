@@ -45,7 +45,7 @@ _task_store: dict[str, dict] = {}
 class SummarizeRequest(BaseModel):
     file_id: str
     summary_ratio: Optional[float] = 0.3
-    max_summary_length: Optional[int] = 300
+    max_summary_length: Optional[int] = 500  # Increased for more detail
 
 class YouTubeSummarizeRequest(BaseModel):
     url: str
@@ -115,13 +115,16 @@ async def _run_summarize_pipeline(
             # Derive a friendly title from the original filename
             video_title = Path(video_path).stem.replace("_", " ").replace("-", " ").title()
 
-            logger.info("Task %s: generating highlight reel video", task_id)
+            logger.info("Task %s: generating enhanced visual summary video", task_id)
             await asyncio.to_thread(
-                processor.create_highlight_video,
+                processor.create_visual_summary,
                 video_path,
-                selected,
+                text_summary,
+                key_points,
                 summary_video_output,
                 video_title,
+                0,        # auto key frames
+                selected  # Use the ranked segments
             )
             if os.path.exists(summary_video_output):
                 summary_video_path = summary_video_output
@@ -468,20 +471,25 @@ async def summarize_video_sync(
             output_filename = f"quick_summary_{uuid.uuid4().hex[:8]}.mp4"
             output_path = str(processed_dir / output_filename)
             
-            # For quick summary, pick 5 best segments
+            # For a clear summary, pick more segments
             all_segments = result.get("segments", [])
-            num_to_pick = min(5, len(all_segments))
+            num_to_pick = min(12, len(all_segments))
             if len(all_segments) > num_to_pick:
                 indices = np.linspace(0, len(all_segments) - 1, num_to_pick, dtype=int)
                 selected_segs = [all_segments[i] for i in indices]
             else:
                 selected_segs = all_segments
             
-            processor.create_highlight_video(
+            # Extract key points to make the summary clearer
+            key_points = summarizer.extract_key_points(transcript)
+            
+            processor.create_visual_summary(
                 temp_video.name, 
-                selected_segs, 
+                summary,
+                key_points,
                 output_path, 
-                title=file.filename
+                video_title=file.filename,
+                segments=selected_segs
             )
             if os.path.exists(output_path):
                 summary_video_path = f"/api/summarize/video/direct/{output_filename}"
