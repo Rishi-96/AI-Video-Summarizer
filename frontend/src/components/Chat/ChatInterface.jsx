@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiSend, FiCpu, FiUser, FiLoader } from 'react-icons/fi';
+import { FiSend, FiCpu, FiLoader } from 'react-icons/fi';
 import { chatAPI } from '../../services/api';
 import MessageBubble from './MessageBubble';
 
@@ -21,6 +21,7 @@ const ChatInterface = ({ sessionId, summary }) => {
         }
       ]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [summary]);
 
   useEffect(() => {

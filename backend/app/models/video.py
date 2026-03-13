@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
 from typing import Optional, List, Dict
 from datetime import datetime
 from beanie import Document, Indexed

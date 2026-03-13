@@ -5,7 +5,7 @@ to reduce peak memory usage and fit within Groq API constraints.
 import logging
 import os
 import tempfile
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 import numpy as np
 
