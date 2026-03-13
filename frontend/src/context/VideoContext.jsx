@@ -11,8 +11,8 @@ export const useVideo = () => {
 };
 
 // ─── polling helper ─────────────────────────────────────────────────────────
-const POLL_INTERVAL_MS = 2500;
-const POLL_TIMEOUT_MS = 10 * 60 * 1000; // 10 min
+const POLL_INTERVAL_MS = 5000;         // Poll every 5 seconds
+const POLL_TIMEOUT_MS = 20 * 60 * 1000; // 20 min timeout
 
 async function pollUntilDone(taskId, onStatusUpdate) {
   const deadline = Date.now() + POLL_TIMEOUT_MS;

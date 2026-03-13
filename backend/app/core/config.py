@@ -56,8 +56,4 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
-# Apply log level from settings
-logging.basicConfig(
-    level=getattr(logging, settings.LOG_LEVEL.upper(), logging.INFO),
-    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-)
+# Logging setup moved to main.py to avoid duplication and capture output properly.

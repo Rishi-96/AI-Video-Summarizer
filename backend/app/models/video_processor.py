@@ -30,11 +30,11 @@ logger = logging.getLogger(__name__)
 OUTPUT_WIDTH = 1280
 OUTPUT_HEIGHT = 720
 FPS = 24
-FADE_DURATION = 0.6          # seconds of cross-fade between slides
-TITLE_SLIDE_DURATION = 4     # seconds
-KEY_FRAME_DURATION = 8       # seconds per key-frame slide (increased for readability)
-KEY_POINT_DURATION = 6       # seconds per key-point slide (increased for readability)
-CLOSING_SLIDE_DURATION = 4   # seconds
+FADE_DURATION = 0.5          # seconds of cross-fade between slides
+TITLE_SLIDE_DURATION = 2     # seconds
+KEY_FRAME_DURATION = 5       # seconds per key-frame slide 
+KEY_POINT_DURATION = 4       # seconds per key-point slide 
+CLOSING_SLIDE_DURATION = 2   # seconds
 
 # Colours (RGB)
 BG_DARK = (15, 17, 26)
@@ -237,7 +237,13 @@ class VideoProcessor:
 
     def _create_frame_slide(self, frame: np.ndarray, text: str, slide_num: int, total_slides: int) -> np.ndarray:
         """Create a static slide (fallback)."""
-        pil_frame = Image.fromarray(frame).resize((OUTPUT_WIDTH, OUTPUT_HEIGHT), Image.LANCZOS)
+        # Ensure frame is RGB
+        if frame.shape[2] == 3:
+            pil_frame = Image.fromarray(frame)
+        else:
+            pil_frame = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            
+        pil_frame = pil_frame.resize((OUTPUT_WIDTH, OUTPUT_HEIGHT), Image.LANCZOS)
         overlay = self._create_overlay_mask(text, slide_num, total_slides)
         combined = Image.alpha_composite(pil_frame.convert("RGBA"), overlay).convert("RGB")
         return np.array(combined)
@@ -461,8 +467,15 @@ class VideoProcessor:
         """
         logger.info("Creating enhanced visual summary for %s", video_path)
 
-        # 1. Metadata
+        # 1. Metadata & Pre-processing
+        # Specify n_threads for faster decoding if the version supports it
         source_video = mp.VideoFileClip(video_path)
+        
+        # Pre-resize source video once to avoid resizing every subclip
+        if source_video.w != OUTPUT_WIDTH or source_video.h != OUTPUT_HEIGHT:
+            logger.info("Pre-resizing source video from %dx%d to %dx%d", source_video.w, source_video.h, OUTPUT_WIDTH, OUTPUT_HEIGHT)
+            source_video = source_video.resize(newsize=(OUTPUT_WIDTH, OUTPUT_HEIGHT))
+            
         video_duration = source_video.duration
         has_audio = source_video.audio is not None
         duration_str = self._format_duration(video_duration)
@@ -470,16 +483,17 @@ class VideoProcessor:
         # 2. Split summary text into digestible chunks
         text_chunks = self._split_text_for_slides(text_summary, max_chars_per_slide=240)
         
-        # 3. Determine slides (either from segments or auto-extracted)
-        faded_clips = []
+        # 3. Determine slides
+        clips_with_starts = []
+        current_time = 0.0
         
         # --- TITLE SLIDE ---
         title_img = self._create_title_slide(video_title, duration_str)
-        title_clip = mp.ImageClip(title_img).set_duration(TITLE_SLIDE_DURATION).crossfadein(FADE_DURATION).crossfadeout(FADE_DURATION)
-        faded_clips.append(title_clip)
+        title_clip = mp.ImageClip(title_img).set_duration(TITLE_SLIDE_DURATION)
+        clips_with_starts.append(title_clip.set_start(current_time).crossfadeout(FADE_DURATION))
+        current_time += TITLE_SLIDE_DURATION - FADE_DURATION
 
         # --- CONTENT SLIDES ---
-        # If segments aren't provided, extract frames evenly
         slide_timestamps = []
         if segments:
             slide_timestamps = [s['start'] for s in segments]
@@ -490,78 +504,90 @@ class VideoProcessor:
         total_content_slides = max(len(text_chunks), len(slide_timestamps))
         
         for i in range(total_content_slides):
-            # Choose text
             chunk = text_chunks[i] if i < len(text_chunks) else "Video Highlight"
-            
-            # Choose timestamp
             ts = slide_timestamps[i % len(slide_timestamps)]
             
-            # Create content subclip (8s moving video)
             dur = KEY_FRAME_DURATION
             start_ts = ts
             end_ts = min(video_duration, start_ts + dur)
             
-            # Ensure we have a valid clip length
             if end_ts - start_ts < 1.0:
                 start_ts = max(0, video_duration - dur)
                 end_ts = video_duration
             
             try:
-                # Get moving subclip
+                # Get moving subclip (source already resized)
                 content_clip = source_video.subclip(start_ts, end_ts)
-                
-                # Resize if needed to match output
-                if content_clip.w != OUTPUT_WIDTH or content_clip.h != OUTPUT_HEIGHT:
-                    content_clip = content_clip.resize(newsize=(OUTPUT_WIDTH, OUTPUT_HEIGHT))
                 
                 # Create the text overlay
                 overlay_img = self._create_overlay_mask(chunk, i + 1, total_content_slides)
-                overlay_clip = mp.ImageClip(np.array(overlay_img)).set_duration(content_clip.duration)
+                overlay_arr = np.array(overlay_img)
                 
-                # Composite
+                # For MoviePy 1.0.3, handle RGBA transparency by separating mask
+                txt_color = mp.ImageClip(overlay_arr[:, :, :3]).set_duration(content_clip.duration)
+                txt_mask = mp.ImageClip(overlay_arr[:, :, 3] / 255.0, ismask=True).set_duration(content_clip.duration)
+                overlay_clip = txt_color.set_mask(txt_mask)
+                
+                # Composite slide
                 slide_clip = mp.CompositeVideoClip([content_clip, overlay_clip])
                 
             except Exception as e:
                 logger.warning(f"Failed to create moving slide {i}, falling back to static: {e}")
-                # Fallback to static frame if subclip fails
                 frame = source_video.get_frame(start_ts)
                 img = self._create_frame_slide(frame, chunk, i + 1, total_content_slides)
                 slide_clip = mp.ImageClip(img).set_duration(dur)
 
-            slide_clip = slide_clip.crossfadein(FADE_DURATION).crossfadeout(FADE_DURATION)
-            faded_clips.append(slide_clip)
+            # Add to list with timing and crossfades
+            slide_clip = slide_clip.set_start(current_time).crossfadein(FADE_DURATION).crossfadeout(FADE_DURATION)
+            clips_with_starts.append(slide_clip)
+            current_time += dur - FADE_DURATION
 
         # --- KEY POINTS SLIDES ---
         if key_points:
             points_per_slide = 3
             for start in range(0, len(key_points), points_per_slide):
                 kp_img = self._create_keypoint_slide(key_points, start, start + points_per_slide)
-                kp_clip = mp.ImageClip(kp_img).set_duration(KEY_POINT_DURATION).crossfadein(FADE_DURATION).crossfadeout(FADE_DURATION)
-                faded_clips.append(kp_clip)
+                kp_clip = mp.ImageClip(kp_img).set_duration(KEY_POINT_DURATION)
+                kp_clip = kp_clip.set_start(current_time).crossfadein(FADE_DURATION).crossfadeout(FADE_DURATION)
+                clips_with_starts.append(kp_clip)
+                current_time += KEY_POINT_DURATION - FADE_DURATION
 
         # --- CLOSING SLIDE ---
         closing_img = self._create_closing_slide()
-        closing_clip = mp.ImageClip(closing_img).set_duration(CLOSING_SLIDE_DURATION).crossfadein(FADE_DURATION)
-        faded_clips.append(closing_clip)
+        closing_clip = mp.ImageClip(closing_img).set_duration(CLOSING_SLIDE_DURATION)
+        closing_clip = closing_clip.set_start(current_time).crossfadein(FADE_DURATION)
+        clips_with_starts.append(closing_clip)
 
-        # 4. Concatenate and Write
-        logger.info("Concatenating %d clips into final summary", len(faded_clips))
-        final = mp.concatenate_videoclips(faded_clips, method="compose", padding=-FADE_DURATION)
+        # 4. Composite and Write
+        logger.info("Compositing %d clips into final summary video (%ds total)", len(clips_with_starts), int(current_time + CLOSING_SLIDE_DURATION))
+        final = mp.CompositeVideoClip(clips_with_starts, size=(OUTPUT_WIDTH, OUTPUT_HEIGHT))
         
         write_kwargs = {
             "fps": FPS,
             "codec": "libx264",
-            "preset": "medium"
+            "preset": "superfast",
+            "threads": 4,
+            "logger": None,
+            "ffmpeg_params": ["-pix_fmt", "yuv420p"] # Maximizes browser compatibility
         }
         if has_audio:
             write_kwargs["audio_codec"] = "aac"
-            # MoviePy will handle the audio from subclips automatically
         else:
             write_kwargs["audio"] = False
 
-        final.write_videofile(output_path, **write_kwargs)
+        try:
+            final.write_videofile(output_path, **write_kwargs)
+        except Exception as write_err:
+            logger.error("MoviePy write_videofile failed: %s", write_err)
+            # Try once more without audio if it failed
+            if has_audio:
+                logger.info("Retrying without audio...")
+                write_kwargs["audio"] = False
+                final.write_videofile(output_path, **write_kwargs)
+            else:
+                raise
         
-        logger.info("Enhanced visual summary created: %s", output_path)
+        logger.info("Enhanced visual summary created successfully at %s", output_path)
         final.close()
         source_video.close()
         return output_path
