@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiFileText, FiList, FiCpu, FiClock } from 'react-icons/fi';
+import { FiFileText, FiList, FiCpu } from 'react-icons/fi';
 
 const SummaryDisplay = ({ summary }) => {
   if (!summary) {

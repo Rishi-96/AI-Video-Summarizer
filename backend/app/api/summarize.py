@@ -14,7 +14,7 @@ import os
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 import numpy as np
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request
@@ -499,8 +499,12 @@ async def summarize_video_sync(
         raise HTTPException(500, detail=str(e))
     finally:
         if os.path.exists(temp_video.name): 
-            try: os.unlink(temp_video.name)
-            except: pass
+            try:
+                os.unlink(temp_video.name)
+            except Exception:
+                pass
         if os.path.exists(temp_audio.name): 
-            try: os.unlink(temp_audio.name)
-            except: pass
+            try:
+                os.unlink(temp_audio.name)
+            except Exception:
+                pass

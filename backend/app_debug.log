@@ -1011,3 +1011,337 @@ yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube] vdMPP47nLhc: This video 
 2026-03-12 17:50:22,819 - app.api.summarize - INFO - Task b43f27ac-3da4-4210-853b-0eb8752afba3: generating highlight reel video
 2026-03-12 17:54:34,079 - app.api.summarize - INFO - Task b43f27ac-3da4-4210-853b-0eb8752afba3: visual summary video created at processed\69a00f20f00b71ffa4672fbb\summary_b43f27ac-3da4-4210-853b-0eb8752afba3.mp4
 2026-03-12 17:54:34,094 - app.api.summarize - INFO - Task b43f27ac-3da4-4210-853b-0eb8752afba3: done, summary_id=c85a1d58-07cd-4438-9452-186c22b3ff6b
+2026-03-13 10:42:23,129 - app.main - INFO - Main module loading...
+2026-03-13 10:42:24,650 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-13 10:42:24,753 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-13 10:42:24,753 - app.main - INFO - Whisper model loaded at startup
+2026-03-13 10:42:26,808 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-13 10:42:26,808 - app.main - INFO - Summarizer model loaded at startup
+2026-03-13 10:44:01,480 - app.api.auth - INFO - User logged in: suhani.j0304@gmail.com
+2026-03-13 11:13:13,870 - app.core.database - INFO - MongoDB connection closed
+2026-03-13 11:13:17,266 - app.main - INFO - Main module loading...
+2026-03-13 11:13:17,610 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-13 11:13:17,673 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-13 11:13:17,673 - app.main - INFO - Whisper model loaded at startup
+2026-03-13 11:13:19,715 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-13 11:13:19,715 - app.main - INFO - Summarizer model loaded at startup
+2026-03-13 11:14:46,366 - app.main - INFO - Main module loading...
+2026-03-13 11:14:47,074 - app.api.auth - INFO - New user registered: new@example.com
+2026-03-13 11:14:47,075 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:14:47,371 - app.api.auth - INFO - New user registered: dup@example.com
+2026-03-13 11:14:47,373 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:14:47,373 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 400 Bad Request"
+2026-03-13 11:14:47,665 - app.api.auth - INFO - New user registered: login@example.com
+2026-03-13 11:14:47,665 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:14:47,948 - app.api.auth - INFO - User logged in: login@example.com
+2026-03-13 11:14:47,949 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:14:48,248 - app.api.auth - INFO - New user registered: wp@example.com
+2026-03-13 11:14:48,248 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:14:48,529 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 401 Unauthorized"
+2026-03-13 11:14:48,818 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:14:48,819 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:14:49,100 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:14:49,100 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:14:49,104 - httpx - INFO - HTTP Request: GET http://test/api/auth/me "HTTP/1.1 200 OK"
+2026-03-13 11:14:49,109 - httpx - INFO - HTTP Request: GET http://test/api/auth/me "HTTP/1.1 401 Unauthorized"
+2026-03-13 11:14:50,889 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:14:50,895 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:14:50,929 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:14:50,937 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:14:51,236 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:14:51,237 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:14:51,536 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:14:51,536 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:14:51,547 - app.api.videos - INFO - Video uploaded: file_id=1c3f3571-0019-40dc-b572-39831da751fb user=69b3a453d79f00b8f813e84a size_mb=0.00
+2026-03-13 11:14:51,547 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 200 OK"
+2026-03-13 11:14:51,839 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:14:51,840 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:14:52,119 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:14:52,119 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:14:52,121 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 400 Bad Request"
+2026-03-13 11:14:52,127 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 401 Unauthorized"
+2026-03-13 11:14:52,421 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:14:52,422 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:14:52,703 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:14:52,704 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:14:52,707 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload/youtube "HTTP/1.1 400 Bad Request"
+2026-03-13 11:14:53,003 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:14:53,003 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:14:53,282 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:14:53,283 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:14:53,286 - app.api.videos - INFO - YouTube video downloaded: file_id=1eb51d5b-b842-43d0-92d6-326686fa59f2 user=69b3a455d79f00b8f813e84e
+2026-03-13 11:14:53,287 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload/youtube "HTTP/1.1 200 OK"
+2026-03-13 11:14:53,579 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:14:53,579 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:14:53,859 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:14:53,860 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:14:53,863 - httpx - INFO - HTTP Request: GET http://test/api/videos/ "HTTP/1.1 200 OK"
+2026-03-13 11:14:54,162 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:14:54,164 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:14:54,444 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:14:54,444 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:14:54,447 - httpx - INFO - HTTP Request: DELETE http://test/api/videos/nonexistent-uuid "HTTP/1.1 404 Not Found"
+2026-03-13 11:15:25,258 - app.main - INFO - Main module loading...
+2026-03-13 11:15:25,863 - app.api.auth - INFO - New user registered: new@example.com
+2026-03-13 11:15:25,863 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:15:26,151 - app.api.auth - INFO - New user registered: dup@example.com
+2026-03-13 11:15:26,152 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:15:26,153 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 400 Bad Request"
+2026-03-13 11:15:26,453 - app.api.auth - INFO - New user registered: login@example.com
+2026-03-13 11:15:26,454 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:15:26,751 - app.api.auth - INFO - User logged in: login@example.com
+2026-03-13 11:15:26,752 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:15:27,039 - app.api.auth - INFO - New user registered: wp@example.com
+2026-03-13 11:15:27,039 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:15:27,323 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 401 Unauthorized"
+2026-03-13 11:15:27,631 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:15:27,633 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:15:27,927 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:15:27,927 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:15:27,932 - httpx - INFO - HTTP Request: GET http://test/api/auth/me "HTTP/1.1 200 OK"
+2026-03-13 11:15:27,937 - httpx - INFO - HTTP Request: GET http://test/api/auth/me "HTTP/1.1 401 Unauthorized"
+2026-03-13 11:15:29,625 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:15:29,629 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:15:29,643 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:15:29,648 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:15:29,969 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:15:29,970 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:15:30,261 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:15:30,262 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:15:30,272 - app.api.videos - INFO - Video uploaded: file_id=9d6d0e50-7998-41ba-8415-5024dafb0230 user=69b3a479371d2926969b8f0d size_mb=0.00
+2026-03-13 11:15:30,273 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 200 OK"
+2026-03-13 11:15:30,558 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:15:30,558 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:15:30,849 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:15:30,849 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:15:30,853 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 400 Bad Request"
+2026-03-13 11:15:30,857 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 401 Unauthorized"
+2026-03-13 11:15:31,139 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:15:31,140 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:15:31,419 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:15:31,420 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:15:31,426 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload/youtube "HTTP/1.1 400 Bad Request"
+2026-03-13 11:15:31,710 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:15:31,711 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:15:32,001 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:15:32,002 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:15:32,006 - app.api.videos - INFO - YouTube video downloaded: file_id=90f1b8c1-eb02-469d-910b-60e1993eafdc user=69b3a47b371d2926969b8f11
+2026-03-13 11:15:32,008 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload/youtube "HTTP/1.1 200 OK"
+2026-03-13 11:15:32,325 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:15:32,326 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:15:32,607 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:15:32,607 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:15:32,610 - httpx - INFO - HTTP Request: GET http://test/api/videos/ "HTTP/1.1 200 OK"
+2026-03-13 11:15:32,893 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:15:32,893 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:15:33,208 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:15:33,210 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:15:33,221 - httpx - INFO - HTTP Request: DELETE http://test/api/videos/nonexistent-uuid "HTTP/1.1 404 Not Found"
+2026-03-13 11:15:59,519 - app.main - INFO - Main module loading...
+2026-03-13 11:16:00,127 - app.api.auth - INFO - New user registered: new@example.com
+2026-03-13 11:16:00,127 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:00,416 - app.api.auth - INFO - New user registered: dup@example.com
+2026-03-13 11:16:00,417 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:00,418 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 400 Bad Request"
+2026-03-13 11:16:00,715 - app.api.auth - INFO - New user registered: login@example.com
+2026-03-13 11:16:00,716 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:01,025 - app.api.auth - INFO - User logged in: login@example.com
+2026-03-13 11:16:01,026 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:16:01,385 - app.api.auth - INFO - New user registered: wp@example.com
+2026-03-13 11:16:01,385 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:01,666 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 401 Unauthorized"
+2026-03-13 11:16:01,955 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:16:01,956 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:02,235 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:16:02,235 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:16:02,240 - httpx - INFO - HTTP Request: GET http://test/api/auth/me "HTTP/1.1 200 OK"
+2026-03-13 11:16:02,246 - httpx - INFO - HTTP Request: GET http://test/api/auth/me "HTTP/1.1 401 Unauthorized"
+2026-03-13 11:16:03,839 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:16:03,844 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:16:03,854 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:16:03,856 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:16:04,143 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:16:04,144 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:04,426 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:16:04,426 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:16:04,438 - app.api.videos - INFO - Video uploaded: file_id=583098e6-42fd-44a6-bff9-704cf7253aa5 user=69b3a49c8557ed6112d31ed7 size_mb=0.00
+2026-03-13 11:16:04,438 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 200 OK"
+2026-03-13 11:16:04,773 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:16:04,773 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:05,054 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:16:05,054 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:16:05,057 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 400 Bad Request"
+2026-03-13 11:16:05,064 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 401 Unauthorized"
+2026-03-13 11:16:05,359 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:16:05,359 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:05,641 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:16:05,641 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:16:05,644 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload/youtube "HTTP/1.1 400 Bad Request"
+2026-03-13 11:16:05,938 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:16:05,938 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:06,220 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:16:06,220 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:16:06,223 - app.api.videos - INFO - YouTube video downloaded: file_id=93a918d4-6d2a-4cf7-ae27-46fbd2ae56ea user=69b3a49d8557ed6112d31edb
+2026-03-13 11:16:06,225 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload/youtube "HTTP/1.1 200 OK"
+2026-03-13 11:16:06,622 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:16:06,623 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:06,921 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:16:06,921 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:16:06,924 - httpx - INFO - HTTP Request: GET http://test/api/videos/ "HTTP/1.1 200 OK"
+2026-03-13 11:16:07,219 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:16:07,219 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:07,502 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:16:07,503 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:16:07,505 - httpx - INFO - HTTP Request: DELETE http://test/api/videos/nonexistent-uuid "HTTP/1.1 404 Not Found"
+2026-03-13 11:16:28,898 - app.main - INFO - Main module loading...
+2026-03-13 11:16:29,616 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:16:29,618 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:29,903 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:16:29,903 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:16:29,913 - app.api.videos - INFO - Video uploaded: file_id=eede2749-13fc-4ec9-b3fc-e7b22d491d4c user=69b3a4b50a618fd65fbc772b size_mb=0.00
+2026-03-13 11:16:29,914 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 200 OK"
+2026-03-13 11:16:30,207 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:16:30,207 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:30,491 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:16:30,491 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:16:30,493 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 400 Bad Request"
+2026-03-13 11:16:30,500 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 401 Unauthorized"
+2026-03-13 11:16:30,790 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:16:30,790 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:31,090 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:16:31,090 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:16:31,098 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload/youtube "HTTP/1.1 400 Bad Request"
+2026-03-13 11:16:31,513 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:16:31,514 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:31,797 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:16:31,797 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:16:31,814 - app.api.videos - INFO - YouTube video downloaded: file_id=990beacc-51b6-4e64-9cab-5bb7e9ebb307 user=69b3a4b70a618fd65fbc772f
+2026-03-13 11:16:31,814 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload/youtube "HTTP/1.1 200 OK"
+2026-03-13 11:16:32,109 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:16:32,109 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:32,391 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:16:32,391 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:16:32,395 - httpx - INFO - HTTP Request: GET http://test/api/videos/ "HTTP/1.1 200 OK"
+2026-03-13 11:16:32,691 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:16:32,691 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:16:33,106 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:16:33,106 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:16:33,109 - httpx - INFO - HTTP Request: DELETE http://test/api/videos/nonexistent-uuid "HTTP/1.1 404 Not Found"
+2026-03-13 11:16:44,463 - app.main - INFO - Main module loading...
+2026-03-13 11:16:45,278 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:16:45,284 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:16:45,304 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:16:45,314 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:17:01,216 - app.main - INFO - Main module loading...
+2026-03-13 11:17:02,065 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:17:02,070 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:17:02,085 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:17:02,089 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:17:09,942 - app.main - INFO - Main module loading...
+2026-03-13 11:17:10,775 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:17:10,781 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:17:10,792 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:17:10,802 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:17:55,549 - app.core.database - INFO - MongoDB connection closed
+2026-03-13 11:17:58,476 - app.main - INFO - Main module loading...
+2026-03-13 11:17:58,759 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-13 11:17:58,763 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-13 11:17:58,763 - app.main - INFO - Whisper model loaded at startup
+2026-03-13 11:18:00,809 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-13 11:18:00,809 - app.main - INFO - Summarizer model loaded at startup
+2026-03-13 11:18:43,536 - app.main - INFO - Main module loading...
+2026-03-13 11:18:44,448 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:18:44,452 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:18:44,463 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:18:44,467 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:18:59,445 - app.main - INFO - Main module loading...
+2026-03-13 11:19:00,199 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:19:00,203 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:19:00,213 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:19:00,218 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:20:23,492 - app.core.database - INFO - MongoDB connection closed
+2026-03-13 11:20:26,552 - app.main - INFO - Main module loading...
+2026-03-13 11:20:26,859 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-13 11:20:26,863 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-13 11:20:26,863 - app.main - INFO - Whisper model loaded at startup
+2026-03-13 11:20:28,907 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-13 11:20:28,907 - app.main - INFO - Summarizer model loaded at startup
+2026-03-13 11:20:34,419 - app.main - INFO - Main module loading...
+2026-03-13 11:20:35,039 - app.api.auth - INFO - New user registered: new@example.com
+2026-03-13 11:20:35,041 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:20:35,331 - app.api.auth - INFO - New user registered: dup@example.com
+2026-03-13 11:20:35,331 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:20:35,334 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 400 Bad Request"
+2026-03-13 11:20:35,624 - app.api.auth - INFO - New user registered: login@example.com
+2026-03-13 11:20:35,625 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:20:35,913 - app.api.auth - INFO - User logged in: login@example.com
+2026-03-13 11:20:35,913 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:20:36,210 - app.api.auth - INFO - New user registered: wp@example.com
+2026-03-13 11:20:36,211 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:20:36,494 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 401 Unauthorized"
+2026-03-13 11:20:36,783 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:20:36,783 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:20:37,063 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:20:37,063 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:20:37,066 - httpx - INFO - HTTP Request: GET http://test/api/auth/me "HTTP/1.1 200 OK"
+2026-03-13 11:20:37,071 - httpx - INFO - HTTP Request: GET http://test/api/auth/me "HTTP/1.1 401 Unauthorized"
+2026-03-13 11:20:38,219 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:20:38,225 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:20:38,230 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:20:38,233 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:20:38,238 - app.models.summarizer - WARNING - GROQ_API_KEY missing or groq not installed. Falling back to mock summarizer.
+2026-03-13 11:20:38,596 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:20:38,596 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:20:38,948 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:20:38,948 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:20:39,080 - app.api.videos - INFO - Video uploaded: file_id=4703da74-f1ac-488a-b993-b7d01c42bd1d user=69b3a5aeded5077d8842f2f3 size_mb=0.00
+2026-03-13 11:20:39,081 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 200 OK"
+2026-03-13 11:20:39,381 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:20:39,382 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:20:39,688 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:20:39,689 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:20:39,692 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 400 Bad Request"
+2026-03-13 11:20:39,698 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload "HTTP/1.1 401 Unauthorized"
+2026-03-13 11:20:39,990 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:20:39,990 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:20:40,268 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:20:40,268 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:20:40,273 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload/youtube "HTTP/1.1 400 Bad Request"
+2026-03-13 11:20:40,567 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:20:40,568 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:20:40,848 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:20:40,848 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:20:40,855 - app.api.videos - INFO - YouTube video downloaded: file_id=bda5af9b-3fe9-452f-b67f-9e35755b73e3 user=69b3a5b0ded5077d8842f2f7
+2026-03-13 11:20:40,856 - httpx - INFO - HTTP Request: POST http://test/api/videos/upload/youtube "HTTP/1.1 200 OK"
+2026-03-13 11:20:41,148 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:20:41,148 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:20:41,429 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:20:41,429 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:20:41,431 - httpx - INFO - HTTP Request: GET http://test/api/videos/ "HTTP/1.1 200 OK"
+2026-03-13 11:20:41,726 - app.api.auth - INFO - New user registered: test@example.com
+2026-03-13 11:20:41,727 - httpx - INFO - HTTP Request: POST http://test/api/auth/register "HTTP/1.1 201 Created"
+2026-03-13 11:20:42,009 - app.api.auth - INFO - User logged in: test@example.com
+2026-03-13 11:20:42,010 - httpx - INFO - HTTP Request: POST http://test/api/auth/login "HTTP/1.1 200 OK"
+2026-03-13 11:20:42,013 - httpx - INFO - HTTP Request: DELETE http://test/api/videos/nonexistent-uuid "HTTP/1.1 404 Not Found"
+2026-03-13 11:24:44,106 - app.core.database - INFO - MongoDB connection closed
+2026-03-13 11:24:48,350 - app.main - INFO - Main module loading...
+2026-03-13 11:24:48,672 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-13 11:24:48,677 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-13 11:24:48,677 - app.main - INFO - Whisper model loaded at startup
+2026-03-13 11:24:50,722 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-13 11:24:50,722 - app.main - INFO - Summarizer model loaded at startup
+2026-03-13 11:25:02,767 - app.core.database - INFO - MongoDB connection closed
+2026-03-13 11:25:08,289 - app.main - INFO - Main module loading...
+2026-03-13 11:25:08,917 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-13 11:25:08,924 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-13 11:25:08,924 - app.main - INFO - Whisper model loaded at startup
+2026-03-13 11:25:10,961 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-13 11:25:10,962 - app.main - INFO - Summarizer model loaded at startup
+2026-03-13 11:25:53,800 - app.core.database - INFO - MongoDB connection closed
+2026-03-13 11:25:58,597 - app.main - INFO - Main module loading...
+2026-03-13 11:26:46,446 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-03-13 11:26:46,472 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-03-13 11:26:46,473 - app.main - INFO - Whisper model loaded at startup
+2026-03-13 11:26:48,547 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-03-13 11:26:48,547 - app.main - INFO - Summarizer model loaded at startup
+2026-03-13 11:26:48,654 - app.core.database - INFO - MongoDB connection closed

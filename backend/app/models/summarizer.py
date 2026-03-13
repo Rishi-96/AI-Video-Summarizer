@@ -2,6 +2,8 @@ import logging
 import os
 import json
 from typing import List, Dict
+import httpx # Moved from inside __init__ and summarize_text
+from app.core.config import settings # Moved from inside __init__
 
 try:
     from groq import Groq
@@ -15,14 +17,12 @@ class VideoSummarizer:
     _hf_summarizer = None
 
     def __init__(self):
-        from app.core.config import settings
         self.api_key = settings.GROQ_API_KEY
         self.client = None
         self.use_mock = not _HAS_GROQ or not self.api_key
         
         if not self.use_mock:
             try:
-                import httpx
                 http_proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("HTTP_PROXY")
                 http_client = httpx.Client(proxy=http_proxy, verify=False) if http_proxy else httpx.Client(verify=False)
                 
@@ -32,7 +32,6 @@ class VideoSummarizer:
                     if ollama_check.status_code == 200:
                         self.use_ollama = True
                         self.ollama_url = "http://localhost:11434/api/generate"
-                        logger.info("Ollama Summarizer detected and loaded")
                     else:
                         self.use_ollama = False
                 except Exception:
@@ -176,9 +175,12 @@ class VideoSummarizer:
                 raw = resp.choices[0].message.content.strip()
             
             # Clean up potential markdown formatting 
-            if raw.startswith("```json"): raw = raw[7:]
-            if raw.startswith("```"): raw = raw[3:]
-            if raw.endswith("```"): raw = raw[:-3]
+            if raw.startswith("```json"):
+                raw = raw[7:]
+            if raw.startswith("```"):
+                raw = raw[3:]
+            if raw.endswith("```"):
+                raw = raw[:-3]
             
             points = json.loads(raw.strip())
             return points[:num_points]

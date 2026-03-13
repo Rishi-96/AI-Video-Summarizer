@@ -1,11 +1,18 @@
 import logging
-# Reloading server...
 import uuid
 import ssl
 import os
 from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
+
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
+from .api import auth, videos, chat
+from .core.config import settings
+from .core.database import database
 
 # Add file handler to root logger
 logging.basicConfig(level=logging.INFO, filename='app_debug.log', filemode='a', 
@@ -28,15 +35,6 @@ try:
     requests.Session.request = new_request
 except ImportError:
     pass
-
-
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-
-from .api import auth, videos, chat
-from .core.config import settings
-from .core.database import database
 
 logger = logging.getLogger(__name__)
 logger.info("Main module loading...")

@@ -14,12 +14,13 @@ import tempfile
 from typing import Dict, List, Optional
 
 import cv2
+import numpy as np
+from PIL import Image, ImageDraw, ImageFont
+
 try:
     import moviepy.editor as mp
 except ImportError:
     import moviepy as mp
-import numpy as np
-from PIL import Image, ImageDraw, ImageFont
 
 logger = logging.getLogger(__name__)
 
@@ -399,7 +400,8 @@ class VideoProcessor:
             clips = [title_clip]
             for i, seg in enumerate(segments[:12]): # limit to 12 clips max
                 start, end = seg['start'], seg['end']
-                if end - start < 1.0: continue # Skip too short
+                if end - start < 1.0:
+                    continue  # Skip too short
                 
                 clip = source.subclip(start, end).crossfadein(0.3).crossfadeout(0.3)
                 clips.append(clip)
