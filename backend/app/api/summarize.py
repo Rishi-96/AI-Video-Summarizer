@@ -108,16 +108,10 @@ async def _run_summarize_pipeline(
 
         await update_task(task_id, progress=65, step="analysis complete")
 
-        # Select TOP-RANKED segments by relevance score, then sort chronologically
-        # This ensures we pick the MOST MEANINGFUL moments (not random frames)
-        total_segs = len(ranked)
-        num_segs = max(1, int(total_segs * summary_ratio))
-        num_segs = min(num_segs, MAX_SEGMENTS_FOR_VIDEO)
-
-        # ranked is already sorted by relevance_score descending — take the top N
-        selected_top = ranked[:num_segs]
-        # Re-sort by timestamp so the video plays in chronological order
-        selected = sorted(selected_top, key=lambda s: s.get("start", 0))
+        # Pass ALL ranked segments to the VideoProcessor — it will internally
+        # select clips totalling 40-50% of the original video duration.
+        # ranked is sorted by relevance_score descending.
+        # segments (all whisper segments) is the full unranked list.
 
         # ── Step 3: Generate subtitles (fast, parallel with video) ────
         subtitle_paths = {}
@@ -132,7 +126,7 @@ async def _run_summarize_pipeline(
         except Exception as sub_err:
             logger.warning("Task %s: subtitle generation failed (non-fatal): %s", task_id, sub_err)
 
-        # ── Step 4: Generate visual summary video ─────────────────────
+        # ── Step 4: Generate summary video (40-50% of original duration) ────
         summary_video_path = None
         try:
             from ..models.video_processor import VideoProcessor
@@ -145,10 +139,11 @@ async def _run_summarize_pipeline(
             summary_video_output = str(processed_dir / summary_video_filename)
 
             video_title = Path(video_path).stem.replace("_", " ").replace("-", " ").title()
-            selected_for_video = selected[:MAX_SEGMENTS_FOR_VIDEO]
 
-            logger.info("Task %s: generating enhanced visual summary video", task_id)
-            await update_task(task_id, status=TASK_STATUS_GENERATING_VIDEO, progress=70, step="generating summary video")
+            logger.info("Task %s: generating summary video (~40-50%% of original)", task_id)
+            await update_task(task_id, status=TASK_STATUS_GENERATING_VIDEO, progress=70, step="generating summary video (40-50%)")
+
+            # Pass ranked segments (importance-ordered) AND all segments (fallback pool)
             await asyncio.to_thread(
                 processor.create_visual_summary,
                 video_path,
@@ -156,16 +151,19 @@ async def _run_summarize_pipeline(
                 key_points,
                 summary_video_output,
                 video_title,
-                0,
-                selected_for_video
+                0,          # num_key_frames (unused now)
+                ranked,     # segments — importance-ordered for selection
+                segments,   # all_segments — full pool for gap-filling
             )
             if os.path.exists(summary_video_output):
                 summary_video_path = summary_video_output
-                logger.info("Task %s: visual summary video created at %s", task_id, summary_video_path)
+                logger.info("Task %s: summary video created at %s", task_id, summary_video_path)
             else:
                 logger.warning("Task %s: summary video file not found after creation", task_id)
         except Exception as vid_err:
             logger.warning("Task %s: summary video generation failed (non-fatal): %s", task_id, vid_err)
+            import traceback
+            logger.debug(traceback.format_exc())
 
         await update_task(task_id, progress=90, step="saving to database")
 
@@ -192,7 +190,7 @@ async def _run_summarize_pipeline(
             "full_transcript": transcript,  # store full transcript for subtitles/TTS
             "text_summary": text_summary,
             "key_points": key_points,
-            "segments": selected,
+            "segments": sorted(ranked, key=lambda s: s.get("start", 0)),
             "all_segments": segments,  # store all segments for subtitle export
             "video_info": video_info,
             "subtitle_paths": subtitle_paths,

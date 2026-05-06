@@ -1446,3 +1446,770 @@ Traceback (most recent call last):
   File "C:\New folder\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
     self._sock.shutdown(socket.SHUT_RDWR)
 ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+2026-05-04 11:12:55,067 - app.main - INFO - Main module loading...
+2026-05-04 11:12:56,350 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 11:12:56,415 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 11:12:56,415 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 11:12:58,437 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 11:12:58,438 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 11:20:11,064 - app.api.auth - INFO - New user registered: rishijain6388@gmail.com
+2026-05-04 11:21:05,722 - py.warnings - WARNING - D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\whisper\transcribe.py:132: UserWarning: FP16 is not supported on CPU; using FP32 instead
+  warnings.warn("FP16 is not supported on CPU; using FP32 instead")
+
+2026-05-04 11:21:46,823 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 11:21:57,522 - app.models.summarizer - INFO - Loading HuggingFace summarization pipeline (sshleifer/distilbart-cnn-12-6)...
+2026-05-04 11:22:12,133 - app.models.video_processor - INFO - Video processor initialized
+2026-05-04 11:22:12,344 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-05-04 11:22:12,345 - app.models.summarizer - WARNING - Groq Key point extraction failed: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+2026-05-04 11:22:12,346 - app.models.video_processor - INFO - Creating enhanced visual summary for C:\Users\rishi\AppData\Local\Temp\tmprzo5rzk5.mp4
+2026-05-04 11:22:15,973 - app.models.video_processor - INFO - Compositing 15 clips into final summary video (61s total)
+2026-05-04 11:26:59,738 - py.warnings - WARNING - D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\moviepy\video\io\ffmpeg_reader.py:123: UserWarning: Warning: in file C:\Users\rishi\AppData\Local\Temp\tmprzo5rzk5.mp4, 2764800 bytes wanted but 0 bytes read,at frame 8759/8761, at time 291.97/292.01 sec. Using the last valid frame instead.
+  warnings.warn("Warning: in file %s, "%(self.filename)+
+
+2026-05-04 11:27:08,397 - app.models.video_processor - INFO - Enhanced visual summary created successfully at processed\69f83393801f7bed75cf001d\quick_summary_6f68d2c4.mp4
+2026-05-04 11:28:41,360 - app.main - INFO - Main module loading...
+2026-05-04 11:28:41,590 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 11:28:41,630 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 11:28:41,630 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 11:28:43,666 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 11:28:43,666 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 11:30:41,060 - app.core.database - INFO - MongoDB connection closed
+2026-05-04 11:31:08,830 - app.main - INFO - Main module loading...
+2026-05-04 11:31:08,944 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 11:31:08,969 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 11:31:08,969 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 11:31:11,005 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 11:31:11,005 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 12:19:03,414 - app.main - INFO - Main module loading...
+2026-05-04 12:19:19,169 - app.main - INFO - Main module loading...
+2026-05-04 12:20:48,561 - app.main - INFO - Main module loading...
+2026-05-04 12:35:15,628 - app.core.database - INFO - MongoDB connection closed
+2026-05-04 12:35:17,672 - app.main - INFO - Main module loading...
+2026-05-04 12:35:18,038 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 12:35:18,223 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 12:35:18,223 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 12:35:20,259 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 12:35:20,259 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 12:35:21,654 - app.main - INFO - Main module loading...
+2026-05-04 12:35:21,780 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 12:35:21,813 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 12:35:21,813 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 12:35:23,850 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 12:35:23,850 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 12:45:20,751 - app.core.database - INFO - MongoDB connection closed
+2026-05-04 12:45:23,635 - app.main - INFO - Main module loading...
+2026-05-04 12:45:23,837 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 12:45:23,913 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 12:45:23,913 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 12:45:25,951 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 12:45:25,952 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 12:45:27,828 - app.main - INFO - Main module loading...
+2026-05-04 12:45:27,980 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 12:45:28,016 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 12:45:28,016 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 12:45:30,041 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 12:45:30,041 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 12:45:58,149 - app.core.database - INFO - MongoDB connection closed
+2026-05-04 12:45:59,748 - app.main - INFO - Main module loading...
+2026-05-04 12:45:59,891 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 12:45:59,928 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 12:45:59,928 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 12:46:01,957 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 12:46:01,959 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 12:46:30,057 - app.core.database - INFO - MongoDB connection closed
+2026-05-04 12:46:32,076 - app.main - INFO - Main module loading...
+2026-05-04 12:46:32,256 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 12:46:32,294 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 12:46:32,294 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 12:46:34,329 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 12:46:34,329 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 12:46:36,079 - app.main - INFO - Main module loading...
+2026-05-04 12:46:36,232 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 12:46:36,273 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 12:46:36,273 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 12:46:38,300 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 12:46:38,300 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 12:47:06,401 - app.core.database - INFO - MongoDB connection closed
+2026-05-04 12:47:08,482 - app.main - INFO - Main module loading...
+2026-05-04 12:47:08,659 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 12:47:08,707 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 12:47:08,707 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 12:47:10,742 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 12:47:10,742 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 12:47:38,815 - app.core.database - INFO - MongoDB connection closed
+2026-05-04 12:47:40,924 - app.main - INFO - Main module loading...
+2026-05-04 12:47:41,071 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 12:47:41,109 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 12:47:41,109 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 12:47:43,152 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 12:47:43,152 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 12:48:11,242 - app.core.database - INFO - MongoDB connection closed
+2026-05-04 12:48:13,114 - app.main - INFO - Main module loading...
+2026-05-04 12:48:13,316 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 12:48:13,372 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 12:48:13,372 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 12:48:15,415 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 12:48:15,415 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 12:50:16,883 - app.core.database - INFO - MongoDB connection closed
+2026-05-04 12:50:18,899 - app.main - INFO - Main module loading...
+2026-05-04 12:50:19,075 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 12:50:19,114 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 12:50:19,114 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 12:50:21,132 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 12:50:21,132 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 13:00:25,148 - app.core.database - INFO - MongoDB connection closed
+2026-05-04 13:10:37,971 - app.main - INFO - Main module loading...
+2026-05-04 13:29:48,289 - app.main - INFO - Main module loading...
+2026-05-04 13:37:58,749 - app.main - INFO - Main module loading...
+2026-05-04 15:17:42,567 - app.main - INFO - Main module loading...
+2026-05-04 15:17:43,723 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 15:17:43,862 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 15:17:43,862 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 15:17:45,900 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 15:17:45,901 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 15:18:28,419 - app.api.videos - INFO - Video uploaded: file_id=63c4a789-c127-4bcb-883b-f1c035ac8937 user=69f83393801f7bed75cf001d size_mb=27.67
+2026-05-04 15:18:31,882 - app.core.task_store - INFO - Task created: a7d5fc37-9248-4346-bb0d-d6289bda3ae3 for user 69f83393801f7bed75cf001d
+2026-05-04 15:18:31,898 - app.api.summarize - INFO - Task a7d5fc37-9248-4346-bb0d-d6289bda3ae3: starting transcription
+2026-05-04 15:18:33,566 - app.core.audio - INFO - Audio extracted (ffmpeg): 63c4a789-c127-4bcb-883b-f1c035ac8937.mp4 → tmp7y66j9c3.wav (8.9 MB)
+2026-05-04 15:18:37,685 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 401 Unauthorized"
+2026-05-04 15:18:37,690 - app.api.summarize - ERROR - Task a7d5fc37-9248-4346-bb0d-d6289bda3ae3 failed: Groq Transcription failed: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 69, in transcribe
+    transcription = self.client.audio.transcriptions.create(
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\resources\audio\transcriptions.py", line 118, in create
+    return self._post(
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\_base_client.py", line 1225, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\_base_client.py", line 920, in request
+    return self._request(
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\_base_client.py", line 1018, in _request
+    raise self._make_status_error_from_response(err.response) from None
+groq.AuthenticationError: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\app\api\summarize.py", line 92, in _run_summarize_pipeline
+    segments = await asyncio.to_thread(whisper.get_segments, video_path)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python310\lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python310\lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 180, in get_segments
+    result = self.transcribe_file(video_path)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 152, in transcribe_file
+    result = self.transcribe(chunk_path)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 105, in transcribe
+    raise RuntimeError(f"Groq Transcription failed: {e}") from e
+RuntimeError: Groq Transcription failed: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+2026-05-04 15:23:48,310 - app.core.database - INFO - MongoDB connection closed
+2026-05-04 16:06:00,940 - app.main - INFO - Main module loading...
+2026-05-04 16:06:02,201 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-04 16:06:02,313 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-04 16:06:02,313 - app.main - INFO - Whisper model loaded at startup
+2026-05-04 16:06:04,339 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-04 16:06:04,339 - app.main - INFO - Summarizer model loaded at startup
+2026-05-04 16:10:59,447 - app.api.auth - INFO - User logged in: rishijain6388@gmail.com
+2026-05-04 16:11:14,187 - app.api.videos - INFO - Video deleted: file_id=63c4a789-c127-4bcb-883b-f1c035ac8937 user=69f83393801f7bed75cf001d
+2026-05-04 16:12:51,214 - app.api.videos - INFO - Video uploaded: file_id=7af3ea3a-271d-4e19-9935-abe399841ee5 user=69f83393801f7bed75cf001d size_mb=36.07
+2026-05-04 16:12:56,230 - app.core.task_store - INFO - Task created: 9467c391-5a08-491e-9cb2-e526a3cd8277 for user 69f83393801f7bed75cf001d
+2026-05-04 16:12:56,251 - app.api.summarize - INFO - Task 9467c391-5a08-491e-9cb2-e526a3cd8277: starting transcription
+2026-05-04 16:12:58,016 - app.core.audio - INFO - Audio extracted (ffmpeg): 7af3ea3a-271d-4e19-9935-abe399841ee5.mp4 → tmp3uf0ladr.wav (8.0 MB)
+2026-05-04 16:13:08,321 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 401 Unauthorized"
+2026-05-04 16:13:08,329 - app.api.summarize - ERROR - Task 9467c391-5a08-491e-9cb2-e526a3cd8277 failed: Groq Transcription failed: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 69, in transcribe
+    transcription = self.client.audio.transcriptions.create(
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\resources\audio\transcriptions.py", line 118, in create
+    return self._post(
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\_base_client.py", line 1225, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\_base_client.py", line 920, in request
+    return self._request(
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\_base_client.py", line 1018, in _request
+    raise self._make_status_error_from_response(err.response) from None
+groq.AuthenticationError: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\app\api\summarize.py", line 92, in _run_summarize_pipeline
+    segments = await asyncio.to_thread(whisper.get_segments, video_path)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python310\lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python310\lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 180, in get_segments
+    result = self.transcribe_file(video_path)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 152, in transcribe_file
+    result = self.transcribe(chunk_path)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 105, in transcribe
+    raise RuntimeError(f"Groq Transcription failed: {e}") from e
+RuntimeError: Groq Transcription failed: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+2026-05-04 16:14:26,946 - app.core.task_store - INFO - Task created: 7108086b-49c2-4da0-b628-a51bd25af909 for user 69f83393801f7bed75cf001d
+2026-05-04 16:14:26,951 - app.api.summarize - INFO - Task 7108086b-49c2-4da0-b628-a51bd25af909: starting transcription
+2026-05-04 16:14:27,252 - app.core.audio - INFO - Audio extracted (ffmpeg): 7af3ea3a-271d-4e19-9935-abe399841ee5.mp4 → tmpniwrxenc.wav (8.0 MB)
+2026-05-04 16:14:42,717 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 401 Unauthorized"
+2026-05-04 16:14:42,722 - app.api.summarize - ERROR - Task 7108086b-49c2-4da0-b628-a51bd25af909 failed: Groq Transcription failed: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 69, in transcribe
+    transcription = self.client.audio.transcriptions.create(
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\resources\audio\transcriptions.py", line 118, in create
+    return self._post(
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\_base_client.py", line 1225, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\_base_client.py", line 920, in request
+    return self._request(
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\_base_client.py", line 1018, in _request
+    raise self._make_status_error_from_response(err.response) from None
+groq.AuthenticationError: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\app\api\summarize.py", line 92, in _run_summarize_pipeline
+    segments = await asyncio.to_thread(whisper.get_segments, video_path)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python310\lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python310\lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 180, in get_segments
+    result = self.transcribe_file(video_path)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 152, in transcribe_file
+    result = self.transcribe(chunk_path)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 105, in transcribe
+    raise RuntimeError(f"Groq Transcription failed: {e}") from e
+RuntimeError: Groq Transcription failed: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+2026-05-04 16:15:08,674 - app.core.task_store - INFO - Task created: 8e735561-708f-4268-9538-7e69c552d626 for user 69f83393801f7bed75cf001d
+2026-05-04 16:15:08,679 - app.api.summarize - INFO - Task 8e735561-708f-4268-9538-7e69c552d626: starting transcription
+2026-05-04 16:15:08,959 - app.core.audio - INFO - Audio extracted (ffmpeg): 7af3ea3a-271d-4e19-9935-abe399841ee5.mp4 → tmpm72jline.wav (8.0 MB)
+2026-05-04 16:15:15,106 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 401 Unauthorized"
+2026-05-04 16:15:15,126 - app.api.summarize - ERROR - Task 8e735561-708f-4268-9538-7e69c552d626 failed: Groq Transcription failed: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 69, in transcribe
+    transcription = self.client.audio.transcriptions.create(
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\resources\audio\transcriptions.py", line 118, in create
+    return self._post(
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\_base_client.py", line 1225, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\_base_client.py", line 920, in request
+    return self._request(
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\groq\_base_client.py", line 1018, in _request
+    raise self._make_status_error_from_response(err.response) from None
+groq.AuthenticationError: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\app\api\summarize.py", line 92, in _run_summarize_pipeline
+    segments = await asyncio.to_thread(whisper.get_segments, video_path)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python310\lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python310\lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 180, in get_segments
+    result = self.transcribe_file(video_path)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 152, in transcribe_file
+    result = self.transcribe(chunk_path)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\models\whisper_model.py", line 105, in transcribe
+    raise RuntimeError(f"Groq Transcription failed: {e}") from e
+RuntimeError: Groq Transcription failed: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+2026-05-04 16:15:39,640 - app.core.database - INFO - MongoDB connection closed
+2026-05-05 11:59:42,217 - app.main - INFO - Main module loading...
+2026-05-05 11:59:43,481 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-05 11:59:43,695 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-05 11:59:43,695 - app.main - INFO - Whisper model loaded at startup
+2026-05-05 11:59:45,750 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-05 11:59:45,750 - app.main - INFO - Summarizer model loaded at startup
+2026-05-05 12:03:27,083 - app.api.videos - INFO - Video deleted: file_id=7af3ea3a-271d-4e19-9935-abe399841ee5 user=69f83393801f7bed75cf001d
+2026-05-05 12:03:41,227 - app.api.videos - INFO - Video uploaded: file_id=ee16aac6-891e-42c5-b006-d6703beb505f user=69f83393801f7bed75cf001d size_mb=11.53
+2026-05-05 12:04:41,039 - app.core.task_store - INFO - Task created: c8af1911-a869-4cfa-aa46-eecbe0b554b6 for user 69f83393801f7bed75cf001d
+2026-05-05 12:04:41,055 - app.api.summarize - INFO - Task c8af1911-a869-4cfa-aa46-eecbe0b554b6: starting transcription
+2026-05-05 12:04:42,821 - app.core.audio - INFO - Audio extracted (ffmpeg): ee16aac6-891e-42c5-b006-d6703beb505f.mp4 → tmpzhdbf91e.wav (2.5 MB)
+2026-05-05 12:04:44,795 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-05 12:04:44,819 - app.api.summarize - INFO - Task c8af1911-a869-4cfa-aa46-eecbe0b554b6: parallel processing (rank + summarize + key points)
+2026-05-05 12:04:45,688 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-05 12:04:46,652 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-05 12:04:57,611 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_c8af1911-a869-4cfa-aa46-eecbe0b554b6.srt (14 entries)
+2026-05-05 12:04:57,614 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_c8af1911-a869-4cfa-aa46-eecbe0b554b6.vtt (14 entries)
+2026-05-05 12:04:57,615 - app.api.summarize - INFO - Task c8af1911-a869-4cfa-aa46-eecbe0b554b6: subtitles generated
+2026-05-05 12:05:00,722 - app.models.video_processor - INFO - Video processor initialized
+2026-05-05 12:05:00,722 - app.api.summarize - INFO - Task c8af1911-a869-4cfa-aa46-eecbe0b554b6: generating enhanced visual summary video
+2026-05-05 12:05:00,725 - app.models.video_processor - INFO - Creating enhanced visual summary for uploads\69f83393801f7bed75cf001d\ee16aac6-891e-42c5-b006-d6703beb505f.mp4
+2026-05-05 12:05:05,192 - app.models.video_processor - INFO - Compositing 13 clips into final summary video (51s total)
+2026-05-05 12:12:02,583 - app.models.video_processor - INFO - Enhanced visual summary created successfully at processed\69f83393801f7bed75cf001d\summary_c8af1911-a869-4cfa-aa46-eecbe0b554b6.mp4
+2026-05-05 12:12:02,610 - app.api.summarize - INFO - Task c8af1911-a869-4cfa-aa46-eecbe0b554b6: visual summary video created at processed\69f83393801f7bed75cf001d\summary_c8af1911-a869-4cfa-aa46-eecbe0b554b6.mp4
+2026-05-05 12:12:02,627 - app.api.summarize - INFO - Task c8af1911-a869-4cfa-aa46-eecbe0b554b6: done, summary_id=47b25f6c-790a-4e90-969b-5c5dcb3c249b
+2026-05-05 12:13:56,782 - app.models.tts - INFO - TTS generated: tts_47b25f6c_summary.mp3 (549.0 KB, voice=en-US-AriaNeural)
+2026-05-05 12:20:30,133 - app.core.database - INFO - MongoDB connection closed
+2026-05-05 12:20:32,886 - app.main - INFO - Main module loading...
+2026-05-05 12:20:33,049 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-05 12:20:33,112 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-05 12:20:33,113 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 11:35:33,264 - app.main - INFO - Main module loading...
+2026-05-06 11:35:34,406 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-06 11:35:34,513 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-06 11:35:34,513 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 11:35:36,547 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-06 11:35:36,547 - app.main - INFO - Summarizer model loaded at startup
+2026-05-06 11:39:25,289 - app.models.translator - INFO - Loading NLLB-200 model: facebook/nllb-200-distilled-600M (this may take a minute...)
+2026-05-06 11:39:26,280 - huggingface_hub.file_download - WARNING - Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+2026-05-06 11:39:29,334 - huggingface_hub.file_download - WARNING - Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+2026-05-06 11:39:39,598 - huggingface_hub.file_download - WARNING - Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+2026-05-06 11:40:58,149 - app.models.thumbnails - INFO - Extracted 12 keyframes from ee16aac6-891e-42c5-b006-d6703beb505f.mp4
+2026-05-06 11:41:05,321 - app.models.thumbnails - INFO - Best thumbnail frame: index=9, timestamp=66.2s, score=27.575
+2026-05-06 11:41:05,473 - app.models.thumbnails - INFO - Thumbnail generated: processed\69f83393801f7bed75cf001d\thumb_47b25f6c.jpg (144.7 KB)
+2026-05-06 11:41:26,916 - app.models.translator - INFO - NLLB-200 model loaded successfully
+2026-05-06 11:41:30,917 - app.models.translator - INFO - Loading NLLB-200 model: facebook/nllb-200-distilled-600M (this may take a minute...)
+2026-05-06 11:41:56,108 - app.models.translator - INFO - NLLB-200 model loaded successfully
+2026-05-06 11:55:32,272 - app.core.database - INFO - MongoDB connection closed
+2026-05-06 11:55:57,061 - app.main - INFO - Main module loading...
+2026-05-06 11:55:58,372 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-06 11:55:58,502 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-06 11:55:58,503 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 11:56:00,545 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-06 11:56:00,545 - app.main - INFO - Summarizer model loaded at startup
+2026-05-06 11:57:56,804 - app.models.translator - INFO - Loading NLLB-200 model: facebook/nllb-200-distilled-600M (this may take a minute...)
+2026-05-06 11:58:00,374 - app.models.tts - INFO - TTS generated: tts_47b25f6c_summary.mp3 (549.0 KB, voice=en-US-AriaNeural)
+2026-05-06 11:58:13,031 - app.models.translator - INFO - NLLB-200 model loaded successfully
+2026-05-06 12:05:55,140 - app.main - INFO - Main module loading...
+2026-05-06 12:05:56,193 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-06 12:05:56,349 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-06 12:05:56,349 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 12:05:58,388 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-06 12:05:58,388 - app.main - INFO - Summarizer model loaded at startup
+2026-05-06 12:09:07,851 - app.api.summarize - ERROR - YouTube summarization failed: 'YouTubeTranscriptApi' object has no attribute 'fetch'
+2026-05-06 12:09:17,983 - app.api.summarize - ERROR - YouTube summarization failed: 'YouTubeTranscriptApi' object has no attribute 'fetch'
+2026-05-06 12:09:20,346 - app.api.summarize - ERROR - YouTube summarization failed: 'YouTubeTranscriptApi' object has no attribute 'fetch'
+2026-05-06 12:09:31,563 - app.api.videos - ERROR - YouTube download failed for user 69f83393801f7bed75cf001d url=https://youtu.be/h7LDnVsNRVI?si=JCXkv3uPqQwZ16-3: [0;31mERROR:[0m unable to download video data: HTTP Error 403: Forbidden
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 3459, in process_info
+    success, real_download = self.dl(temp_filename, info_dict)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 3180, in dl
+    return fd.download(name, new_info, subtitle)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\downloader\common.py", line 466, in download
+    ret = self.real_download(filename, info_dict)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\downloader\http.py", line 369, in real_download
+    establish_connection()
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\downloader\http.py", line 120, in establish_connection
+    ctx.data = self.ydl.urlopen(request)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 4142, in urlopen
+    return self._request_director.send(req)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\networking\common.py", line 117, in send
+    response = handler.send(request)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\networking\_helper.py", line 208, in wrapper
+    return func(self, *args, **kwargs)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\networking\common.py", line 337, in send
+    return self._send(request)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\networking\_requests.py", line 366, in _send
+    raise HTTPError(res, redirect_loop=max_redirects_exceeded)
+yt_dlp.networking.exceptions.HTTPError: HTTP Error 403: Forbidden
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\app\api\videos.py", line 220, in upload_youtube
+    result = await _yt_download(body.url, output_template)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\api\videos.py", line 99, in _yt_download
+    return await asyncio.to_thread(_download)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python310\lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python310\lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\api\videos.py", line 93, in _download
+    info = ydl.extract_info(url, download=True)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 1595, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 1606, in wrapper
+    return func(self, *args, **kwargs)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 1762, in __extract_info
+    return self.process_ie_result(ie_result, download, extra_info)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 1821, in process_ie_result
+    ie_result = self.process_video_result(ie_result, download=download)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 2993, in process_video_result
+    self.process_info(new_info)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 3468, in process_info
+    self.report_error('unable to download video data: %s' % error_to_compat_str(err))
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 1073, in report_error
+    self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 1012, in trouble
+    raise DownloadError(message, exc_info)
+yt_dlp.utils.DownloadError: [0;31mERROR:[0m unable to download video data: HTTP Error 403: Forbidden
+2026-05-06 12:12:54,918 - app.api.videos - ERROR - YouTube download failed for user 69f83393801f7bed75cf001d url=https://youtu.be/h7LDnVsNRVI?si=JCXkv3uPqQwZ16-3: [0;31mERROR:[0m unable to download video data: HTTP Error 403: Forbidden
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 3459, in process_info
+    success, real_download = self.dl(temp_filename, info_dict)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 3180, in dl
+    return fd.download(name, new_info, subtitle)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\downloader\common.py", line 466, in download
+    ret = self.real_download(filename, info_dict)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\downloader\http.py", line 369, in real_download
+    establish_connection()
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\downloader\http.py", line 120, in establish_connection
+    ctx.data = self.ydl.urlopen(request)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 4142, in urlopen
+    return self._request_director.send(req)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\networking\common.py", line 117, in send
+    response = handler.send(request)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\networking\_helper.py", line 208, in wrapper
+    return func(self, *args, **kwargs)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\networking\common.py", line 337, in send
+    return self._send(request)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\networking\_requests.py", line 366, in _send
+    raise HTTPError(res, redirect_loop=max_redirects_exceeded)
+yt_dlp.networking.exceptions.HTTPError: HTTP Error 403: Forbidden
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\app\api\videos.py", line 220, in upload_youtube
+    result = await _yt_download(body.url, output_template)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\api\videos.py", line 99, in _yt_download
+    return await asyncio.to_thread(_download)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python310\lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python310\lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\videosum\AI-Video-Summarizer\backend\app\api\videos.py", line 93, in _download
+    info = ydl.extract_info(url, download=True)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 1595, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 1606, in wrapper
+    return func(self, *args, **kwargs)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 1762, in __extract_info
+    return self.process_ie_result(ie_result, download, extra_info)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 1821, in process_ie_result
+    ie_result = self.process_video_result(ie_result, download=download)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 2993, in process_video_result
+    self.process_info(new_info)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 3468, in process_info
+    self.report_error('unable to download video data: %s' % error_to_compat_str(err))
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 1073, in report_error
+    self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
+  File "D:\videosum\AI-Video-Summarizer\backend\venv\lib\site-packages\yt_dlp\YoutubeDL.py", line 1012, in trouble
+    raise DownloadError(message, exc_info)
+yt_dlp.utils.DownloadError: [0;31mERROR:[0m unable to download video data: HTTP Error 403: Forbidden
+2026-05-06 12:13:16,031 - app.core.database - INFO - MongoDB connection closed
+2026-05-06 12:13:21,558 - app.main - INFO - Main module loading...
+2026-05-06 12:13:21,822 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-06 12:13:21,912 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-06 12:13:21,912 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 12:13:23,937 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-06 12:13:23,938 - app.main - INFO - Summarizer model loaded at startup
+2026-05-06 12:15:29,952 - app.models.groq_chat - INFO - Groq client initialized
+2026-05-06 12:15:30,000 - app.api.chat - INFO - Chat session created: cd70f2a6-97ae-4afd-a992-7c7ee2bd99af
+2026-05-06 12:15:44,506 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 12:16:12,461 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 12:16:43,079 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 12:17:27,214 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 12:17:48,308 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 12:22:50,715 - app.api.videos - INFO - Video uploaded: file_id=e5abc693-28ad-41e1-a981-1f3d371d2fcd user=69f83393801f7bed75cf001d size_mb=67.36
+2026-05-06 12:22:56,291 - app.core.task_store - INFO - Task created: fafd5f22-4caa-4a42-9297-236bc877d552 for user 69f83393801f7bed75cf001d
+2026-05-06 12:22:56,299 - app.api.summarize - INFO - Task fafd5f22-4caa-4a42-9297-236bc877d552: starting transcription
+2026-05-06 12:22:59,210 - app.core.audio - INFO - Audio extracted (ffmpeg): e5abc693-28ad-41e1-a981-1f3d371d2fcd.mp4 → tmpcscurum3.wav (17.0 MB)
+2026-05-06 12:23:06,371 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-06 12:23:06,424 - app.api.summarize - INFO - Task fafd5f22-4caa-4a42-9297-236bc877d552: parallel processing (rank + summarize + key points)
+2026-05-06 12:23:07,390 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 12:23:08,209 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 12:23:22,742 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_fafd5f22-4caa-4a42-9297-236bc877d552.srt (89 entries)
+2026-05-06 12:23:22,744 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_fafd5f22-4caa-4a42-9297-236bc877d552.vtt (89 entries)
+2026-05-06 12:23:22,747 - app.api.summarize - INFO - Task fafd5f22-4caa-4a42-9297-236bc877d552: subtitles generated
+2026-05-06 12:23:26,527 - app.models.video_processor - INFO - Video processor initialized
+2026-05-06 12:23:26,528 - app.api.summarize - INFO - Task fafd5f22-4caa-4a42-9297-236bc877d552: generating enhanced visual summary video
+2026-05-06 12:23:26,533 - app.models.video_processor - INFO - Creating enhanced visual summary for uploads\69f83393801f7bed75cf001d\e5abc693-28ad-41e1-a981-1f3d371d2fcd.mp4
+2026-05-06 12:23:27,100 - app.models.video_processor - INFO - Pre-resizing source video from 1280x720 to 854x480
+2026-05-06 12:23:32,145 - app.models.video_processor - INFO - Compositing 17 clips into final summary video (114s total)
+2026-05-06 12:32:47,473 - app.models.video_processor - INFO - Enhanced visual summary created successfully at processed\69f83393801f7bed75cf001d\summary_fafd5f22-4caa-4a42-9297-236bc877d552.mp4
+2026-05-06 12:32:47,537 - app.api.summarize - INFO - Task fafd5f22-4caa-4a42-9297-236bc877d552: visual summary video created at processed\69f83393801f7bed75cf001d\summary_fafd5f22-4caa-4a42-9297-236bc877d552.mp4
+2026-05-06 12:32:47,590 - app.api.summarize - INFO - Task fafd5f22-4caa-4a42-9297-236bc877d552: done, summary_id=68ccfaa6-4aa7-4359-a92c-85ea4f37b1b0
+2026-05-06 12:37:16,272 - app.models.translator - INFO - Loading NLLB-200 model: facebook/nllb-200-distilled-600M (this may take a minute...)
+2026-05-06 12:37:33,254 - app.models.translator - INFO - NLLB-200 model loaded successfully
+2026-05-06 12:40:52,292 - app.models.tts - INFO - TTS generated: tts_68ccfaa6_summary.mp3 (833.8 KB, voice=en-US-AriaNeural)
+2026-05-06 12:42:23,197 - asyncio - ERROR - Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python310\lib\asyncio\events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python310\lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+2026-05-06 12:45:34,746 - app.core.database - INFO - MongoDB connection closed
+2026-05-06 13:19:15,188 - app.main - INFO - Main module loading...
+2026-05-06 13:19:16,351 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-06 13:19:16,506 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-06 13:19:16,506 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 13:19:18,547 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-06 13:19:18,547 - app.main - INFO - Summarizer model loaded at startup
+2026-05-06 13:27:24,370 - app.main - INFO - Main module loading...
+2026-05-06 13:27:25,238 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-06 13:27:25,334 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-06 13:27:25,334 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 13:27:27,367 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-06 13:27:27,367 - app.main - INFO - Summarizer model loaded at startup
+2026-05-06 13:27:32,402 - app.core.database - INFO - MongoDB connection closed
+2026-05-06 13:27:37,728 - app.main - INFO - Main module loading...
+2026-05-06 13:27:37,964 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-06 13:27:38,028 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-06 13:27:38,029 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 13:27:40,059 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-06 13:27:40,059 - app.main - INFO - Summarizer model loaded at startup
+2026-05-06 13:27:40,065 - app.core.database - INFO - MongoDB connection closed
+2026-05-06 13:28:35,963 - app.api.videos - INFO - Video uploaded: file_id=6e424b0b-a12f-44f6-a07c-8adbb709b8d0 user=69f83393801f7bed75cf001d size_mb=67.36
+2026-05-06 13:28:39,597 - app.core.task_store - INFO - Task created: 504b4f79-5f4d-42e3-8b2f-aff9ca237649 for user 69f83393801f7bed75cf001d
+2026-05-06 13:28:39,610 - app.api.summarize - INFO - Task 504b4f79-5f4d-42e3-8b2f-aff9ca237649: starting transcription
+2026-05-06 13:28:41,480 - app.core.audio - INFO - Audio extracted (ffmpeg): 6e424b0b-a12f-44f6-a07c-8adbb709b8d0.mp4 → tmpbsozficb.wav (17.0 MB)
+2026-05-06 13:29:00,884 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-06 13:29:00,910 - app.api.summarize - INFO - Task 504b4f79-5f4d-42e3-8b2f-aff9ca237649: parallel processing (rank + summarize + key points)
+2026-05-06 13:29:02,418 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 13:29:02,828 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 13:29:11,460 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_504b4f79-5f4d-42e3-8b2f-aff9ca237649.srt (89 entries)
+2026-05-06 13:29:11,465 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_504b4f79-5f4d-42e3-8b2f-aff9ca237649.vtt (89 entries)
+2026-05-06 13:29:11,466 - app.api.summarize - INFO - Task 504b4f79-5f4d-42e3-8b2f-aff9ca237649: subtitles generated
+2026-05-06 13:29:15,052 - app.models.video_processor - INFO - Video processor initialized
+2026-05-06 13:29:15,052 - app.api.summarize - INFO - Task 504b4f79-5f4d-42e3-8b2f-aff9ca237649: generating enhanced visual summary video
+2026-05-06 13:29:15,057 - app.models.video_processor - INFO - Creating enhanced visual summary for uploads\69f83393801f7bed75cf001d\6e424b0b-a12f-44f6-a07c-8adbb709b8d0.mp4
+2026-05-06 13:29:15,534 - app.models.video_processor - INFO - Pre-resizing source video from 1280x720 to 854x480
+2026-05-06 13:29:15,535 - app.api.summarize - WARNING - Task 504b4f79-5f4d-42e3-8b2f-aff9ca237649: summary video generation failed (non-fatal): 'VideoFileClip' object has no attribute 'resize'
+2026-05-06 13:29:15,550 - app.api.summarize - INFO - Task 504b4f79-5f4d-42e3-8b2f-aff9ca237649: done, summary_id=9495c988-3dbd-47b0-8e67-4ff201532eff
+2026-05-06 13:30:44,447 - app.api.videos - INFO - Video deleted: file_id=6e424b0b-a12f-44f6-a07c-8adbb709b8d0 user=69f83393801f7bed75cf001d
+2026-05-06 13:30:48,765 - app.api.videos - INFO - Video deleted: file_id=e5abc693-28ad-41e1-a981-1f3d371d2fcd user=69f83393801f7bed75cf001d
+2026-05-06 13:33:54,593 - app.api.videos - INFO - Video uploaded: file_id=f8549012-ca95-4ed4-bf97-fff83fd52125 user=69f83393801f7bed75cf001d size_mb=41.23
+2026-05-06 13:34:31,705 - app.core.task_store - INFO - Task created: 207f5dd9-f9f0-4be0-93e6-7f76d1cdd3d2 for user 69f83393801f7bed75cf001d
+2026-05-06 13:34:31,713 - app.api.summarize - INFO - Task 207f5dd9-f9f0-4be0-93e6-7f76d1cdd3d2: starting transcription
+2026-05-06 13:34:32,146 - app.core.audio - INFO - Audio extracted (ffmpeg): f8549012-ca95-4ed4-bf97-fff83fd52125.mp4 → tmpz656w8w1.wav (9.5 MB)
+2026-05-06 13:34:35,903 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-06 13:34:35,922 - app.api.summarize - INFO - Task 207f5dd9-f9f0-4be0-93e6-7f76d1cdd3d2: parallel processing (rank + summarize + key points)
+2026-05-06 13:34:37,125 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 13:34:37,781 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 13:34:37,790 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_207f5dd9-f9f0-4be0-93e6-7f76d1cdd3d2.srt (48 entries)
+2026-05-06 13:34:37,793 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_207f5dd9-f9f0-4be0-93e6-7f76d1cdd3d2.vtt (48 entries)
+2026-05-06 13:34:37,795 - app.api.summarize - INFO - Task 207f5dd9-f9f0-4be0-93e6-7f76d1cdd3d2: subtitles generated
+2026-05-06 13:34:37,795 - app.models.video_processor - INFO - Video processor initialized
+2026-05-06 13:34:37,796 - app.api.summarize - INFO - Task 207f5dd9-f9f0-4be0-93e6-7f76d1cdd3d2: generating enhanced visual summary video
+2026-05-06 13:34:37,799 - app.models.video_processor - INFO - Creating enhanced visual summary for uploads\69f83393801f7bed75cf001d\f8549012-ca95-4ed4-bf97-fff83fd52125.mp4
+2026-05-06 13:34:38,125 - app.models.video_processor - INFO - Pre-resizing source video from 1280x720 to 854x480
+2026-05-06 13:34:38,125 - app.api.summarize - WARNING - Task 207f5dd9-f9f0-4be0-93e6-7f76d1cdd3d2: summary video generation failed (non-fatal): 'VideoFileClip' object has no attribute 'resize'
+2026-05-06 13:34:38,135 - app.api.summarize - INFO - Task 207f5dd9-f9f0-4be0-93e6-7f76d1cdd3d2: done, summary_id=7f514bfe-254d-4223-bb93-4c304c92d5d0
+2026-05-06 13:35:41,238 - app.api.videos - INFO - Video deleted: file_id=f8549012-ca95-4ed4-bf97-fff83fd52125 user=69f83393801f7bed75cf001d
+2026-05-06 13:36:29,049 - app.api.videos - INFO - Video uploaded: file_id=7325ec89-30f8-4e46-bea6-2e29371eb15a user=69f83393801f7bed75cf001d size_mb=41.23
+2026-05-06 13:36:30,850 - app.core.task_store - INFO - Task created: d65658bc-4958-4d4c-aed4-664d5d6e5d64 for user 69f83393801f7bed75cf001d
+2026-05-06 13:36:30,856 - app.api.summarize - INFO - Task d65658bc-4958-4d4c-aed4-664d5d6e5d64: starting transcription
+2026-05-06 13:36:31,246 - app.core.audio - INFO - Audio extracted (ffmpeg): 7325ec89-30f8-4e46-bea6-2e29371eb15a.mp4 → tmpnr2i55v3.wav (9.5 MB)
+2026-05-06 13:36:34,731 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-06 13:36:34,742 - app.api.summarize - INFO - Task d65658bc-4958-4d4c-aed4-664d5d6e5d64: parallel processing (rank + summarize + key points)
+2026-05-06 13:36:35,845 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 13:36:36,116 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 13:36:36,123 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_d65658bc-4958-4d4c-aed4-664d5d6e5d64.srt (48 entries)
+2026-05-06 13:36:36,129 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_d65658bc-4958-4d4c-aed4-664d5d6e5d64.vtt (48 entries)
+2026-05-06 13:36:36,130 - app.api.summarize - INFO - Task d65658bc-4958-4d4c-aed4-664d5d6e5d64: subtitles generated
+2026-05-06 13:36:36,130 - app.models.video_processor - INFO - Video processor initialized
+2026-05-06 13:36:36,130 - app.api.summarize - INFO - Task d65658bc-4958-4d4c-aed4-664d5d6e5d64: generating enhanced visual summary video
+2026-05-06 13:36:36,134 - app.models.video_processor - INFO - Creating enhanced visual summary for uploads\69f83393801f7bed75cf001d\7325ec89-30f8-4e46-bea6-2e29371eb15a.mp4
+2026-05-06 13:36:36,431 - app.models.video_processor - INFO - Pre-resizing source video from 1280x720 to 854x480
+2026-05-06 13:36:36,431 - app.api.summarize - WARNING - Task d65658bc-4958-4d4c-aed4-664d5d6e5d64: summary video generation failed (non-fatal): 'VideoFileClip' object has no attribute 'resize'
+2026-05-06 13:36:36,465 - app.api.summarize - INFO - Task d65658bc-4958-4d4c-aed4-664d5d6e5d64: done, summary_id=793fe9e9-5fd0-4095-bee2-70e4bb231e79
+2026-05-06 13:39:11,348 - app.main - INFO - Main module loading...
+2026-05-06 13:39:11,471 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-06 13:39:11,520 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-06 13:39:11,520 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 13:39:13,557 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-06 13:39:13,558 - app.main - INFO - Summarizer model loaded at startup
+2026-05-06 13:39:53,082 - app.api.auth - INFO - User logged in: rishijain6388@gmail.com
+2026-05-06 13:40:12,220 - app.api.videos - INFO - Video uploaded: file_id=437f3da7-26a2-4f68-83fd-d6b1c6b7841a user=69f83393801f7bed75cf001d size_mb=67.36
+2026-05-06 13:40:14,531 - app.core.task_store - INFO - Task created: 0034e7c9-c9e0-48a5-8366-a7d9da5c8479 for user 69f83393801f7bed75cf001d
+2026-05-06 13:40:14,536 - app.api.summarize - INFO - Task 0034e7c9-c9e0-48a5-8366-a7d9da5c8479: starting transcription
+2026-05-06 13:40:15,234 - app.core.audio - INFO - Audio extracted (ffmpeg): 437f3da7-26a2-4f68-83fd-d6b1c6b7841a.mp4 → tmp1cb60kpu.wav (17.0 MB)
+2026-05-06 13:40:21,006 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-06 13:40:21,050 - app.api.summarize - INFO - Task 0034e7c9-c9e0-48a5-8366-a7d9da5c8479: parallel processing (rank + summarize + key points)
+2026-05-06 13:40:22,258 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 13:40:22,872 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 13:40:31,489 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_0034e7c9-c9e0-48a5-8366-a7d9da5c8479.srt (89 entries)
+2026-05-06 13:40:31,493 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_0034e7c9-c9e0-48a5-8366-a7d9da5c8479.vtt (89 entries)
+2026-05-06 13:40:31,494 - app.api.summarize - INFO - Task 0034e7c9-c9e0-48a5-8366-a7d9da5c8479: subtitles generated
+2026-05-06 13:40:34,168 - app.models.video_processor - INFO - Video processor initialized
+2026-05-06 13:40:34,168 - app.api.summarize - INFO - Task 0034e7c9-c9e0-48a5-8366-a7d9da5c8479: generating enhanced visual summary video
+2026-05-06 13:40:34,173 - app.models.video_processor - INFO - Creating enhanced visual summary for uploads\69f83393801f7bed75cf001d\437f3da7-26a2-4f68-83fd-d6b1c6b7841a.mp4
+2026-05-06 13:40:34,622 - app.models.video_processor - INFO - Pre-resizing source video from 1280x720 to 854x480
+2026-05-06 13:40:37,987 - app.models.video_processor - INFO - Compositing 15 clips into final summary video (99s total)
+2026-05-06 13:47:39,005 - app.models.video_processor - INFO - Enhanced visual summary created successfully at processed\69f83393801f7bed75cf001d\summary_0034e7c9-c9e0-48a5-8366-a7d9da5c8479.mp4
+2026-05-06 13:47:39,041 - app.api.summarize - INFO - Task 0034e7c9-c9e0-48a5-8366-a7d9da5c8479: visual summary video created at processed\69f83393801f7bed75cf001d\summary_0034e7c9-c9e0-48a5-8366-a7d9da5c8479.mp4
+2026-05-06 13:47:39,051 - app.api.summarize - INFO - Task 0034e7c9-c9e0-48a5-8366-a7d9da5c8479: done, summary_id=ea9a76d5-cfa3-4a51-b987-d02cca4fb11c
+2026-05-06 13:48:49,076 - app.core.database - INFO - MongoDB connection closed
+2026-05-06 14:40:56,632 - app.main - INFO - Main module loading...
+2026-05-06 14:40:56,960 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-06 14:40:57,092 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-06 14:40:57,092 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 14:40:59,134 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-06 14:40:59,134 - app.main - INFO - Summarizer model loaded at startup
+2026-05-06 14:43:27,312 - app.api.videos - INFO - Video uploaded: file_id=c64c8da0-1f68-4e07-92d0-fa6acfc3682a user=69f83393801f7bed75cf001d size_mb=41.23
+2026-05-06 14:43:31,850 - app.core.task_store - INFO - Task created: 92f6bcd4-73d8-4761-b28d-872610204da0 for user 69f83393801f7bed75cf001d
+2026-05-06 14:43:31,873 - app.api.summarize - INFO - Task 92f6bcd4-73d8-4761-b28d-872610204da0: starting transcription
+2026-05-06 14:43:32,460 - app.core.audio - INFO - Audio extracted (ffmpeg): c64c8da0-1f68-4e07-92d0-fa6acfc3682a.mp4 → tmpd0396pq4.wav (9.5 MB)
+2026-05-06 14:43:36,804 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-06 14:43:36,845 - app.api.summarize - INFO - Task 92f6bcd4-73d8-4761-b28d-872610204da0: parallel processing (rank + summarize + key points)
+2026-05-06 14:43:37,762 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 14:43:38,390 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 14:43:40,083 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_92f6bcd4-73d8-4761-b28d-872610204da0.srt (48 entries)
+2026-05-06 14:43:40,085 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_92f6bcd4-73d8-4761-b28d-872610204da0.vtt (48 entries)
+2026-05-06 14:43:40,085 - app.api.summarize - INFO - Task 92f6bcd4-73d8-4761-b28d-872610204da0: subtitles generated
+2026-05-06 14:43:40,986 - app.models.video_processor - INFO - Video processor initialized
+2026-05-06 14:43:40,987 - app.api.summarize - INFO - Task 92f6bcd4-73d8-4761-b28d-872610204da0: generating enhanced visual summary video
+2026-05-06 14:43:40,991 - app.models.video_processor - INFO - Creating enhanced visual summary for uploads\69f83393801f7bed75cf001d\c64c8da0-1f68-4e07-92d0-fa6acfc3682a.mp4
+2026-05-06 14:43:41,487 - app.models.video_processor - INFO - Pre-resizing source video from 1280x720 to 854x480
+2026-05-06 14:43:41,488 - app.api.summarize - WARNING - Task 92f6bcd4-73d8-4761-b28d-872610204da0: summary video generation failed (non-fatal): 'VideoFileClip' object has no attribute 'resize'
+2026-05-06 14:43:41,508 - app.api.summarize - INFO - Task 92f6bcd4-73d8-4761-b28d-872610204da0: done, summary_id=f5f34150-c25d-4484-9686-21664b59089f
+2026-05-06 14:44:30,619 - app.api.videos - INFO - Video uploaded: file_id=fee8063f-89ff-48c3-a7b0-3126d797188d user=69f83393801f7bed75cf001d size_mb=19.73
+2026-05-06 14:45:48,086 - app.core.task_store - INFO - Task created: fb0b33b7-5a51-453e-8b21-1324e95559ff for user 69f83393801f7bed75cf001d
+2026-05-06 14:45:48,094 - app.api.summarize - INFO - Task fb0b33b7-5a51-453e-8b21-1324e95559ff: starting transcription
+2026-05-06 14:45:48,749 - app.core.audio - INFO - Audio extracted (ffmpeg): fee8063f-89ff-48c3-a7b0-3126d797188d.mp4 → tmpb4ii97x5.wav (10.4 MB)
+2026-05-06 14:45:54,372 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-06 14:45:54,418 - app.api.summarize - INFO - Task fb0b33b7-5a51-453e-8b21-1324e95559ff: parallel processing (rank + summarize + key points)
+2026-05-06 14:45:55,722 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 14:45:56,187 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 14:45:56,196 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_fb0b33b7-5a51-453e-8b21-1324e95559ff.srt (84 entries)
+2026-05-06 14:45:56,199 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_fb0b33b7-5a51-453e-8b21-1324e95559ff.vtt (84 entries)
+2026-05-06 14:45:56,200 - app.api.summarize - INFO - Task fb0b33b7-5a51-453e-8b21-1324e95559ff: subtitles generated
+2026-05-06 14:45:56,200 - app.models.video_processor - INFO - Video processor initialized
+2026-05-06 14:45:56,201 - app.api.summarize - INFO - Task fb0b33b7-5a51-453e-8b21-1324e95559ff: generating enhanced visual summary video
+2026-05-06 14:45:56,206 - app.models.video_processor - INFO - Creating enhanced visual summary for uploads\69f83393801f7bed75cf001d\fee8063f-89ff-48c3-a7b0-3126d797188d.mp4
+2026-05-06 14:45:56,533 - app.models.video_processor - INFO - Pre-resizing source video from 1280x720 to 854x480
+2026-05-06 14:45:56,534 - app.api.summarize - WARNING - Task fb0b33b7-5a51-453e-8b21-1324e95559ff: summary video generation failed (non-fatal): 'VideoFileClip' object has no attribute 'resize'
+2026-05-06 14:45:56,548 - app.api.summarize - INFO - Task fb0b33b7-5a51-453e-8b21-1324e95559ff: done, summary_id=f002c0e1-f07a-4868-9bc4-6fbd59d38fd8
+2026-05-06 22:54:24,708 - app.main - INFO - Main module loading...
+2026-05-06 22:54:26,246 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-06 22:54:26,491 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-06 22:54:26,491 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 22:54:28,511 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-06 22:54:28,511 - app.main - INFO - Summarizer model loaded at startup
+2026-05-06 22:55:35,692 - app.api.videos - INFO - Video uploaded: file_id=d8748d2f-7208-4b89-8820-658f3ab62bff user=69f83393801f7bed75cf001d size_mb=13.70
+2026-05-06 22:55:38,385 - app.core.task_store - INFO - Task created: 2d8ec6d9-a084-46c0-9977-b8ebd4d5d6f4 for user 69f83393801f7bed75cf001d
+2026-05-06 22:55:38,395 - app.api.summarize - INFO - Task 2d8ec6d9-a084-46c0-9977-b8ebd4d5d6f4: starting transcription
+2026-05-06 22:55:40,348 - app.core.audio - INFO - Audio extracted (ffmpeg): d8748d2f-7208-4b89-8820-658f3ab62bff.mp4 → tmpy8akswgm.wav (5.7 MB)
+2026-05-06 22:55:43,383 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-06 22:55:43,401 - app.api.summarize - INFO - Task 2d8ec6d9-a084-46c0-9977-b8ebd4d5d6f4: parallel processing (rank + summarize + key points)
+2026-05-06 22:55:44,333 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 22:55:44,862 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 22:55:54,632 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_2d8ec6d9-a084-46c0-9977-b8ebd4d5d6f4.srt (33 entries)
+2026-05-06 22:55:54,632 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_2d8ec6d9-a084-46c0-9977-b8ebd4d5d6f4.vtt (33 entries)
+2026-05-06 22:55:54,633 - app.api.summarize - INFO - Task 2d8ec6d9-a084-46c0-9977-b8ebd4d5d6f4: subtitles generated
+2026-05-06 22:55:58,416 - app.models.video_processor - INFO - Video processor initialized
+2026-05-06 22:55:58,416 - app.api.summarize - INFO - Task 2d8ec6d9-a084-46c0-9977-b8ebd4d5d6f4: generating enhanced visual summary video
+2026-05-06 22:55:58,418 - app.models.video_processor - INFO - Creating enhanced visual summary for uploads\69f83393801f7bed75cf001d\d8748d2f-7208-4b89-8820-658f3ab62bff.mp4
+2026-05-06 22:55:58,718 - app.models.video_processor - INFO - Pre-resizing source video from 1280x720 to 854x480
+2026-05-06 22:55:58,720 - app.api.summarize - WARNING - Task 2d8ec6d9-a084-46c0-9977-b8ebd4d5d6f4: summary video generation failed (non-fatal): 'VideoFileClip' object has no attribute 'resize'
+2026-05-06 22:55:58,773 - app.api.summarize - INFO - Task 2d8ec6d9-a084-46c0-9977-b8ebd4d5d6f4: done, summary_id=9fdb9452-89b4-450d-875f-d36ca1c96950
+2026-05-06 23:06:07,632 - app.main - INFO - Main module loading...
+2026-05-06 23:06:07,831 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-06 23:06:07,897 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-06 23:06:07,897 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 23:06:09,916 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-06 23:06:09,917 - app.main - INFO - Summarizer model loaded at startup
+2026-05-06 23:06:09,922 - app.core.database - INFO - MongoDB connection closed
+2026-05-06 23:09:02,891 - app.main - INFO - Main module loading...
+2026-05-06 23:09:03,055 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-06 23:09:03,094 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-06 23:09:03,094 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 23:09:05,122 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-06 23:09:05,123 - app.main - INFO - Summarizer model loaded at startup
+2026-05-06 23:10:17,251 - app.api.videos - INFO - Video uploaded: file_id=7a6a645b-e1d1-4797-a50b-e957f3ca8bd5 user=69f83393801f7bed75cf001d size_mb=7.29
+2026-05-06 23:10:20,353 - app.core.task_store - INFO - Task created: dcc3d99a-b646-4035-ac7e-7ffc9c0ca317 for user 69f83393801f7bed75cf001d
+2026-05-06 23:10:20,357 - app.api.summarize - INFO - Task dcc3d99a-b646-4035-ac7e-7ffc9c0ca317: starting transcription
+2026-05-06 23:10:20,780 - app.core.audio - INFO - Audio extracted (ffmpeg): 7a6a645b-e1d1-4797-a50b-e957f3ca8bd5.mp4 → tmpijn1svoj.wav (6.2 MB)
+2026-05-06 23:10:23,397 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-06 23:10:23,407 - app.api.summarize - INFO - Task dcc3d99a-b646-4035-ac7e-7ffc9c0ca317: parallel processing (rank + summarize + key points)
+2026-05-06 23:10:24,261 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 23:10:24,791 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 23:10:24,801 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_dcc3d99a-b646-4035-ac7e-7ffc9c0ca317.srt (36 entries)
+2026-05-06 23:10:24,804 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_dcc3d99a-b646-4035-ac7e-7ffc9c0ca317.vtt (36 entries)
+2026-05-06 23:10:24,805 - app.api.summarize - INFO - Task dcc3d99a-b646-4035-ac7e-7ffc9c0ca317: subtitles generated
+2026-05-06 23:10:25,160 - app.models.video_processor - INFO - Video processor initialized (MoviePy v2=True)
+2026-05-06 23:10:25,161 - app.api.summarize - INFO - Task dcc3d99a-b646-4035-ac7e-7ffc9c0ca317: generating summary video (~40-50% of original)
+2026-05-06 23:10:25,164 - app.models.video_processor - INFO - Creating summary video for uploads\69f83393801f7bed75cf001d\7a6a645b-e1d1-4797-a50b-e957f3ca8bd5.mp4
+2026-05-06 23:10:25,506 - app.models.video_processor - INFO - Segment selection: 13 clips, total 82.6s (41% of 203.7s original)
+2026-05-06 23:10:27,102 - app.models.video_processor - INFO - Concatenating 15 clips (1 title + 13 content + 1 closing)
+2026-05-06 23:10:27,295 - app.models.video_processor - INFO - Final summary video: 87.6s (original: 203.7s, ratio: 43%)
+2026-05-06 23:13:11,744 - app.models.video_processor - INFO - Summary video saved: processed\69f83393801f7bed75cf001d\summary_dcc3d99a-b646-4035-ac7e-7ffc9c0ca317.mp4
+2026-05-06 23:13:11,758 - app.api.summarize - INFO - Task dcc3d99a-b646-4035-ac7e-7ffc9c0ca317: summary video created at processed\69f83393801f7bed75cf001d\summary_dcc3d99a-b646-4035-ac7e-7ffc9c0ca317.mp4
+2026-05-06 23:13:11,762 - app.api.summarize - ERROR - Task dcc3d99a-b646-4035-ac7e-7ffc9c0ca317 failed: name 'selected' is not defined
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\app\api\summarize.py", line 193, in _run_summarize_pipeline
+    "segments": selected,
+NameError: name 'selected' is not defined
+2026-05-06 23:13:23,386 - app.core.task_store - INFO - Task created: 25315733-412a-4e2b-ad29-a38558b8ff31 for user 69f83393801f7bed75cf001d
+2026-05-06 23:13:23,391 - app.api.summarize - INFO - Task 25315733-412a-4e2b-ad29-a38558b8ff31: starting transcription
+2026-05-06 23:13:23,688 - app.core.audio - INFO - Audio extracted (ffmpeg): 7a6a645b-e1d1-4797-a50b-e957f3ca8bd5.mp4 → tmpb2bdjdtj.wav (6.2 MB)
+2026-05-06 23:13:27,360 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-06 23:13:27,372 - app.api.summarize - INFO - Task 25315733-412a-4e2b-ad29-a38558b8ff31: parallel processing (rank + summarize + key points)
+2026-05-06 23:13:28,318 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 23:13:28,805 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 23:13:28,815 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_25315733-412a-4e2b-ad29-a38558b8ff31.srt (36 entries)
+2026-05-06 23:13:28,817 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_25315733-412a-4e2b-ad29-a38558b8ff31.vtt (36 entries)
+2026-05-06 23:13:28,818 - app.api.summarize - INFO - Task 25315733-412a-4e2b-ad29-a38558b8ff31: subtitles generated
+2026-05-06 23:13:28,819 - app.models.video_processor - INFO - Video processor initialized (MoviePy v2=True)
+2026-05-06 23:13:28,819 - app.api.summarize - INFO - Task 25315733-412a-4e2b-ad29-a38558b8ff31: generating summary video (~40-50% of original)
+2026-05-06 23:13:28,822 - app.models.video_processor - INFO - Creating summary video for uploads\69f83393801f7bed75cf001d\7a6a645b-e1d1-4797-a50b-e957f3ca8bd5.mp4
+2026-05-06 23:13:29,053 - app.models.video_processor - INFO - Segment selection: 13 clips, total 82.6s (41% of 203.7s original)
+2026-05-06 23:13:30,818 - app.models.video_processor - INFO - Concatenating 15 clips (1 title + 13 content + 1 closing)
+2026-05-06 23:13:30,913 - app.models.video_processor - INFO - Final summary video: 87.6s (original: 203.7s, ratio: 43%)
+2026-05-06 23:16:14,877 - app.models.video_processor - INFO - Summary video saved: processed\69f83393801f7bed75cf001d\summary_25315733-412a-4e2b-ad29-a38558b8ff31.mp4
+2026-05-06 23:16:14,884 - app.api.summarize - INFO - Task 25315733-412a-4e2b-ad29-a38558b8ff31: summary video created at processed\69f83393801f7bed75cf001d\summary_25315733-412a-4e2b-ad29-a38558b8ff31.mp4
+2026-05-06 23:16:14,889 - app.api.summarize - ERROR - Task 25315733-412a-4e2b-ad29-a38558b8ff31 failed: name 'selected' is not defined
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\app\api\summarize.py", line 193, in _run_summarize_pipeline
+    "segments": selected,
+NameError: name 'selected' is not defined
+2026-05-06 23:16:36,869 - app.api.videos - INFO - Video uploaded: file_id=59391de5-f7cb-45ac-9dfc-5162e1af2b43 user=69f83393801f7bed75cf001d size_mb=10.00
+2026-05-06 23:16:40,482 - app.core.task_store - INFO - Task created: dfab5c23-d170-4251-bba5-903e9ab34c24 for user 69f83393801f7bed75cf001d
+2026-05-06 23:16:40,490 - app.api.summarize - INFO - Task dfab5c23-d170-4251-bba5-903e9ab34c24: starting transcription
+2026-05-06 23:16:40,799 - app.core.audio - INFO - Audio extracted (ffmpeg): 59391de5-f7cb-45ac-9dfc-5162e1af2b43.mp4 → tmpb707a_bu.wav (7.0 MB)
+2026-05-06 23:16:43,372 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-06 23:16:43,382 - app.api.summarize - INFO - Task dfab5c23-d170-4251-bba5-903e9ab34c24: parallel processing (rank + summarize + key points)
+2026-05-06 23:16:44,393 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 23:16:44,801 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 23:16:44,813 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_dfab5c23-d170-4251-bba5-903e9ab34c24.srt (46 entries)
+2026-05-06 23:16:44,816 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_dfab5c23-d170-4251-bba5-903e9ab34c24.vtt (46 entries)
+2026-05-06 23:16:44,816 - app.api.summarize - INFO - Task dfab5c23-d170-4251-bba5-903e9ab34c24: subtitles generated
+2026-05-06 23:16:44,816 - app.models.video_processor - INFO - Video processor initialized (MoviePy v2=True)
+2026-05-06 23:16:44,817 - app.api.summarize - INFO - Task dfab5c23-d170-4251-bba5-903e9ab34c24: generating summary video (~40-50% of original)
+2026-05-06 23:16:44,819 - app.models.video_processor - INFO - Creating summary video for uploads\69f83393801f7bed75cf001d\59391de5-f7cb-45ac-9dfc-5162e1af2b43.mp4
+2026-05-06 23:16:45,055 - app.models.video_processor - INFO - Segment selection: 15 clips, total 96.4s (42% of 229.9s original)
+2026-05-06 23:16:46,756 - app.models.video_processor - INFO - Concatenating 17 clips (1 title + 15 content + 1 closing)
+2026-05-06 23:16:46,877 - app.models.video_processor - INFO - Final summary video: 101.4s (original: 229.9s, ratio: 44%)
+2026-05-06 23:20:04,261 - app.models.video_processor - INFO - Summary video saved: processed\69f83393801f7bed75cf001d\summary_dfab5c23-d170-4251-bba5-903e9ab34c24.mp4
+2026-05-06 23:20:04,274 - app.api.summarize - INFO - Task dfab5c23-d170-4251-bba5-903e9ab34c24: summary video created at processed\69f83393801f7bed75cf001d\summary_dfab5c23-d170-4251-bba5-903e9ab34c24.mp4
+2026-05-06 23:20:04,278 - app.api.summarize - ERROR - Task dfab5c23-d170-4251-bba5-903e9ab34c24 failed: name 'selected' is not defined
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\app\api\summarize.py", line 193, in _run_summarize_pipeline
+    "segments": selected,
+NameError: name 'selected' is not defined
+2026-05-06 23:23:09,914 - app.main - INFO - Main module loading...
+2026-05-06 23:23:10,160 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-06 23:23:10,220 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-06 23:23:10,220 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 23:23:12,241 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-06 23:23:12,241 - app.main - INFO - Summarizer model loaded at startup
+2026-05-06 23:23:12,243 - app.core.database - INFO - MongoDB connection closed
+2026-05-06 23:23:37,998 - app.api.videos - INFO - Video uploaded: file_id=be14da5d-61f0-4705-81ba-557c0349f15a user=69f83393801f7bed75cf001d size_mb=4.27
+2026-05-06 23:23:40,775 - app.core.task_store - INFO - Task created: 6f3c1cb8-fbbe-4cdd-a336-e0ddb6e257d2 for user 69f83393801f7bed75cf001d
+2026-05-06 23:23:40,784 - app.api.summarize - INFO - Task 6f3c1cb8-fbbe-4cdd-a336-e0ddb6e257d2: starting transcription
+2026-05-06 23:23:42,834 - app.core.audio - INFO - Audio extracted (ffmpeg): be14da5d-61f0-4705-81ba-557c0349f15a.mp4 → tmppsvb7sd_.wav (4.5 MB)
+2026-05-06 23:23:44,980 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-06 23:23:44,991 - app.api.summarize - INFO - Task 6f3c1cb8-fbbe-4cdd-a336-e0ddb6e257d2: parallel processing (rank + summarize + key points)
+2026-05-06 23:23:45,762 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 23:23:46,402 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 23:23:46,412 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_6f3c1cb8-fbbe-4cdd-a336-e0ddb6e257d2.srt (23 entries)
+2026-05-06 23:23:46,416 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_6f3c1cb8-fbbe-4cdd-a336-e0ddb6e257d2.vtt (23 entries)
+2026-05-06 23:23:46,416 - app.api.summarize - INFO - Task 6f3c1cb8-fbbe-4cdd-a336-e0ddb6e257d2: subtitles generated
+2026-05-06 23:23:46,417 - app.models.video_processor - INFO - Video processor initialized (MoviePy v2=True)
+2026-05-06 23:23:46,418 - app.api.summarize - INFO - Task 6f3c1cb8-fbbe-4cdd-a336-e0ddb6e257d2: generating summary video (~40-50% of original)
+2026-05-06 23:23:46,422 - app.models.video_processor - INFO - Creating summary video for uploads\69f83393801f7bed75cf001d\be14da5d-61f0-4705-81ba-557c0349f15a.mp4
+2026-05-06 23:23:48,846 - app.models.video_processor - INFO - Segment selection: 6 clips, total 61.5s (42% of 147.2s original)
+2026-05-06 23:23:49,616 - app.models.video_processor - INFO - Concatenating 8 clips (1 title + 6 content + 1 closing)
+2026-05-06 23:23:49,725 - app.models.video_processor - INFO - Final summary video: 66.5s (original: 147.2s, ratio: 45%)
+2026-05-06 23:26:42,887 - app.models.video_processor - INFO - Summary video saved: processed\69f83393801f7bed75cf001d\summary_6f3c1cb8-fbbe-4cdd-a336-e0ddb6e257d2.mp4
+2026-05-06 23:26:42,895 - app.api.summarize - INFO - Task 6f3c1cb8-fbbe-4cdd-a336-e0ddb6e257d2: summary video created at processed\69f83393801f7bed75cf001d\summary_6f3c1cb8-fbbe-4cdd-a336-e0ddb6e257d2.mp4
+2026-05-06 23:26:42,901 - app.api.summarize - ERROR - Task 6f3c1cb8-fbbe-4cdd-a336-e0ddb6e257d2 failed: name 'selected' is not defined
+Traceback (most recent call last):
+  File "D:\videosum\AI-Video-Summarizer\backend\app\api\summarize.py", line 193, in _run_summarize_pipeline
+    "segments": sorted(ranked, key=lambda s: s.get("start", 0)),
+NameError: name 'selected' is not defined

@@ -1,50 +1,74 @@
 version: "3.9"
 
 services:
-  # ─── MongoDB ──────────────────────────────────────────────────────────────
+  # ─── MongoDB ─────────────────────────────────────────────────────────────────
   mongo:
     image: mongo:7
+    container_name: videosum-mongo
     restart: unless-stopped
+    ports:
+      - "27017:27017"
     volumes:
       - mongo_data:/data/db
     environment:
       MONGO_INITDB_DATABASE: video_summarizer
-    ports:
-      - "27017:27017"
 
-  # ─── Backend ──────────────────────────────────────────────────────────────
+  # ─── Redis (for Celery task queue + caching) ────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: videosum-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # ─── Backend API ─────────────────────────────────────────────────────────────
   backend:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
+    container_name: videosum-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+      - redis
+    env_file:
+      - backend/.env
+    environment:
+      MONGODB_URL: mongodb://mongo:27017/video_summarizer
+      REDIS_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+      STORAGE_BACKEND: local
+    volumes:
+      - uploads_data:/app/uploads
+      - processed_data:/app/processed_videos
+
+  # ─── Celery Worker (GPU workloads) ──────────────────────────────────────────
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: videosum-worker
     restart: unless-stopped
     depends_on:
       - mongo
+      - redis
     env_file:
-      - ./backend/.env
+      - backend/.env
     environment:
-      MONGODB_URL: mongodb://mongo:27017
-      FRONTEND_URL: http://localhost:3000
-    ports:
-      - "8000:8000"
+      MONGODB_URL: mongodb://mongo:27017/video_summarizer
+      REDIS_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
     volumes:
       - uploads_data:/app/uploads
-      - processed_data:/app/processed
-
-  # ─── Frontend ─────────────────────────────────────────────────────────────
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    depends_on:
-      - backend
-    environment:
-      REACT_APP_API_URL: http://localhost:8000
-    ports:
-      - "3000:80"
+      - processed_data:/app/processed_videos
+    command: celery -A app.core.celery_app worker --loglevel=info --concurrency=1
 
 volumes:
   mongo_data:
+  redis_data:
   uploads_data:
   processed_data:
