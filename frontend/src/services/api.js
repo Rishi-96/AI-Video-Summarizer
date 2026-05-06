@@ -108,8 +108,11 @@ export const summariesAPI = {
       max_summary_length: maxLength,
     }),
 
-  // Poll task status
+  // Poll task status (legacy — use SSE progress instead)
   getTaskStatus: (taskId) => api.get(`/api/summarize/status/${taskId}`),
+
+  // SSE real-time progress stream (replaces polling)
+  getProgressUrl: (taskId) => `${API_BASE_URL}/api/summarize/progress/${taskId}`,
 
   // History + individual
   getHistory: () => api.get('/api/summarize/history'),
@@ -120,6 +123,7 @@ export const summariesAPI = {
     const token = localStorage.getItem('token') || '';
     return `${API_BASE_URL}/api/summarize/video/${summaryId}/stream?token=${encodeURIComponent(token)}`;
   },
+
   // Synchronous summarization (Transformers/Whisper)
   summarizeYouTube: (url) => api.post('/api/summarize/summarize-youtube', { url }),
   summarizeVideo: (file) => {
@@ -129,14 +133,51 @@ export const summariesAPI = {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
+
+  // ── Subtitles ───────────────────────────────────────────────────────
+  getSubtitleUrl: (summaryId, format = 'srt') => {
+    const token = localStorage.getItem('token') || '';
+    return `${API_BASE_URL}/api/summarize/subtitles/${summaryId}/${format}?token=${encodeURIComponent(token)}`;
+  },
+  downloadSubtitles: (summaryId, format = 'srt') =>
+    api.get(`/api/summarize/subtitles/${summaryId}/${format}`, { responseType: 'blob' }),
+
+  // ── Text-to-Speech ──────────────────────────────────────────────────
+  generateTTS: (summaryId, voice = 'en-US-AriaNeural', source = 'summary', rate = '+0%') =>
+    api.post('/api/summarize/tts/generate', { summary_id: summaryId, voice, source, rate }),
+  getTTSVoices: (language = 'en') => api.get('/api/summarize/tts/voices', { params: { language } }),
+  getTTSStreamUrl: (filename) => {
+    const token = localStorage.getItem('token') || '';
+    return `${API_BASE_URL}/api/summarize/tts/stream/${filename}?token=${encodeURIComponent(token)}`;
+  },
+
+  // ── Descriptions ────────────────────────────────────────────────────
+  generateDescriptions: (summaryId, types = ['oneliner', 'short', 'detailed', 'seo']) =>
+    api.post('/api/summarize/descriptions/generate', { summary_id: summaryId, types }),
+
+  // ── Thumbnail ───────────────────────────────────────────────────────
+  generateThumbnail: (summaryId) => api.post(`/api/summarize/thumbnail/${summaryId}`),
+  getThumbnailUrl: (summaryId) => {
+    const token = localStorage.getItem('token') || '';
+    return `${API_BASE_URL}/api/summarize/thumbnail/view/${summaryId}?token=${encodeURIComponent(token)}`;
+  },
+
+  // ── Highlights ──────────────────────────────────────────────────────
+  detectHighlights: (summaryId) => api.post(`/api/summarize/highlights/${summaryId}`),
+
+  // ── Translation ─────────────────────────────────────────────────────
+  translateSummary: (summaryId, targetLang) =>
+    api.post('/api/summarize/translate', { summary_id: summaryId, target_lang: targetLang }),
+  getLanguages: () => api.get('/api/summarize/languages'),
 };
 
 // ─── Chat API ───────────────────────────────────────────────────────────────
 export const chatAPI = {
   startSession: (summaryId) => api.post('/api/chat/session/start', null, { params: { summary_id: summaryId } }),
+  getSession: (sessionId) => api.get(`/api/chat/session/${sessionId}/info`),
   // question now goes in the request body, not query string
   askQuestion: (sessionId, question) => api.post(`/api/chat/session/${sessionId}/ask`, { question }),
   getMessages: (sessionId) => api.get(`/api/chat/session/${sessionId}/messages`),
 };
 
-export default api;
+export default api;

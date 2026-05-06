@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import VideoUploader from '../components/Video/VideoUploader';
 import { useVideo } from '../context/VideoContext';
 import { summariesAPI } from '../services/api';
@@ -42,7 +43,7 @@ const UploadPage = () => {
       setQuickSummary(response.data.summary);
     } catch (error) {
       console.error('YouTube summarization failed:', error);
-      alert('Could not summarize YouTube video. Ensure it has a transcript.');
+      toast.error('Could not summarize YouTube video. Ensure it has a transcript.');
     } finally {
       setIsSummarizing(false);
     }
@@ -60,7 +61,7 @@ const UploadPage = () => {
       }
     } catch (error) {
       console.error('Local video summarization failed:', error);
-      alert('Summarization failed. Ensure the video isn\'t corrupt.');
+      toast.error('Summarization failed. Ensure the video isn\'t corrupt.');
     } finally {
       setIsSummarizing(false);
     }

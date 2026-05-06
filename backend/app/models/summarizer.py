@@ -2,8 +2,16 @@ import logging
 import os
 import json
 from typing import List, Dict
-import httpx # Moved from inside __init__ and summarize_text
-from app.core.config import settings # Moved from inside __init__
+import httpx
+from app.core.config import settings
+from app.core.constants import (
+    GROQ_SUMMARIZATION_MODEL,
+    OLLAMA_MODEL,
+    OLLAMA_GENERATE_URL,
+    OLLAMA_TAGS_URL,
+    HF_SUMMARIZATION_MODEL,
+    TEXT_CHUNK_MAX_CHARS,
+)
 
 try:
     from groq import Groq
@@ -23,15 +31,19 @@ class VideoSummarizer:
         
         if not self.use_mock:
             try:
+                _disable_ssl = os.environ.get("DISABLE_SSL_VERIFY", "").lower() == "true"
                 http_proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("HTTP_PROXY")
-                http_client = httpx.Client(proxy=http_proxy, verify=False) if http_proxy else httpx.Client(verify=False)
+                http_client = httpx.Client(
+                    proxy=http_proxy,
+                    verify=not _disable_ssl,
+                )
                 
                 # Try Ollama first if it's running, else fallback to Groq
                 try:
-                    ollama_check = httpx.get("http://localhost:11434/api/tags", timeout=1.0)
+                    ollama_check = httpx.get(OLLAMA_TAGS_URL, timeout=1.0)
                     if ollama_check.status_code == 200:
                         self.use_ollama = True
-                        self.ollama_url = "http://localhost:11434/api/generate"
+                        self.ollama_url = OLLAMA_GENERATE_URL
                     else:
                         self.use_ollama = False
                 except Exception:
@@ -52,8 +64,8 @@ class VideoSummarizer:
         if cls._hf_summarizer is None:
             try:
                 from transformers import pipeline
-                logger.info("Loading HuggingFace summarization pipeline (sshleifer/distilbart-cnn-12-6)...")
-                cls._hf_summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
+                logger.info("Loading HuggingFace summarization pipeline (%s)...", HF_SUMMARIZATION_MODEL)
+                cls._hf_summarizer = pipeline("summarization", model=HF_SUMMARIZATION_MODEL)
             except Exception as e:
                 logger.error(f"Failed to load HuggingFace summarizer: {e}")
         return cls._hf_summarizer
@@ -75,7 +87,7 @@ class VideoSummarizer:
     # -------------------------------
     # TEXT CHUNKING
     # -------------------------------
-    def _chunk_text(self, text: str, max_chunk_chars: int = 15000) -> List[str]:
+    def _chunk_text(self, text: str, max_chunk_chars: int = TEXT_CHUNK_MAX_CHARS) -> List[str]:
         # Groq llama3 supports 8k tokens (~32k chars), 15k chars is very safe
         sentences = text.split(". ")
         chunks = []
@@ -107,16 +119,15 @@ class VideoSummarizer:
                 prompt = f"Please provide a detailed, clear, and highly accurate summary of the following video transcript. Ensure the summary is easy to understand and approximately {max_length} words long.\n\nTranscript: {chunk}"
                 
                 if self.use_ollama:
-                    import httpx
                     resp = httpx.post(self.ollama_url, json={
-                        "model": "llama3",
+                        "model": OLLAMA_MODEL,
                         "prompt": prompt,
                         "stream": False
                     }, timeout=60.0)
                     summaries.append(resp.json().get("response", "").strip())
                 else:
                     resp = self.client.chat.completions.create(
-                        model="llama-3.1-8b-instant",
+                        model=GROQ_SUMMARIZATION_MODEL,
                         messages=[{"role": "user", "content": prompt}]
                     )
                     summaries.append(resp.choices[0].message.content.strip())
@@ -126,16 +137,15 @@ class VideoSummarizer:
             if len(summaries) > 1:
                 final_req = f"Combine these summary parts into one clean, seamless final recap (approx {max_length} words):\n\n{combined}"
                 if self.use_ollama:
-                    import httpx
                     resp = httpx.post(self.ollama_url, json={
-                        "model": "llama3",
+                        "model": OLLAMA_MODEL,
                         "prompt": final_req,
                         "stream": False
                     }, timeout=60.0)
                     return resp.json().get("response", "").strip()
                 else:
                     final = self.client.chat.completions.create(
-                        model="llama-3.1-8b-instant",
+                        model=GROQ_SUMMARIZATION_MODEL,
                         messages=[{"role": "user", "content": final_req}]
                     )
                     return final.choices[0].message.content.strip()
@@ -155,20 +165,19 @@ class VideoSummarizer:
 
         try:
             # We only need the first big chunk to extract decent high-level points
-            chunk = text[:15000] 
+            chunk = text[:TEXT_CHUNK_MAX_CHARS] 
             prompt = f"Extract the {num_points} most important key points from the following video transcript. These should be detailed but clear bullet points that represent the core value of the content. Return ONLY a valid JSON array of strings, with no other formatting or markdown.\n\nTranscript: {chunk}"
             
             if self.use_ollama:
-                import httpx
                 resp = httpx.post(self.ollama_url, json={
-                    "model": "llama3",
+                    "model": OLLAMA_MODEL,
                     "prompt": prompt,
                     "stream": False
                 }, timeout=60.0)
                 raw = resp.json().get("response", "").strip()
             else:
                 resp = self.client.chat.completions.create(
-                    model="llama-3.1-8b-instant",
+                    model=GROQ_SUMMARIZATION_MODEL,
                     messages=[{"role": "user", "content": prompt}],
                     temperature=0.2
                 )
@@ -189,18 +198,92 @@ class VideoSummarizer:
             return [text[:100] + "..."]
 
     # -------------------------------
-    # SEGMENT RANKING
+    # SEGMENT RANKING (TF-IDF + TextRank)
     # -------------------------------
     def rank_segments(self, segments: List[Dict]) -> List[Dict]:
         """
-        Rank segments based on relevance or other metrics.
-        Currently returns segments with equal weight, allowing the caller 
-        to decide on distribution/slicing (e.g., evenly across the video).
+        Rank transcript segments by importance using TF-IDF + TextRank.
+
+        Scoring combines:
+          - TextRank centrality (how similar a segment is to others)
+          - Text density (longer, more content-rich segments score higher)
+          - Transcription confidence (higher confidence = more trustworthy)
         """
         if not segments:
             return []
-            
-        for seg in segments:
-            seg["relevance_score"] = 1.0  # Equal weight
-            
-        return segments
+
+        texts = [seg.get("text", "").strip() for seg in segments]
+
+        # Filter out empty segments
+        valid_indices = [i for i, t in enumerate(texts) if len(t) > 10]
+        if len(valid_indices) < 2:
+            for seg in segments:
+                seg["relevance_score"] = 1.0
+            return segments
+
+        valid_texts = [texts[i] for i in valid_indices]
+
+        try:
+            from sklearn.feature_extraction.text import TfidfVectorizer
+            from sklearn.metrics.pairwise import cosine_similarity
+            import numpy as np
+
+            # Build TF-IDF matrix
+            vectorizer = TfidfVectorizer(
+                stop_words="english",
+                max_features=500,
+                min_df=1,
+                max_df=0.95,
+            )
+            tfidf_matrix = vectorizer.fit_transform(valid_texts)
+
+            # TextRank: cosine similarity graph → sum of edge weights
+            sim_matrix = cosine_similarity(tfidf_matrix)
+            np.fill_diagonal(sim_matrix, 0)
+
+            # Iterative TextRank (simplified PageRank)
+            n = len(valid_texts)
+            scores = np.ones(n) / n
+            damping = 0.85
+            for _ in range(10):  # 10 iterations is sufficient for convergence
+                row_sums = sim_matrix.sum(axis=1, keepdims=True)
+                row_sums[row_sums == 0] = 1  # avoid division by zero
+                norm_matrix = sim_matrix / row_sums
+                scores = (1 - damping) / n + damping * norm_matrix.T @ scores
+
+            # Normalize to 0-1
+            if scores.max() > scores.min():
+                scores = (scores - scores.min()) / (scores.max() - scores.min())
+            else:
+                scores = np.ones(n)
+
+            # Apply scores back to original segments
+            for seg in segments:
+                seg["relevance_score"] = 0.1  # default low score for invalid segments
+
+            for idx_in_valid, orig_idx in enumerate(valid_indices):
+                seg = segments[orig_idx]
+                textrank_score = float(scores[idx_in_valid])
+
+                # Text density bonus (longer segments likely contain more info)
+                text_len = len(seg.get("text", ""))
+                density_bonus = min(text_len / 200.0, 1.0)  # cap at 1.0
+
+                # Confidence bonus from transcription
+                confidence = seg.get("confidence", 1.0)
+
+                # Weighted combination
+                seg["relevance_score"] = (
+                    0.60 * textrank_score +
+                    0.25 * density_bonus +
+                    0.15 * confidence
+                )
+
+            # Sort by relevance (highest first)
+            return sorted(segments, key=lambda s: s["relevance_score"], reverse=True)
+
+        except Exception as e:
+            logger.warning("TF-IDF ranking failed, falling back to equal weight: %s", e)
+            for seg in segments:
+                seg["relevance_score"] = 1.0
+            return segments

@@ -3,6 +3,7 @@ import { useVideo } from '../context/VideoContext';
 import { useAuth } from '../context/AuthContext';
 import VideoList from '../components/Video/VideoList';
 import SummaryHistory from '../components/Summary/SummaryHistory';
+import SummaryProgressBar from '../components/Summary/SummaryProgressBar';
 import { FiVideo, FiFileText, FiActivity } from 'react-icons/fi';
 import DashboardCard from '../components/Dashboard/DashboardCard';
 import SkeletonLoader from '../components/Dashboard/SkeletonLoader';
@@ -10,7 +11,7 @@ import EmptyState from '../components/Dashboard/EmptyState';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Dashboard = () => {
-  const { videos, summaries, fetchVideos, fetchSummaries, loading: videoLoading } = useVideo();
+  const { videos, summaries, fetchVideos, fetchSummaries, loading: videoLoading, summaryStatus, summaryProgress } = useVideo();
   const { user } = useAuth();
 
   useEffect(() => {
@@ -79,6 +80,21 @@ const Dashboard = () => {
                 delay={0.3}
               />
             </div>
+
+            {/* Real-time Summarization Progress (SSE) */}
+            {summaryStatus && summaryStatus !== 'done' && summaryStatus !== 'failed' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <SummaryProgressBar
+                  progress={summaryProgress.progress}
+                  step={summaryProgress.step}
+                  status={summaryStatus}
+                />
+              </motion.div>
+            )}
 
             {/* Video & Summary Sections */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">

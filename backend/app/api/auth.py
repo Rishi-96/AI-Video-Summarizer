@@ -2,7 +2,9 @@ import logging
 from datetime import datetime, timedelta, timezone
 
 from bson import ObjectId
-from fastapi import APIRouter, Cookie, HTTPException, Depends, Response, status
+from fastapi import APIRouter, Cookie, HTTPException, Depends, Request, Response, status
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 from ..core.config import settings
 from ..core.database import get_database
@@ -15,9 +17,11 @@ from ..core.security import (
     verify_password,
 )
 from ..models.user import Token, TokenPair, UserCreate, UserLogin, UserResponse
+from ..core.constants import RATE_LIMIT_AUTH
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+limiter = Limiter(key_func=get_remote_address)
 
 
 # ---------------------------------------------------------------------------
@@ -38,12 +42,14 @@ async def get_user_by_id(user_id: str):
     return await db.users.find_one({"_id": obj_id})
 
 
+
 # ---------------------------------------------------------------------------
 # Routes
 # ---------------------------------------------------------------------------
 
 @router.post("/register", response_model=TokenPair, status_code=status.HTTP_201_CREATED)
-async def register(user_data: UserCreate, response: Response):
+@limiter.limit(RATE_LIMIT_AUTH)
+async def register(request: Request, user_data: UserCreate, response: Response):
     """Register a new user and return access + refresh tokens."""
     try:
         db = await get_database()
@@ -94,7 +100,8 @@ async def register(user_data: UserCreate, response: Response):
 
 
 @router.post("/login", response_model=TokenPair)
-async def login(login_data: UserLogin, response: Response):
+@limiter.limit(RATE_LIMIT_AUTH)
+async def login(request: Request, login_data: UserLogin, response: Response):
     """Authenticate and return access + refresh tokens."""
     db = await get_database()
     user = await db.users.find_one({"email": login_data.email})

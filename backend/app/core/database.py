@@ -37,6 +37,8 @@ class Database:
         await self.db.summaries.create_index("summary_id", unique=True)
         await self.db.summaries.create_index("user_id")
         await self.db.chat_sessions.create_index("session_id", unique=True)
+        await self.db.tasks.create_index("task_id",        unique=True)
+        await self.db.tasks.create_index("user_id")
         logger.debug("MongoDB indexes verified")
 
     async def close(self):

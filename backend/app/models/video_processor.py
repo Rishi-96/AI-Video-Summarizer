@@ -27,13 +27,13 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-OUTPUT_WIDTH = 1280
-OUTPUT_HEIGHT = 720
+OUTPUT_WIDTH = 854
+OUTPUT_HEIGHT = 480
 FPS = 24
-FADE_DURATION = 0.5          # seconds of cross-fade between slides
-TITLE_SLIDE_DURATION = 2     # seconds
-KEY_FRAME_DURATION = 5       # seconds per key-frame slide 
-KEY_POINT_DURATION = 4       # seconds per key-point slide 
+FADE_DURATION = 0.4          # seconds of cross-fade between slides
+TITLE_SLIDE_DURATION = 3     # seconds
+KEY_FRAME_DURATION = 8       # seconds per key-frame slide (longer = more readable)
+KEY_POINT_DURATION = 6       # seconds per key-point slide
 CLOSING_SLIDE_DURATION = 2   # seconds
 
 # Colours (RGB)
@@ -565,10 +565,11 @@ class VideoProcessor:
         write_kwargs = {
             "fps": FPS,
             "codec": "libx264",
-            "preset": "superfast",
+            "preset": "ultrafast",
             "threads": 4,
+            "bitrate": "1500k",
             "logger": None,
-            "ffmpeg_params": ["-pix_fmt", "yuv420p"] # Maximizes browser compatibility
+            "ffmpeg_params": ["-pix_fmt", "yuv420p", "-crf", "28"],
         }
         if has_audio:
             write_kwargs["audio_codec"] = "aac"

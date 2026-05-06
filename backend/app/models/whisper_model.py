@@ -8,6 +8,9 @@ import tempfile
 from typing import Dict, List
 
 import numpy as np
+import soundfile as sf
+
+from app.core.constants import WHISPER_MODEL_NAME, AUDIO_CHUNK_SECONDS
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +23,7 @@ except ImportError:
 
 
 class WhisperTranscriber:
-    def __init__(self, model_size: str = "whisper-large-v3", chunk_seconds: int = 600):
+    def __init__(self, model_size: str = WHISPER_MODEL_NAME, chunk_seconds: int = AUDIO_CHUNK_SECONDS):
         """
         Args:
             model_size:    Ignored locally, maps directly to Groq's whisper-large-v3
@@ -36,9 +39,12 @@ class WhisperTranscriber:
         if not self.use_mock:
             try:
                 import httpx
-                import os
+                _disable_ssl = os.environ.get("DISABLE_SSL_VERIFY", "").lower() == "true"
                 http_proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("HTTP_PROXY")
-                http_client = httpx.Client(proxy=http_proxy, verify=False) if http_proxy else httpx.Client(verify=False)
+                http_client = httpx.Client(
+                    proxy=http_proxy,
+                    verify=not _disable_ssl,
+                )
                 self.client = Groq(api_key=self.api_key, http_client=http_client)
                 logger.info("Groq Whisper Transcriber loaded")
             except Exception as e:
@@ -62,7 +68,7 @@ class WhisperTranscriber:
             with open(audio_path, "rb") as audio_file:
                 transcription = self.client.audio.transcriptions.create(
                     file=(os.path.basename(audio_path), audio_file.read()),
-                    model="whisper-large-v3",
+                    model=WHISPER_MODEL_NAME,
                     response_format="verbose_json",
                 )
             
@@ -100,23 +106,12 @@ class WhisperTranscriber:
 
     # ------------------------------------------------------------------
     def _extract_audio(self, video_path: str) -> str:
-        """Extract audio to a temporary WAV file. Caller must delete it."""
-        try:
-            try:
-                from moviepy import VideoFileClip
-            except ImportError:
-                from moviepy.editor import VideoFileClip
-            tmp = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
-            audio_path = tmp.name
-            tmp.close()
-
-            clip = VideoFileClip(video_path)
-            # Output 16kHz mono audio to aggressively save megabytes (Groq limits: 25MB)
-            clip.audio.write_audiofile(audio_path, fps=16000, nbytes=2, codec='pcm_s16le')
-            clip.close()
-            return audio_path
-        except Exception as e:
-            raise RuntimeError(f"Audio extraction failed: {e}") from e
+        """Extract audio to a temporary WAV file using fast ffmpeg. Caller must delete it."""
+        from app.core.audio import extract_audio_fast
+        tmp = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
+        audio_path = tmp.name
+        tmp.close()
+        return extract_audio_fast(video_path, audio_path)
 
     # ------------------------------------------------------------------
     def _chunk_audio(self, audio_path: str) -> List[str]:
@@ -125,7 +120,6 @@ class WhisperTranscriber:
         Returns a list of temporary WAV file paths.
         """
         try:
-            import soundfile as sf
             data, samplerate = sf.read(audio_path)
         except Exception:
             return [audio_path]
@@ -138,8 +132,7 @@ class WhisperTranscriber:
             chunk = data[start : start + chunk_samples]
             tmp = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
             tmp.close()
-            import soundfile as sf2
-            sf2.write(tmp.name, chunk, samplerate)
+            sf.write(tmp.name, chunk, samplerate)
             chunk_paths.append(tmp.name)
 
         return chunk_paths if chunk_paths else [audio_path]

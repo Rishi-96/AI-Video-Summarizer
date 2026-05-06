@@ -10,9 +10,58 @@ export const useVideo = () => {
   return context;
 };
 
-// ─── polling helper ─────────────────────────────────────────────────────────
-const POLL_INTERVAL_MS = 5000;         // Poll every 5 seconds
-const POLL_TIMEOUT_MS = 20 * 60 * 1000; // 20 min timeout
+// ─── SSE progress helper (real-time, replaces 5s polling) ────────────────────
+const SSE_TIMEOUT_MS = 20 * 60 * 1000; // 20 min timeout
+
+function watchProgressSSE(taskId, onProgressUpdate) {
+  return new Promise((resolve, reject) => {
+    const url = summariesAPI.getProgressUrl(taskId);
+    const eventSource = new EventSource(url);
+    const timeout = setTimeout(() => {
+      eventSource.close();
+      reject(new Error('Summarization timed out. The video may be too long.'));
+    }, SSE_TIMEOUT_MS);
+
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.error) {
+          eventSource.close();
+          clearTimeout(timeout);
+          reject(new Error(data.error));
+          return;
+        }
+        if (onProgressUpdate) onProgressUpdate(data);
+        if (data.status === 'done') {
+          eventSource.close();
+          clearTimeout(timeout);
+          resolve(data.summary_id);
+        }
+        if (data.status === 'failed') {
+          eventSource.close();
+          clearTimeout(timeout);
+          reject(new Error(data.error || 'Summarization failed'));
+        }
+      } catch (e) {
+        console.error('SSE parse error:', e);
+      }
+    };
+
+    eventSource.onerror = () => {
+      eventSource.close();
+      clearTimeout(timeout);
+      // Fallback to polling if SSE fails
+      console.warn('SSE connection lost, falling back to polling...');
+      pollUntilDone(taskId, (status) => {
+        if (onProgressUpdate) onProgressUpdate({ status, progress: 0, step: '' });
+      }).then(resolve).catch(reject);
+    };
+  });
+}
+
+// ─── Polling fallback ────────────────────────────────────────────────────────
+const POLL_INTERVAL_MS = 3000;
+const POLL_TIMEOUT_MS = 20 * 60 * 1000;
 
 async function pollUntilDone(taskId, onStatusUpdate) {
   const deadline = Date.now() + POLL_TIMEOUT_MS;
@@ -33,7 +82,9 @@ export const VideoProvider = ({ children }) => {
   const [currentSummary, setCurrentSummary] = useState(null);
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [summaryStatus, setSummaryStatus] = useState(null); // 'pending' | 'processing' | 'done' | 'failed'
+  const [summaryStatus, setSummaryStatus] = useState(null);
+  const [summaryProgress, setSummaryProgress] = useState({ progress: 0, step: '' }); // NEW
+
 
   // ── fetch videos ────────────────────────────────────────────────────────
   const fetchVideos = useCallback(async () => {
@@ -105,19 +156,24 @@ export const VideoProvider = ({ children }) => {
     }
   };
 
-  // ── create summary (202 + poll) ─────────────────────────────────────────
+  // ── create summary (202 + SSE progress) ──────────────────────────────────
   const createSummary = async (fileId, summaryRatio = 0.3) => {
     try {
       setLoading(true);
       setSummaryStatus('pending');
+      setSummaryProgress({ progress: 0, step: 'Queuing...' });
 
       // 1. Enqueue the job (returns 202 + task_id)
       const { data: task } = await summariesAPI.create(fileId, summaryRatio);
-      toast.success('Summarization started — processing in background…');
+      toast.success('Summarization started — processing in background...');
 
-      // 2. Poll until done
-      const summaryId = await pollUntilDone(task.task_id, (status) => {
-        setSummaryStatus(status);
+      // 2. Watch progress via SSE (real-time 1s updates vs old 5s polling)
+      const summaryId = await watchProgressSSE(task.task_id, (data) => {
+        setSummaryStatus(data.status);
+        setSummaryProgress({
+          progress: data.progress || 0,
+          step: data.step || data.status || '',
+        });
       });
 
       // 3. Fetch the completed summary
@@ -126,11 +182,13 @@ export const VideoProvider = ({ children }) => {
       await fetchSummaries();
       setCurrentSummary(summary);
       setSummaryStatus('done');
+      setSummaryProgress({ progress: 100, step: 'Complete' });
       return summary;
 
     } catch (error) {
       console.error('Summary error:', error);
       setSummaryStatus('failed');
+      setSummaryProgress({ progress: 0, step: 'Failed' });
       const detail = error.response?.data?.detail;
       const msg = typeof detail === 'object' ? detail?.message : (detail || error.message || 'Summary creation failed');
       toast.error(msg);
@@ -165,6 +223,7 @@ export const VideoProvider = ({ children }) => {
     loading,
     uploadProgress,
     summaryStatus,
+    summaryProgress,
     fetchVideos,
     fetchSummaries,
     uploadVideo,

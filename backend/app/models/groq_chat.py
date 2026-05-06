@@ -4,9 +4,15 @@ import httpx
 from typing import AsyncGenerator, Dict, List, Optional
 from groq import Groq
 
-logger = logging.getLogger(__name__)
+from app.core.constants import (
+    GROQ_CHAT_MODEL,
+    OLLAMA_MODEL,
+    OLLAMA_GENERATE_URL,
+    OLLAMA_TAGS_URL,
+    MAX_CHAT_TRANSCRIPT_CHARS,
+)
 
-DEFAULT_MODEL = "llama-3.1-8b-instant"
+logger = logging.getLogger(__name__)
 
 class GroqChat:
     def __init__(self, api_key: str):
@@ -15,15 +21,19 @@ class GroqChat:
         self.history: List[Dict] = []
         self.use_mock = False
         self.use_ollama = False
-        self.ollama_url = "http://localhost:11434/api/generate"
+        self.ollama_url = OLLAMA_GENERATE_URL
 
         try:
             http_proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("HTTP_PROXY")
-            http_client = httpx.Client(proxy=http_proxy, verify=False) if http_proxy else httpx.Client(verify=False)
+            _disable_ssl = os.environ.get("DISABLE_SSL_VERIFY", "").lower() == "true"
+            http_client = httpx.Client(
+                proxy=http_proxy,
+                verify=not _disable_ssl,
+            )
             
             # Check for Ollama
             try:
-                ollama_check = httpx.get("http://localhost:11434/api/tags", timeout=1.0)
+                ollama_check = httpx.get(OLLAMA_TAGS_URL, timeout=1.0)
                 if ollama_check.status_code == 200:
                     self.use_ollama = True
                     logger.info("Chat: Ollama detected")
@@ -53,7 +63,7 @@ class GroqChat:
             "You are an AI assistant that helps users understand video content.\n\n"
             f"VIDEO TITLE: {video_info.get('original_name', 'Unknown')}\n"
             f"DURATION: {video_info.get('duration', 0)} seconds\n\n"
-            f"TRANSCRIPT (first 2000 chars):\n{transcript[:2000]}\n\n"
+            f"TRANSCRIPT (first {MAX_CHAT_TRANSCRIPT_CHARS} chars):\n{transcript[:MAX_CHAT_TRANSCRIPT_CHARS]}\n\n"
             f"SUMMARY:\n{summary}\n\n"
             f"KEY POINTS:\n{', '.join(key_points[:10])}\n\n"
             "Instructions:\n"
@@ -72,7 +82,7 @@ class GroqChat:
             
             try:
                 resp = httpx.post(self.ollama_url, json={
-                    "model": "llama3",
+                "model": OLLAMA_MODEL,
                     "prompt": prompt,
                     "stream": False
                 }, timeout=60.0)
@@ -91,7 +101,7 @@ class GroqChat:
         try:
             resp = self.client.chat.completions.create(
                 messages=self.history,
-                model=DEFAULT_MODEL,
+                model=GROQ_CHAT_MODEL,
             )
             answer = resp.choices[0].message.content
             self.history.append({"role": "assistant", "content": answer})
@@ -117,7 +127,7 @@ class GroqChat:
         try:
             stream = self.client.chat.completions.create(
                 messages=self.history,
-                model=DEFAULT_MODEL,
+                model=GROQ_CHAT_MODEL,
                 stream=True,
             )
             for chunk in stream:

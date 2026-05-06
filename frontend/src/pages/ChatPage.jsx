@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiArrowLeft, FiInfo } from 'react-icons/fi';
-import { summariesAPI } from '../services/api';
+import { summariesAPI, chatAPI } from '../services/api';
 import ChatInterface from '../components/Chat/ChatInterface';
 import toast from 'react-hot-toast';
 
@@ -11,17 +11,22 @@ const ChatPage = () => {
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchSummaryInfo();
-  }, []);
-
-  const fetchSummaryInfo = async () => {
+  const fetchSummaryInfo = useCallback(async () => {
     try {
-      // Extract summaryId from sessionId (you might want to store this mapping)
-      // For now, we'll just fetch a default summary
-      const response = await summariesAPI.getHistory();
-      if (response.data.summaries && response.data.summaries.length > 0) {
-        setSummary(response.data.summaries[0]);
+      // 1. Get session metadata to find the associated summary_id
+      const sessionResp = await chatAPI.getSession(sessionId);
+      const summaryId = sessionResp.data.summary_id;
+
+      if (summaryId) {
+        // 2. Fetch the CORRECT summary for this session
+        const summaryResp = await summariesAPI.getOne(summaryId);
+        setSummary(summaryResp.data);
+      } else {
+        // Fallback: use first summary if session metadata missing
+        const response = await summariesAPI.getHistory();
+        if (response.data.summaries && response.data.summaries.length > 0) {
+          setSummary(response.data.summaries[0]);
+        }
       }
     } catch (error) {
       console.error('Error fetching summary:', error);
@@ -29,7 +34,11 @@ const ChatPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [sessionId]);
+
+  useEffect(() => {
+    fetchSummaryInfo();
+  }, [fetchSummaryInfo]);
 
   if (loading) {
     return (

@@ -194,6 +194,34 @@ async def get_messages(
         raise HTTPException(500, detail={"code": "FETCH_FAILED", "message": "Failed to retrieve messages."})
 
 
+@router.get("/session/{session_id}/info")
+async def get_session_info(
+    session_id: str,
+    current_user: dict = Depends(get_current_user),
+):
+    """Return session metadata including its associated summary_id."""
+    try:
+        db = await get_database()
+        session = await db.chat_sessions.find_one({
+            "session_id": session_id,
+            "user_id": str(current_user["_id"]),
+        })
+        if not session:
+            raise HTTPException(404, detail={"code": "SESSION_NOT_FOUND", "message": "Chat session not found."})
+        return {
+            "session_id": session["session_id"],
+            "summary_id": session.get("summary_id", ""),
+            "video_id": session.get("video_id", ""),
+            "created_at": session.get("created_at"),
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("Failed to fetch session info %s: %s", session_id, e)
+        raise HTTPException(500, detail={"code": "FETCH_FAILED", "message": "Failed to retrieve session info."})
+
+
+
 # ---------------------------------------------------------------------------
 # Authenticated WebSocket
 # ---------------------------------------------------------------------------

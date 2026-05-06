@@ -7,16 +7,20 @@ from urllib.parse import urlparse
 
 import aiofiles
 import yt_dlp
-from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 from ..core.config import settings
 from ..core.database import get_database
 from ..core.security import get_current_user
+from ..core.constants import RATE_LIMIT_UPLOAD
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+limiter = Limiter(key_func=get_remote_address)
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -100,12 +104,25 @@ async def _yt_download(url: str, output_template: str) -> dict:
 # ---------------------------------------------------------------------------
 
 @router.post("/upload")
+@limiter.limit(RATE_LIMIT_UPLOAD)
 async def upload_video(
+    request: Request,
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     current_user: dict = Depends(get_current_user),
 ):
     """Upload a local video file."""
+    # 0. Content-Length pre-check (reject before streaming body)
+    content_length = request.headers.get("content-length")
+    if content_length and int(content_length) > MAX_UPLOAD_BYTES:
+        raise HTTPException(
+            status_code=413,
+            detail={
+                "code": "FILE_TOO_LARGE",
+                "message": f"File exceeds the {settings.MAX_FILE_SIZE_MB} MB limit.",
+            },
+        )
+
     # 1. Content-type validation
     if file.content_type not in ALLOWED_CONTENT_TYPES:
         raise HTTPException(
@@ -184,13 +201,15 @@ async def upload_video(
 
 
 @router.post("/upload/youtube")
+@limiter.limit(RATE_LIMIT_UPLOAD)
 async def upload_youtube(
-    request: YouTubeRequest,
+    request: Request,
+    body: YouTubeRequest,
     background_tasks: BackgroundTasks,
     current_user: dict = Depends(get_current_user),
 ):
     """Download and process a YouTube video (runs in a thread pool)."""
-    _validate_youtube_url(request.url)
+    _validate_youtube_url(body.url)
 
     user_id = str(current_user["_id"])
     upload_dir = _user_upload_dir(user_id)
@@ -198,7 +217,7 @@ async def upload_youtube(
     output_template = str(upload_dir / f"{file_id}.%(ext)s")
 
     try:
-        result = await _yt_download(request.url, output_template)
+        result = await _yt_download(body.url, output_template)
         filepath = Path(result["filepath"])
         original_title = result["title"]
         filename = filepath.name
@@ -231,7 +250,7 @@ async def upload_youtube(
     except HTTPException:
         raise
     except Exception as e:
-        logger.exception("YouTube download failed for user %s url=%s: %s", user_id, request.url, e)
+        logger.exception("YouTube download failed for user %s url=%s: %s", user_id, body.url, e)
         raise HTTPException(
             status_code=500,
             detail={"code": "YOUTUBE_DOWNLOAD_FAILED", "message": f"Error processing YouTube video: {str(e)}"},
@@ -255,14 +274,17 @@ async def get_videos(current_user: dict = Depends(get_current_user)):
 
 
 @router.get("/stream/{file_id}")
-async def stream_video(file_id: str, token: str = ""):
+async def stream_video(request: Request, file_id: str, token: str = ""):
     """
     Stream a video file to the browser.
     Accepts the JWT as ?token= query param because browser <video> elements
     cannot send custom Authorization headers.
+    Supports HTTP Range requests for proper seeking.
     """
     # Validate token manually (same logic as get_current_user)
     from ..core.security import get_current_user_from_token
+    from fastapi.responses import StreamingResponse
+
     user = await get_current_user_from_token(token)
     if user is None:
         raise HTTPException(401, detail={"code": "UNAUTHORIZED", "message": "Invalid or missing token."})
@@ -279,11 +301,49 @@ async def stream_video(file_id: str, token: str = ""):
 
         extension = file_path.suffix.lower()
         media_type = EXT_MIME.get(extension, "video/mp4")
+        file_size = file_path.stat().st_size
+        range_header = request.headers.get("range")
 
+        if range_header:
+            # Parse Range header: "bytes=start-end"
+            range_spec = range_header.replace("bytes=", "")
+            parts = range_spec.split("-")
+            start = int(parts[0]) if parts[0] else 0
+            end = int(parts[1]) if parts[1] else file_size - 1
+            end = min(end, file_size - 1)
+            content_length = end - start + 1
+            file_path_str = str(file_path)
+
+            def iter_file():
+                with open(file_path_str, "rb") as f:
+                    f.seek(start)
+                    remaining = content_length
+                    while remaining > 0:
+                        chunk_size = min(1024 * 1024, remaining)  # 1MB chunks
+                        data = f.read(chunk_size)
+                        if not data:
+                            break
+                        remaining -= len(data)
+                        yield data
+
+            return StreamingResponse(
+                iter_file(),
+                status_code=206,
+                media_type=media_type,
+                headers={
+                    "Content-Range": f"bytes {start}-{end}/{file_size}",
+                    "Accept-Ranges": "bytes",
+                    "Content-Length": str(content_length),
+                    "Content-Disposition": f'inline; filename="{video.get("filename", file_path.name)}"',
+                },
+            )
+
+        # No Range header — return full file
         return FileResponse(
             path=str(file_path),
             media_type=media_type,
             filename=video.get("filename", file_path.name),
+            headers={"Accept-Ranges": "bytes"},
         )
     except HTTPException:
         raise

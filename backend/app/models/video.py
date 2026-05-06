@@ -1,11 +1,19 @@
-from pydantic import Field
+"""
+video.py — Pydantic schemas for Video, Summary, and ChatSession documents.
+
+These are used for request/response validation ONLY.
+Actual DB operations use raw Motor queries (no ORM).
+"""
+from pydantic import BaseModel, Field
 from typing import Optional, List, Dict
 from datetime import datetime
-from beanie import Document, Indexed
 
-class Video(Document):
-    """Video model"""
-    file_id: Indexed(str, unique=True)
+
+# ─── Video ────────────────────────────────────────────────────────────────────
+
+class VideoCreate(BaseModel):
+    """Fields written to MongoDB when a video is uploaded."""
+    file_id: str
     user_id: str
     filename: str
     original_name: str
@@ -16,21 +24,30 @@ class Video(Document):
     height: Optional[int] = 0
     fps: Optional[float] = 0
     thumbnail_path: Optional[str] = None
-    status: str = "uploaded"  # uploaded, processing, completed, failed
-    created_at: datetime = Field(default_factory=datetime.now)
-    updated_at: datetime = Field(default_factory=datetime.now)
-    
-    class Settings:
-        name = "videos"
-        indexes = [
-            "file_id",
-            "user_id",
-            "status"
-        ]
+    status: str = "uploaded"
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-class Summary(Document):
-    """Summary model"""
-    summary_id: Indexed(str, unique=True)
+
+class VideoResponse(BaseModel):
+    """Subset of fields returned to the frontend."""
+    file_id: str
+    filename: str
+    original_name: str
+    file_size: int
+    status: str
+    created_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+# ─── Summary ─────────────────────────────────────────────────────────────────
+
+class SummaryCreate(BaseModel):
+    """Fields written to MongoDB when a summary is created."""
+    summary_id: str
+    task_id: str
     video_id: str
     user_id: str
     transcript: str
@@ -38,32 +55,33 @@ class Summary(Document):
     key_points: List[str]
     segments: List[Dict]
     video_info: Dict
-    language: str
+    language: str = "auto"
     summary_video_path: Optional[str] = None
-    created_at: datetime = Field(default_factory=datetime.now)
-    
-    class Settings:
-        name = "summaries"
-        indexes = [
-            "summary_id",
-            "video_id",
-            "user_id"
-        ]
+    summary_video_size: Optional[int] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
 
-class ChatSession(Document):
-    """Chat session model"""
-    session_id: Indexed(str, unique=True)
+
+class SummaryResponse(BaseModel):
+    """Subset of fields returned to the frontend."""
+    summary_id: str
+    video_id: str
+    text_summary: str
+    key_points: List[str]
+    has_summary_video: bool = False
+    created_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+# ─── Chat Session ────────────────────────────────────────────────────────────
+
+class ChatSessionCreate(BaseModel):
+    """Fields written to MongoDB when a chat session starts."""
+    session_id: str
     user_id: str
     video_id: str
     summary_id: str
     messages: List[Dict] = []
-    created_at: datetime = Field(default_factory=datetime.now)
-    updated_at: datetime = Field(default_factory=datetime.now)
-    
-    class Settings:
-        name = "chat_sessions"
-        indexes = [
-            "session_id",
-            "user_id",
-            "video_id"
-        ]
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)

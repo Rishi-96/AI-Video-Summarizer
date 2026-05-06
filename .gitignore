@@ -1,17 +1,20 @@
-# Python
+﻿# Python
 venv/
 backend/venv/
 __pycache__/
 *.pyc
+*.pyo
 
-# Uploads
+# Uploads & Media
 backend/uploads/
 backend/processed/
 uploads/
 *.mp4
 
-# Environment
+# Environment secrets - never commit
 .env
+.env.local
+.env.*.local
 
 # Node
 node_modules/
@@ -19,3 +22,29 @@ node_modules/
 # Build
 dist/
 build/
+
+# Logs
+*.log
+backend/app_debug.log
+
+# Dead/unused feature modules - not in use yet
+backend/app/core/api_keys.py
+backend/app/core/audio.py
+backend/app/core/celery_app.py
+backend/app/core/quotas.py
+backend/app/core/storage.py
+backend/app/core/task_store.py
+backend/app/models/descriptions.py
+backend/app/models/highlights.py
+backend/app/models/subtitles.py
+backend/app/models/thumbnails.py
+backend/app/models/translator.py
+backend/app/models/tts.py
+
+# Docker (uncomment when ready to deploy)
+Dockerfile
+docker-compose.yml
+
+# OS files
+.DS_Store
+Thumbs.db
