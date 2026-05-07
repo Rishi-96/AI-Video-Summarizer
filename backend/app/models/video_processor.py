@@ -1,7 +1,7 @@
 """
 video_processor.py — Visual summary video generator (MoviePy 2.x compatible).
 
-Creates a summary video that is 40-50% of the original video's length by:
+Creates a summary video that is 55-60% of the original video's length by:
   1. Selecting the most important transcript segments (by AI relevance score)
   2. Stitching those clips back-to-back with the original audio
   3. Adding a title slide at the start and closing slide at the end
@@ -46,10 +46,10 @@ OUTPUT_WIDTH = 1280
 OUTPUT_HEIGHT = 720
 FPS = 24
 
-# Summary target: produce a video that is 40-50% of the original duration
-TARGET_RATIO_MIN = 0.40
-TARGET_RATIO_MAX = 0.50
-TARGET_RATIO = 0.45   # aim for 45% of original
+# Summary target: produce a video that is 55-60% of the original duration
+TARGET_RATIO_MIN = 0.55
+TARGET_RATIO_MAX = 0.60
+TARGET_RATIO = 0.575  # aim for 57.5% of original
 
 TITLE_SLIDE_DURATION = 3.0   # seconds
 CLOSING_SLIDE_DURATION = 2.0  # seconds
@@ -191,7 +191,7 @@ class VideoProcessor:
         if duration_str:
             lines.append(f"Original: {duration_str}")
         if summary_duration_str:
-            lines.append(f"Summary:  {summary_duration_str}  (~45%)")
+            lines.append(f"Summary:  {summary_duration_str}  (~60%)")
         for i, line in enumerate(lines):
             info_bbox = draw.textbbox((0, 0), line, font=info_font)
             info_w = info_bbox[2] - info_bbox[0]
@@ -280,7 +280,7 @@ class VideoProcessor:
         return results
 
     # ------------------------------------------------------------------
-    # Segment selection to hit 40-50% of original duration
+    # Segment selection to hit 55-60% of original duration
     # ------------------------------------------------------------------
     def _select_segments_for_target_duration(
         self,
@@ -289,7 +289,7 @@ class VideoProcessor:
         all_segments: Optional[List[Dict]] = None,
     ) -> List[Dict]:
         """
-        Choose segments whose total duration is ~TARGET_RATIO (45%) of the
+        Choose segments whose total duration is ~TARGET_RATIO (57.5%) of the
         original video. Returns segments sorted chronologically.
 
         Strategy:
@@ -335,9 +335,9 @@ class VideoProcessor:
             accumulated += seg_dur
 
             if accumulated >= target_min:
-                break  # Already in the 40-50% window — stop
+                break  # Already in the 55-60% window — stop
 
-        # If we didn't reach 40% with ranked segments, add more from the pool
+        # If we didn't reach 55% with ranked segments, add more from the pool
         if accumulated < target_min and all_segments:
             # Add segments not already selected
             selected_starts = {s.get("start") for s in selected}
@@ -414,7 +414,7 @@ class VideoProcessor:
             raise
 
     # ------------------------------------------------------------------
-    # create_visual_summary — PRIMARY METHOD (40-50% duration)
+    # create_visual_summary — PRIMARY METHOD (55-60% duration)
     # ------------------------------------------------------------------
     def create_visual_summary(
         self,
@@ -428,7 +428,7 @@ class VideoProcessor:
         all_segments: Optional[List[Dict]] = None,
     ) -> str:
         """
-        Create a summary video that is ~40-50% of the original video's duration.
+        Create a summary video that is ~55-60% of the original video's duration.
 
         Uses actual video clips from the source (preserving original audio),
         stitched together with a title slide and closing slide.
@@ -441,12 +441,12 @@ class VideoProcessor:
         has_audio = source.audio is not None
         duration_str = self._format_duration(video_duration)
 
-        # 2. Select segments targeting 40-50% of total duration
+        # 2. Select segments targeting 55-60% of total duration
         pool = segments or []
         selected = self._select_segments_for_target_duration(pool, video_duration, all_segments)
 
         if not selected:
-            # Ultimate fallback: evenly spread clips covering ~45% of video
+            # Ultimate fallback: evenly spread clips covering ~57.5% of video
             logger.warning("No segments provided — using evenly-spread clips")
             target_dur = video_duration * TARGET_RATIO
             chunk = max(3.0, target_dur / 8)

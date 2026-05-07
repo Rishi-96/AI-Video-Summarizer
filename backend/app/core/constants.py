@@ -35,7 +35,7 @@ AUDIO_CHUNK_SECONDS = 600      # 10 min chunks for Groq API size limits
 
 # ─── Summarization Defaults ──────────────────────────────────────────────────
 DEFAULT_SUMMARY_RATIO = 0.3
-DEFAULT_MAX_SUMMARY_LENGTH = 500
+DEFAULT_MAX_SUMMARY_LENGTH = 800
 MAX_TRANSCRIPT_STORE_CHARS = 5000
 MAX_CHAT_TRANSCRIPT_CHARS = 2000
 TEXT_CHUNK_MAX_CHARS = 15000   # Safe for 8K token context LLMs

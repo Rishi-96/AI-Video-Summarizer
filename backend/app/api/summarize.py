@@ -109,7 +109,7 @@ async def _run_summarize_pipeline(
         await update_task(task_id, progress=65, step="analysis complete")
 
         # Pass ALL ranked segments to the VideoProcessor — it will internally
-        # select clips totalling 40-50% of the original video duration.
+        # select clips totalling 55-60% of the original video duration.
         # ranked is sorted by relevance_score descending.
         # segments (all whisper segments) is the full unranked list.
 
@@ -126,7 +126,7 @@ async def _run_summarize_pipeline(
         except Exception as sub_err:
             logger.warning("Task %s: subtitle generation failed (non-fatal): %s", task_id, sub_err)
 
-        # ── Step 4: Generate summary video (40-50% of original duration) ────
+        # ── Step 4: Generate summary video (55-60% of original duration) ────
         summary_video_path = None
         try:
             from ..models.video_processor import VideoProcessor
@@ -140,8 +140,8 @@ async def _run_summarize_pipeline(
 
             video_title = Path(video_path).stem.replace("_", " ").replace("-", " ").title()
 
-            logger.info("Task %s: generating summary video (~40-50%% of original)", task_id)
-            await update_task(task_id, status=TASK_STATUS_GENERATING_VIDEO, progress=70, step="generating summary video (40-50%)")
+            logger.info("Task %s: generating summary video (~55-60%% of original)", task_id)
+            await update_task(task_id, status=TASK_STATUS_GENERATING_VIDEO, progress=70, step="generating summary video (55-60%)")
 
             # Pass ranked segments (importance-ordered) AND all segments (fallback pool)
             await asyncio.to_thread(

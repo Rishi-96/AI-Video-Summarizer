@@ -2213,3 +2213,139 @@ Traceback (most recent call last):
   File "D:\videosum\AI-Video-Summarizer\backend\app\api\summarize.py", line 193, in _run_summarize_pipeline
     "segments": sorted(ranked, key=lambda s: s.get("start", 0)),
 NameError: name 'selected' is not defined
+2026-05-06 23:27:15,927 - app.main - INFO - Main module loading...
+2026-05-06 23:27:16,285 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-06 23:27:16,373 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-06 23:27:16,373 - app.main - INFO - Whisper model loaded at startup
+2026-05-06 23:27:18,434 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-06 23:27:18,434 - app.main - INFO - Summarizer model loaded at startup
+2026-05-06 23:27:51,898 - app.core.task_store - INFO - Task created: d4828e91-9309-4475-9815-b8bb9e1b4a5d for user 69f83393801f7bed75cf001d
+2026-05-06 23:27:51,903 - app.api.summarize - INFO - Task d4828e91-9309-4475-9815-b8bb9e1b4a5d: starting transcription
+2026-05-06 23:27:53,878 - app.core.audio - INFO - Audio extracted (ffmpeg): be14da5d-61f0-4705-81ba-557c0349f15a.mp4 → tmpvulybdfl.wav (4.5 MB)
+2026-05-06 23:27:57,107 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-06 23:27:57,117 - app.api.summarize - INFO - Task d4828e91-9309-4475-9815-b8bb9e1b4a5d: parallel processing (rank + summarize + key points)
+2026-05-06 23:27:57,781 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 23:27:58,275 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-06 23:27:58,887 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_d4828e91-9309-4475-9815-b8bb9e1b4a5d.srt (23 entries)
+2026-05-06 23:27:58,887 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_d4828e91-9309-4475-9815-b8bb9e1b4a5d.vtt (23 entries)
+2026-05-06 23:27:58,888 - app.api.summarize - INFO - Task d4828e91-9309-4475-9815-b8bb9e1b4a5d: subtitles generated
+2026-05-06 23:28:02,172 - app.models.video_processor - INFO - Video processor initialized (MoviePy v2=True)
+2026-05-06 23:28:02,173 - app.api.summarize - INFO - Task d4828e91-9309-4475-9815-b8bb9e1b4a5d: generating summary video (~40-50% of original)
+2026-05-06 23:28:02,176 - app.models.video_processor - INFO - Creating summary video for uploads\69f83393801f7bed75cf001d\be14da5d-61f0-4705-81ba-557c0349f15a.mp4
+2026-05-06 23:28:02,526 - app.models.video_processor - INFO - Segment selection: 6 clips, total 61.5s (42% of 147.2s original)
+2026-05-06 23:28:03,366 - app.models.video_processor - INFO - Concatenating 8 clips (1 title + 6 content + 1 closing)
+2026-05-06 23:28:03,463 - app.models.video_processor - INFO - Final summary video: 66.5s (original: 147.2s, ratio: 45%)
+2026-05-06 23:30:36,924 - app.models.video_processor - INFO - Summary video saved: processed\69f83393801f7bed75cf001d\summary_d4828e91-9309-4475-9815-b8bb9e1b4a5d.mp4
+2026-05-06 23:30:36,935 - app.api.summarize - INFO - Task d4828e91-9309-4475-9815-b8bb9e1b4a5d: summary video created at processed\69f83393801f7bed75cf001d\summary_d4828e91-9309-4475-9815-b8bb9e1b4a5d.mp4
+2026-05-06 23:30:36,945 - app.api.summarize - INFO - Task d4828e91-9309-4475-9815-b8bb9e1b4a5d: done, summary_id=14ca4aaf-2661-4a60-8285-3f6e0dc66485
+2026-05-07 11:02:43,148 - app.main - INFO - Main module loading...
+2026-05-07 11:02:45,191 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-07 11:02:45,522 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-07 11:02:45,522 - app.main - INFO - Whisper model loaded at startup
+2026-05-07 11:02:47,595 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-07 11:02:47,595 - app.main - INFO - Summarizer model loaded at startup
+2026-05-07 11:04:51,484 - app.api.videos - INFO - Video uploaded: file_id=6885ae18-6675-457d-b923-fe5e69c49ae5 user=69f83393801f7bed75cf001d size_mb=15.05
+2026-05-07 11:05:07,501 - app.core.task_store - INFO - Task created: ff32dd43-2f04-44c0-ab6a-a143927c49e0 for user 69f83393801f7bed75cf001d
+2026-05-07 11:05:07,580 - app.api.summarize - INFO - Task ff32dd43-2f04-44c0-ab6a-a143927c49e0: starting transcription
+2026-05-07 11:05:10,277 - app.core.audio - INFO - Audio extracted (ffmpeg): 6885ae18-6675-457d-b923-fe5e69c49ae5.mp4 → tmpmvieq7gs.wav (10.3 MB)
+2026-05-07 11:05:21,342 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-07 11:05:21,403 - app.api.summarize - INFO - Task ff32dd43-2f04-44c0-ab6a-a143927c49e0: parallel processing (rank + summarize + key points)
+2026-05-07 11:05:22,288 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 11:05:22,663 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 11:05:37,238 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_ff32dd43-2f04-44c0-ab6a-a143927c49e0.srt (61 entries)
+2026-05-07 11:05:37,242 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_ff32dd43-2f04-44c0-ab6a-a143927c49e0.vtt (61 entries)
+2026-05-07 11:05:37,243 - app.api.summarize - INFO - Task ff32dd43-2f04-44c0-ab6a-a143927c49e0: subtitles generated
+2026-05-07 11:05:41,622 - app.models.video_processor - INFO - Video processor initialized (MoviePy v2=True)
+2026-05-07 11:05:41,623 - app.api.summarize - INFO - Task ff32dd43-2f04-44c0-ab6a-a143927c49e0: generating summary video (~40-50% of original)
+2026-05-07 11:05:41,628 - app.models.video_processor - INFO - Creating summary video for uploads\69f83393801f7bed75cf001d\6885ae18-6675-457d-b923-fe5e69c49ae5.mp4
+2026-05-07 11:05:42,198 - app.models.video_processor - INFO - Segment selection: 19 clips, total 138.3s (41% of 336.1s original)
+2026-05-07 11:05:46,171 - app.models.video_processor - INFO - Concatenating 21 clips (1 title + 19 content + 1 closing)
+2026-05-07 11:05:46,546 - app.models.video_processor - INFO - Final summary video: 143.3s (original: 336.1s, ratio: 43%)
+2026-05-07 11:14:36,631 - app.models.video_processor - INFO - Summary video saved: processed\69f83393801f7bed75cf001d\summary_ff32dd43-2f04-44c0-ab6a-a143927c49e0.mp4
+2026-05-07 11:14:36,648 - app.api.summarize - INFO - Task ff32dd43-2f04-44c0-ab6a-a143927c49e0: summary video created at processed\69f83393801f7bed75cf001d\summary_ff32dd43-2f04-44c0-ab6a-a143927c49e0.mp4
+2026-05-07 11:14:36,669 - app.api.summarize - INFO - Task ff32dd43-2f04-44c0-ab6a-a143927c49e0: done, summary_id=120fbf74-297d-4bb7-8c21-a8a3a685dd92
+2026-05-07 11:34:02,693 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:34:02,693 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:34:02,695 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:34:02,695 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:34:02,698 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:34:02,698 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:34:02,702 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:34:02,702 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:34:02,703 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:34:02,703 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:34:02,705 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:34:02,705 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:34:16,738 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:34:16,738 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:34:16,739 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:34:16,739 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:34:16,740 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:34:16,740 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:34:16,741 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:34:16,741 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:34:16,743 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:34:16,743 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:34:16,745 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:34:16,745 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:35:19,585 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:35:19,585 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:35:19,586 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:35:19,586 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:35:19,587 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:35:19,588 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:35:19,589 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:35:19,589 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:35:19,590 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:35:19,591 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:35:19,592 - app.models.translator - ERROR - Failed to load NLLB-200: No module named 'transformers'
+2026-05-07 11:35:19,592 - app.models.translator - ERROR - Translation failed for chunk: No module named 'transformers'
+2026-05-07 11:36:53,960 - app.core.database - INFO - MongoDB connection closed
+2026-05-07 12:17:44,421 - app.main - INFO - Main module loading...
+2026-05-07 12:17:44,680 - app.core.database - INFO - Connected to MongoDB: video_summarizer
+2026-05-07 12:17:44,753 - app.models.whisper_model - INFO - Groq Whisper Transcriber loaded
+2026-05-07 12:17:44,753 - app.main - INFO - Whisper model loaded at startup
+2026-05-07 12:17:46,777 - app.models.summarizer - INFO - Groq Summarizer loaded
+2026-05-07 12:17:46,778 - app.main - INFO - Summarizer model loaded at startup
+2026-05-07 12:19:05,569 - app.api.videos - INFO - Video uploaded: file_id=f79a55c6-c580-462b-a077-0b14a0dcb877 user=69f83393801f7bed75cf001d size_mb=10.14
+2026-05-07 12:19:33,757 - app.core.task_store - INFO - Task created: ce7748a7-aa43-434f-bb62-2bb80b86b148 for user 69f83393801f7bed75cf001d
+2026-05-07 12:19:33,798 - app.api.summarize - INFO - Task ce7748a7-aa43-434f-bb62-2bb80b86b148: starting transcription
+2026-05-07 12:19:34,402 - app.core.audio - INFO - Audio extracted (ffmpeg): f79a55c6-c580-462b-a077-0b14a0dcb877.mp4 → tmp4mk16fax.wav (7.5 MB)
+2026-05-07 12:19:39,306 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/audio/transcriptions "HTTP/1.1 200 OK"
+2026-05-07 12:19:39,347 - app.api.summarize - INFO - Task ce7748a7-aa43-434f-bb62-2bb80b86b148: parallel processing (rank + summarize + key points)
+2026-05-07 12:19:40,314 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:19:40,863 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:19:42,718 - app.models.subtitles - INFO - SRT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_ce7748a7-aa43-434f-bb62-2bb80b86b148.srt (40 entries)
+2026-05-07 12:19:42,720 - app.models.subtitles - INFO - VTT subtitle generated: processed\69f83393801f7bed75cf001d\subtitles_ce7748a7-aa43-434f-bb62-2bb80b86b148.vtt (40 entries)
+2026-05-07 12:19:42,722 - app.api.summarize - INFO - Task ce7748a7-aa43-434f-bb62-2bb80b86b148: subtitles generated
+2026-05-07 12:19:43,617 - app.models.video_processor - INFO - Video processor initialized (MoviePy v2=True)
+2026-05-07 12:19:43,618 - app.api.summarize - INFO - Task ce7748a7-aa43-434f-bb62-2bb80b86b148: generating summary video (~55-60% of original)
+2026-05-07 12:19:43,623 - app.models.video_processor - INFO - Creating summary video for uploads\69f83393801f7bed75cf001d\f79a55c6-c580-462b-a077-0b14a0dcb877.mp4
+2026-05-07 12:19:44,199 - app.models.video_processor - INFO - Segment selection: 18 clips, total 136.0s (56% of 244.2s original)
+2026-05-07 12:19:48,943 - app.models.video_processor - INFO - Concatenating 20 clips (1 title + 18 content + 1 closing)
+2026-05-07 12:19:49,370 - app.models.video_processor - INFO - Final summary video: 141.0s (original: 244.2s, ratio: 58%)
+2026-05-07 12:29:25,689 - app.models.video_processor - INFO - Summary video saved: processed\69f83393801f7bed75cf001d\summary_ce7748a7-aa43-434f-bb62-2bb80b86b148.mp4
+2026-05-07 12:29:25,703 - app.api.summarize - INFO - Task ce7748a7-aa43-434f-bb62-2bb80b86b148: summary video created at processed\69f83393801f7bed75cf001d\summary_ce7748a7-aa43-434f-bb62-2bb80b86b148.mp4
+2026-05-07 12:29:25,731 - app.api.summarize - INFO - Task ce7748a7-aa43-434f-bb62-2bb80b86b148: done, summary_id=934ac572-4ecb-481e-881c-6b8a0268b9d9
+2026-05-07 12:40:39,708 - app.models.translator - INFO - Translator: using Groq LLM backend (key found)
+2026-05-07 12:40:43,205 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:40:43,914 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:40:44,705 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:40:45,655 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:40:46,254 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:40:46,756 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:41:22,692 - app.models.translator - INFO - Translator: using Groq LLM backend (key found)
+2026-05-07 12:41:24,261 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:41:24,639 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:41:24,948 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:41:25,270 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:41:25,731 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:41:26,037 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:41:38,065 - app.models.translator - INFO - Translator: using Groq LLM backend (key found)
+2026-05-07 12:41:39,702 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:41:40,204 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:41:40,925 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:41:41,338 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:41:41,740 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:41:42,188 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-07 12:44:36,719 - app.core.database - INFO - MongoDB connection closed

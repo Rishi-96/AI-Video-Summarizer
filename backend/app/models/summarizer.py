@@ -107,46 +107,64 @@ class VideoSummarizer:
     # -------------------------------
     # SUMMARIZATION
     # -------------------------------
-    def summarize_text(self, text: str, max_length: int = 150) -> str:
+    def summarize_text(self, text: str, max_length: int = 400) -> str:
         if self.use_mock or not text.strip():
-            return text[:300] + "..."
+            return text[:500] + "..."
 
         try:
             chunks = self._chunk_text(text)
             summaries = []
 
             for chunk in chunks:
-                prompt = f"Please provide a detailed, clear, and highly accurate summary of the following video transcript. Ensure the summary is easy to understand and approximately {max_length} words long.\n\nTranscript: {chunk}"
+                prompt = (
+                    f"You are an expert video content summarizer. Provide a comprehensive, "
+                    f"accurate, and detailed summary of the following video transcript. "
+                    f"Requirements:\n"
+                    f"1. Cover ALL major topics, arguments, and conclusions discussed.\n"
+                    f"2. Preserve important names, numbers, dates, and technical terms exactly as stated.\n"
+                    f"3. Maintain the logical flow and structure of the content.\n"
+                    f"4. The summary should be approximately {max_length} words long.\n"
+                    f"5. Write in clear, professional language that is easy to understand.\n"
+                    f"6. Do NOT add information that is not in the transcript.\n\n"
+                    f"Transcript:\n{chunk}"
+                )
                 
                 if self.use_ollama:
                     resp = httpx.post(self.ollama_url, json={
                         "model": OLLAMA_MODEL,
                         "prompt": prompt,
                         "stream": False
-                    }, timeout=60.0)
+                    }, timeout=90.0)
                     summaries.append(resp.json().get("response", "").strip())
                 else:
                     resp = self.client.chat.completions.create(
                         model=GROQ_SUMMARIZATION_MODEL,
-                        messages=[{"role": "user", "content": prompt}]
+                        messages=[{"role": "user", "content": prompt}],
+                        temperature=0.2,
                     )
                     summaries.append(resp.choices[0].message.content.strip())
 
             combined = " ".join(summaries)
             
             if len(summaries) > 1:
-                final_req = f"Combine these summary parts into one clean, seamless final recap (approx {max_length} words):\n\n{combined}"
+                final_req = (
+                    f"Combine the following summary sections into one unified, coherent, "
+                    f"and comprehensive summary (approximately {max_length} words). "
+                    f"Remove any redundancy, ensure smooth transitions between topics, "
+                    f"and preserve all key information accurately:\n\n{combined}"
+                )
                 if self.use_ollama:
                     resp = httpx.post(self.ollama_url, json={
                         "model": OLLAMA_MODEL,
                         "prompt": final_req,
                         "stream": False
-                    }, timeout=60.0)
+                    }, timeout=90.0)
                     return resp.json().get("response", "").strip()
                 else:
                     final = self.client.chat.completions.create(
                         model=GROQ_SUMMARIZATION_MODEL,
-                        messages=[{"role": "user", "content": final_req}]
+                        messages=[{"role": "user", "content": final_req}],
+                        temperature=0.2,
                     )
                     return final.choices[0].message.content.strip()
 
@@ -154,7 +172,7 @@ class VideoSummarizer:
 
         except Exception as e:
             logger.warning("Groq Summarization failed: %s", e)
-            return text[:300] + "..."
+            return text[:500] + "..."
 
     # -------------------------------
     # KEY POINT EXTRACTION
